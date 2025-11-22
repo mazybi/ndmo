@@ -1,0 +1,3102 @@
+[
+  {
+    "page": 2,
+    "line": 1,
+    "text": "Document Control"
+  },
+  {
+    "page": 3,
+    "line": 9,
+    "text": "7. Control Structure ................................................................................................................11"
+  },
+  {
+    "page": 4,
+    "line": 29,
+    "text": "Data Controller"
+  },
+  {
+    "page": 4,
+    "line": 34,
+    "text": "processes personal data on behalf of a Data Controller."
+  },
+  {
+    "page": 5,
+    "line": 9,
+    "text": "directly or indirectly, by data in the custody of the Data Controller."
+  },
+  {
+    "page": 6,
+    "line": 13,
+    "text": "the Data Management and Personal Data Protection Standards to govern and control the practice"
+  },
+  {
+    "page": 6,
+    "line": 17,
+    "text": "Data Management and Personal Data Protection Framework along with the required controls and"
+  },
+  {
+    "page": 6,
+    "line": 33,
+    "text": "controls for data and artificial intelligence and monitor compliance upon publication. The"
+  },
+  {
+    "page": 7,
+    "line": 6,
+    "text": "Data Protection standards to all government data assets within their control and custody. The"
+  },
+  {
+    "page": 7,
+    "line": 20,
+    "text": "will be cascaded up to the control, domain, and overall Entity level. The annual compliance report"
+  },
+  {
+    "page": 9,
+    "line": 2,
+    "text": "The standards including the controls and specifications have been defined across 15 Domains"
+  },
+  {
+    "page": 9,
+    "line": 21,
+    "text": "1. Data Governance: Data Governance provides the authority and control over the planning"
+  },
+  {
+    "page": 10,
+    "line": 7,
+    "text": "controlling the capture, storage, access, and use of documents and content stored outside of"
+  },
+  {
+    "page": 11,
+    "line": 8,
+    "text": "7. Control Structure"
+  },
+  {
+    "page": 11,
+    "line": 9,
+    "text": "The standards control structure adopted follows a 3-level hierarchy:"
+  },
+  {
+    "page": 11,
+    "line": 12,
+    "text": "2. Control level – the control is a grouping of the specifications addressing a common area within"
+  },
+  {
+    "page": 11,
+    "line": 16,
+    "text": "As such, each of the 15 Data Management & Privacy domains breaks down to a set of controls"
+  },
+  {
+    "page": 11,
+    "line": 18,
+    "text": " For each control area, the control description, ID, and dependencies are defined"
+  },
+  {
+    "page": 11,
+    "line": 20,
+    "text": "Figure2: Control Structure Format"
+  },
+  {
+    "page": 11,
+    "line": 22,
+    "text": "Control Name Name of the Control Control ID #"
+  },
+  {
+    "page": 11,
+    "line": 23,
+    "text": "Control"
+  },
+  {
+    "page": 11,
+    "line": 24,
+    "text": "Description of the Control"
+  },
+  {
+    "page": 11,
+    "line": 27,
+    "text": "Specification Name Control Specification Priority"
+  },
+  {
+    "page": 11,
+    "line": 34,
+    "text": "Dependencies Control Dependencies"
+  },
+  {
+    "page": 12,
+    "line": 6,
+    "text": "3 Control Name A name of the Control. e.g. Policy and Guidelines"
+  },
+  {
+    "page": 12,
+    "line": 7,
+    "text": "A unique identifier of the Control using the following"
+  },
+  {
+    "page": 12,
+    "line": 9,
+    "text": "4 Control ID ordering number of the Control within the Domain"
+  },
+  {
+    "page": 12,
+    "line": 10,
+    "text": "An example: DG.2 is a second control within Data"
+  },
+  {
+    "page": 12,
+    "line": 12,
+    "text": "A high-level description of the Control including the"
+  },
+  {
+    "page": 12,
+    "line": 13,
+    "text": "5 Control Description"
+  },
+  {
+    "page": 12,
+    "line": 16,
+    "text": "following format [Control ID.NUMBER] where"
+  },
+  {
+    "page": 12,
+    "line": 19,
+    "text": "within the Control"
+  },
+  {
+    "page": 12,
+    "line": 21,
+    "text": "the second Control within Data Governance domain"
+  },
+  {
+    "page": 12,
+    "line": 23,
+    "text": "7 Control Specification"
+  },
+  {
+    "page": 12,
+    "line": 25,
+    "text": "A priority determining the order in which the Control’s"
+  },
+  {
+    "page": 12,
+    "line": 28,
+    "text": "The version history allowing versioning control of"
+  },
+  {
+    "page": 12,
+    "line": 31,
+    "text": "Pre-requisite for other Controls the Entity must be"
+  },
+  {
+    "page": 12,
+    "line": 33,
+    "text": "complied with to ensure that this Control is effective"
+  },
+  {
+    "page": 13,
+    "line": 6,
+    "text": "controls and 191 specifications. The specifications have been prioritized as follows:"
+  },
+  {
+    "page": 13,
+    "line": 7,
+    "text": " Priority 1 (P1): Required specifications that must first be implemented as foundational"
+  },
+  {
+    "page": 13,
+    "line": 10,
+    "text": " Priority 2 (P2): Required specifications that should be implemented to improve data"
+  },
+  {
+    "page": 13,
+    "line": 13,
+    "text": " Priority 3 (P3): Required specifications that should be implemented to further advance the"
+  },
+  {
+    "page": 13,
+    "line": 16,
+    "text": "Summarized below, the span of controls and specifications across 15 domains:"
+  },
+  {
+    "page": 13,
+    "line": 20,
+    "text": "Controls Specifications"
+  },
+  {
+    "page": 13,
+    "line": 21,
+    "text": "P1 P2 P3"
+  },
+  {
+    "page": 14,
+    "line": 6,
+    "text": "The controls and specifications for this domain shall be"
+  },
+  {
+    "page": 14,
+    "line": 15,
+    "text": "1. The end of Year 1 – all specifications with Priority 1 (P1) are implemented"
+  },
+  {
+    "page": 14,
+    "line": 16,
+    "text": "2. The end of Year 2 – all specifications with Priority 1 and 2 (P1 and P2) are implemented"
+  },
+  {
+    "page": 14,
+    "line": 17,
+    "text": "3. The end of Year 3 – all specifications with Priority 1, 2 and 3 (P1, P2 and P3) are"
+  },
+  {
+    "page": 14,
+    "line": 22,
+    "text": "In this section, the specific controls and specifications identified are listed based on the previously"
+  },
+  {
+    "page": 15,
+    "line": 3,
+    "text": "Data Governance domain comprises of 8 controls and 28 specifications. This domain provides the authority and control over"
+  },
+  {
+    "page": 15,
+    "line": 9,
+    "text": "Control a"
+  },
+  {
+    "page": 16,
+    "line": 1,
+    "text": "9.1.2. Controls and Specifications"
+  },
+  {
+    "page": 16,
+    "line": 3,
+    "text": "Control Name Strategy and Plan Control ID DG.1"
+  },
+  {
+    "page": 16,
+    "line": 4,
+    "text": "As part of the Strategy and Plan control, the Entity shall establish a Data"
+  },
+  {
+    "page": 16,
+    "line": 5,
+    "text": "Control"
+  },
+  {
+    "page": 16,
+    "line": 10,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 16,
+    "line": 25,
+    "text": "DG.1.1 business strategy as well as external P1"
+  },
+  {
+    "page": 17,
+    "line": 13,
+    "text": "Adoption of the National Data Management P1"
+  },
+  {
+    "page": 17,
+    "line": 34,
+    "text": "DG.1.3 P1"
+  },
+  {
+    "page": 18,
+    "line": 6,
+    "text": "Approval and senior level executives within the Entity. The P1"
+  },
+  {
+    "page": 19,
+    "line": 2,
+    "text": "Control Name Policy and Guidelines Control ID DG.2"
+  },
+  {
+    "page": 19,
+    "line": 3,
+    "text": "As part of the Policy and Guidelines control, the Entity shall conduct a Data"
+  },
+  {
+    "page": 19,
+    "line": 4,
+    "text": "Control Management and Personal Data Protection Policy and Guidelines gap analysis,"
+  },
+  {
+    "page": 19,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 19,
+    "line": 25,
+    "text": "DG.2.1 related standards and policies currently P1"
+  },
+  {
+    "page": 19,
+    "line": 46,
+    "text": "DG.2.2 Personal Data P1"
+  },
+  {
+    "page": 21,
+    "line": 2,
+    "text": "Control Name Training and Awareness Control ID DG.3"
+  },
+  {
+    "page": 21,
+    "line": 3,
+    "text": "As part of the Training and Awareness control, the Entity shall conduct a Data"
+  },
+  {
+    "page": 21,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 21,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 21,
+    "line": 22,
+    "text": "Personal Entity P1"
+  },
+  {
+    "page": 22,
+    "line": 2,
+    "text": "Control Name Data Management Organization Control ID DG.4"
+  },
+  {
+    "page": 22,
+    "line": 3,
+    "text": "As part of the Data Management Organization control, the Entity shall establish"
+  },
+  {
+    "page": 22,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 22,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 22,
+    "line": 15,
+    "text": "DG.4.1 Management P1"
+  },
+  {
+    "page": 22,
+    "line": 24,
+    "text": "DG.4.2 Management P1"
+  },
+  {
+    "page": 22,
+    "line": 33,
+    "text": "DG.4.3 Officer's (CDO) responsibilities shall be P1"
+  },
+  {
+    "page": 22,
+    "line": 41,
+    "text": "DG.4.4 Governance Officer's responsibilities shall be highlighted in a P1"
+  },
+  {
+    "page": 22,
+    "line": 48,
+    "text": "DG.4.5 and P1"
+  },
+  {
+    "page": 23,
+    "line": 8,
+    "text": "DG.4.6 P1"
+  },
+  {
+    "page": 23,
+    "line": 18,
+    "text": "DG.4.7 Data Protection Officer's responsibilities shall be P1"
+  },
+  {
+    "page": 23,
+    "line": 27,
+    "text": "DG.4.8 Data The Business Data Executive's responsibilities P1"
+  },
+  {
+    "page": 23,
+    "line": 34,
+    "text": "DG.4.9 Data Data Steward responsibilities shall be highlighted P1"
+  },
+  {
+    "page": 23,
+    "line": 42,
+    "text": "DG.4.10 Steward responsibilities shall be highlighted in a P1"
+  },
+  {
+    "page": 24,
+    "line": 4,
+    "text": "DG.4.11 P1"
+  },
+  {
+    "page": 25,
+    "line": 2,
+    "text": "Control Name Compliance Audit Framework Control ID DG.5"
+  },
+  {
+    "page": 25,
+    "line": 3,
+    "text": "As part of the Compliance Audit Framework control, the Entity shall establish"
+  },
+  {
+    "page": 25,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 25,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 25,
+    "line": 19,
+    "text": "DG.5.1 compliance audits P2"
+  },
+  {
+    "page": 25,
+    "line": 35,
+    "text": "DG.5.2 Audit 2. Clearly articulated findings with supporting P2"
+  },
+  {
+    "page": 25,
+    "line": 45,
+    "text": "DG.5.3 P2"
+  },
+  {
+    "page": 27,
+    "line": 2,
+    "text": "Control Name Data Lifecycle Governance Control ID DG.6"
+  },
+  {
+    "page": 27,
+    "line": 3,
+    "text": "As part of the Data Lifecycle Governance control, the Entity shall conduct"
+  },
+  {
+    "page": 27,
+    "line": 4,
+    "text": "Control periodic reviews for the Data Management and Personal Data Protection Plan"
+  },
+  {
+    "page": 27,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 27,
+    "line": 14,
+    "text": "DG.6.1 Periodic Plan P2"
+  },
+  {
+    "page": 27,
+    "line": 29,
+    "text": "DG.6.2 Communications P2"
+  },
+  {
+    "page": 29,
+    "line": 2,
+    "text": "Control Name Performance Management Control ID DG.7"
+  },
+  {
+    "page": 29,
+    "line": 3,
+    "text": "As part of the Performance Management control, the Entity shall establish key"
+  },
+  {
+    "page": 29,
+    "line": 4,
+    "text": "Control performance indicators (KPIs) to gather statistics on Data Governance and"
+  },
+  {
+    "page": 29,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 29,
+    "line": 20,
+    "text": "DG.7.1 Governance P2"
+  },
+  {
+    "page": 29,
+    "line": 34,
+    "text": "DG.7.2 P2"
+  },
+  {
+    "page": 30,
+    "line": 3,
+    "text": "Control Name Artifacts Control ID DG.8"
+  },
+  {
+    "page": 30,
+    "line": 4,
+    "text": "As part of the Artifacts control, the Entity shall document in a register all data"
+  },
+  {
+    "page": 30,
+    "line": 5,
+    "text": "Control"
+  },
+  {
+    "page": 30,
+    "line": 6,
+    "text": "governance decisions, tracking logs and implement a version control for data"
+  },
+  {
+    "page": 30,
+    "line": 10,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 30,
+    "line": 15,
+    "text": "DG.8.1 approved data governance decisions along with P2"
+  },
+  {
+    "page": 30,
+    "line": 23,
+    "text": "DG.8.2 Issue P3"
+  },
+  {
+    "page": 30,
+    "line": 30,
+    "text": "DG.8.3 control for data management documents and P2"
+  },
+  {
+    "page": 30,
+    "line": 31,
+    "text": "Control"
+  },
+  {
+    "page": 32,
+    "line": 3,
+    "text": "Data Catalog and Metadata domain comprises of 6 controls and 20 specifications. This domain focuses on enabling an effective"
+  },
+  {
+    "page": 32,
+    "line": 10,
+    "text": "Control Plan Guidelines Awareness Management Automation Management"
+  },
+  {
+    "page": 33,
+    "line": 1,
+    "text": "9.2.2. Controls and Specifications"
+  },
+  {
+    "page": 33,
+    "line": 3,
+    "text": "Control Name Plan Control ID MCM.1"
+  },
+  {
+    "page": 33,
+    "line": 4,
+    "text": "Control As part of the Plan control, the Entity shall develop a Data Catalog Plan and the"
+  },
+  {
+    "page": 33,
+    "line": 7,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 33,
+    "line": 17,
+    "text": "MCM.1.1 P1"
+  },
+  {
+    "page": 33,
+    "line": 29,
+    "text": "MCM.1.2 Sources P1"
+  },
+  {
+    "page": 34,
+    "line": 9,
+    "text": "MCM.1.3 P1"
+  },
+  {
+    "page": 35,
+    "line": 2,
+    "text": "Control Name Policy and Guidelines Control ID MCM.2"
+  },
+  {
+    "page": 35,
+    "line": 3,
+    "text": "As part of the Policy and Guidelines control, the Entity shall establish and follow"
+  },
+  {
+    "page": 35,
+    "line": 4,
+    "text": "Control clear processes for an approval of connecting the Data Catalog to the Entity's"
+  },
+  {
+    "page": 35,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 35,
+    "line": 12,
+    "text": "MCM.2.1 process for the approval of connecting the Data P2"
+  },
+  {
+    "page": 35,
+    "line": 21,
+    "text": "MCM.2.2 Access access groups (for example read only, read and P2"
+  },
+  {
+    "page": 36,
+    "line": 2,
+    "text": "Control Name Training and Awareness Control ID MCM.3"
+  },
+  {
+    "page": 36,
+    "line": 3,
+    "text": "Control As part of the Training and Awareness control, the Entity shall conduct the Data"
+  },
+  {
+    "page": 36,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 36,
+    "line": 14,
+    "text": "MCM.3.1 P2"
+  },
+  {
+    "page": 36,
+    "line": 19,
+    "text": "3. Hands-on exercises of the Data Catalog"
+  },
+  {
+    "page": 36,
+    "line": 27,
+    "text": "MCM.3.2 Adoption current Data Catalog power users and P3"
+  },
+  {
+    "page": 37,
+    "line": 2,
+    "text": "Control Name Data Lifecycle Management Control ID MCM.4"
+  },
+  {
+    "page": 37,
+    "line": 3,
+    "text": "As part of the Data Lifecycle Management control, the Entity shall develop the"
+  },
+  {
+    "page": 37,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 37,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 37,
+    "line": 14,
+    "text": "MCM.4.1 Stewardship Data Stewards assigned to the Metadata shall be P2"
+  },
+  {
+    "page": 37,
+    "line": 23,
+    "text": "MCM.4.2 shall be implemented as a workflow in the Data P2"
+  },
+  {
+    "page": 37,
+    "line": 33,
+    "text": "MCM.4.3 Metadata attributes that are required to be P1"
+  },
+  {
+    "page": 37,
+    "line": 42,
+    "text": "MCM.4.4 P2"
+  },
+  {
+    "page": 38,
+    "line": 7,
+    "text": "MCM.4.5 development of remediation actions within P1"
+  },
+  {
+    "page": 38,
+    "line": 18,
+    "text": "MCM.4.6 within the Data Catalog. The process shall be P3"
+  },
+  {
+    "page": 38,
+    "line": 27,
+    "text": "MCM.4.7 Catalog. The process shall be implemented as a P2"
+  },
+  {
+    "page": 39,
+    "line": 2,
+    "text": "Control Name Data Catalog Automation Control ID MCM.5"
+  },
+  {
+    "page": 39,
+    "line": 3,
+    "text": "As part of the Data Catalog Automation control, the Entity shall implement Data"
+  },
+  {
+    "page": 39,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 39,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 39,
+    "line": 14,
+    "text": "MCM.5.1 Automated Entity's Metadata management. The P2"
+  },
+  {
+    "page": 39,
+    "line": 20,
+    "text": "MCM.5.2 and Catalog within the Data Catalog automated tool, to keep P2"
+  },
+  {
+    "page": 39,
+    "line": 26,
+    "text": "MCM.5.3 and Catalog Monitoring shall include information about users’ P2"
+  },
+  {
+    "page": 39,
+    "line": 34,
+    "text": "MCM.5.4 P2"
+  },
+  {
+    "page": 41,
+    "line": 2,
+    "text": "Control Name Performance Management Control ID MCM.6"
+  },
+  {
+    "page": 41,
+    "line": 3,
+    "text": "As part of the Performance Management control, the Entity shall establish key"
+  },
+  {
+    "page": 41,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 41,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 41,
+    "line": 18,
+    "text": "MCM.6.1 3. Number of logins to Data Catalog P2"
+  },
+  {
+    "page": 41,
+    "line": 32,
+    "text": "MCM.6.2 glossaries and data dictionaries are P2"
+  },
+  {
+    "page": 43,
+    "line": 3,
+    "text": "Data Quality domain comprises of 4 controls and 13 specifications. This domain Data Quality focuses on the improvement of"
+  },
+  {
+    "page": 43,
+    "line": 9,
+    "text": "Control Plan Operations Management Management"
+  },
+  {
+    "page": 44,
+    "line": 1,
+    "text": "9.3.2. Controls and Specifications"
+  },
+  {
+    "page": 44,
+    "line": 3,
+    "text": "Control Name Plan Control ID DQ.1"
+  },
+  {
+    "page": 44,
+    "line": 4,
+    "text": "As part of the Plan control, the Entity shall prioritize its data from the perspective"
+  },
+  {
+    "page": 44,
+    "line": 5,
+    "text": "Control"
+  },
+  {
+    "page": 44,
+    "line": 10,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 44,
+    "line": 16,
+    "text": "DQ.1.1 be a ranked list of data to be followed when P1"
+  },
+  {
+    "page": 44,
+    "line": 29,
+    "text": "P1"
+  },
+  {
+    "page": 44,
+    "line": 41,
+    "text": "Quality P1"
+  },
+  {
+    "page": 46,
+    "line": 2,
+    "text": "Control Name Data Quality Operations Control ID DQ.2"
+  },
+  {
+    "page": 46,
+    "line": 3,
+    "text": "As part of the Data Quality Operations control, the Entity shall develop Data"
+  },
+  {
+    "page": 46,
+    "line": 4,
+    "text": "Control Quality Rules, monitor its Data Quality, establish and follow a clear process for"
+  },
+  {
+    "page": 46,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 46,
+    "line": 26,
+    "text": "DQ.2.1 Rules P2"
+  },
+  {
+    "page": 47,
+    "line": 16,
+    "text": "P2"
+  },
+  {
+    "page": 47,
+    "line": 37,
+    "text": "DQ.2.3 Issues 1c. Definition of the options for resolving the P2"
+  },
+  {
+    "page": 48,
+    "line": 9,
+    "text": "DQ.2.4 P2"
+  },
+  {
+    "page": 48,
+    "line": 26,
+    "text": "DQ.2.5 P2"
+  },
+  {
+    "page": 49,
+    "line": 2,
+    "text": "Control Name Performance Management Control ID DQ.3"
+  },
+  {
+    "page": 49,
+    "line": 3,
+    "text": "As part of the Performance Management control, the Entity shall establish key"
+  },
+  {
+    "page": 49,
+    "line": 4,
+    "text": "Control performance indicators (KPIs) to measure and report on the Entity's Data"
+  },
+  {
+    "page": 49,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 49,
+    "line": 15,
+    "text": "DQ.3.1 P2"
+  },
+  {
+    "page": 49,
+    "line": 28,
+    "text": "Issues reported Data Quality issues P2"
+  },
+  {
+    "page": 51,
+    "line": 2,
+    "text": "Control Name Data Lifecycle Management Control ID DQ.4"
+  },
+  {
+    "page": 51,
+    "line": 3,
+    "text": "As part of the Data Lifecycle Management control, the Entity shall publish Data"
+  },
+  {
+    "page": 51,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 51,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 51,
+    "line": 16,
+    "text": "DQ.4.1 P2"
+  },
+  {
+    "page": 51,
+    "line": 26,
+    "text": "DQ.4.2 process shall be implemented as a workflow in the P3"
+  },
+  {
+    "page": 51,
+    "line": 35,
+    "text": "DQ.4.3 automated tool. The population of the metadata P3"
+  },
+  {
+    "page": 54,
+    "line": 3,
+    "text": "Data Operations domain comprises of 5 controls and 14 specifications. This domain focuses on the design, implementation,"
+  },
+  {
+    "page": 54,
+    "line": 8,
+    "text": "Control Plan Guidelines Operations Continuity Management"
+  },
+  {
+    "page": 55,
+    "line": 1,
+    "text": "9.4.2. Controls and Specifications"
+  },
+  {
+    "page": 55,
+    "line": 3,
+    "text": "Control Name Plan Control ID DO.1"
+  },
+  {
+    "page": 55,
+    "line": 4,
+    "text": "As part of the Plan control, the Entity shall create a Data Operation Plan,"
+  },
+  {
+    "page": 55,
+    "line": 5,
+    "text": "Control conduct Data Storage forecasts, prioritize its information systems based on"
+  },
+  {
+    "page": 55,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 55,
+    "line": 19,
+    "text": "DO.1.1 Operations P1"
+  },
+  {
+    "page": 55,
+    "line": 34,
+    "text": "DO.1.2 P2"
+  },
+  {
+    "page": 56,
+    "line": 8,
+    "text": "DO.1.3 Systems P1"
+  },
+  {
+    "page": 56,
+    "line": 22,
+    "text": "DO.1.4 Technology 2. Availability of resources skilled in the P2"
+  },
+  {
+    "page": 56,
+    "line": 30,
+    "text": "7. Security controls provided by the technology"
+  },
+  {
+    "page": 57,
+    "line": 2,
+    "text": "Control Name Policy and Guidelines Control ID DO.2"
+  },
+  {
+    "page": 57,
+    "line": 3,
+    "text": "Control As part of the Policy and Guidelines control, the Entity shall create a storage"
+  },
+  {
+    "page": 57,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 57,
+    "line": 15,
+    "text": "DO.2.1 Retention 2. Retention periods of data based on its type, P1"
+  },
+  {
+    "page": 58,
+    "line": 2,
+    "text": "Control Name Database Operations Control ID DO.3"
+  },
+  {
+    "page": 58,
+    "line": 3,
+    "text": "As part of the Database Operations control, the Entity shall monitor and report"
+  },
+  {
+    "page": 58,
+    "line": 4,
+    "text": "Control database performance and establish and follow processes for providing the"
+  },
+  {
+    "page": 58,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 58,
+    "line": 16,
+    "text": "DO.3.1 P2"
+  },
+  {
+    "page": 58,
+    "line": 28,
+    "text": "DO.3.2 Access P2"
+  },
+  {
+    "page": 58,
+    "line": 30,
+    "text": "Control"
+  },
+  {
+    "page": 58,
+    "line": 39,
+    "text": "DO.3.3 Configuration 1. Configuration identification - identification and P2"
+  },
+  {
+    "page": 58,
+    "line": 42,
+    "text": "2. Configuration change control -"
+  },
+  {
+    "page": 59,
+    "line": 10,
+    "text": "DO.3.4 P3"
+  },
+  {
+    "page": 59,
+    "line": 22,
+    "text": "DO.3.5 limited to) the following: P2"
+  },
+  {
+    "page": 60,
+    "line": 2,
+    "text": "Control Name Business Continuity Control ID DO.4"
+  },
+  {
+    "page": 60,
+    "line": 3,
+    "text": "As part of the Business Continuity control, the Entity shall establish and follow"
+  },
+  {
+    "page": 60,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 60,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 60,
+    "line": 17,
+    "text": "DO.4.1 P2"
+  },
+  {
+    "page": 60,
+    "line": 32,
+    "text": "DO.4.2 P2"
+  },
+  {
+    "page": 61,
+    "line": 12,
+    "text": "DO.4.3 Data Access 1. Change request initiating the process P2"
+  },
+  {
+    "page": 61,
+    "line": 13,
+    "text": "Control"
+  },
+  {
+    "page": 61,
+    "line": 15,
+    "text": "controlled implementation of changes to"
+  },
+  {
+    "page": 62,
+    "line": 2,
+    "text": "Control Name Performance Management Control ID DO.5"
+  },
+  {
+    "page": 62,
+    "line": 3,
+    "text": "Control As part of the Performance Management control, the Entity shall establish key"
+  },
+  {
+    "page": 62,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 62,
+    "line": 15,
+    "text": "DO.5.1 P2"
+  },
+  {
+    "page": 64,
+    "line": 3,
+    "text": "Document and Content Management domain comprises of 5 controls and 12 specifications. This domain involves controlling"
+  },
+  {
+    "page": 64,
+    "line": 9,
+    "text": "Control Plan"
+  },
+  {
+    "page": 65,
+    "line": 1,
+    "text": "9.5.2. Controls and Specifications"
+  },
+  {
+    "page": 65,
+    "line": 3,
+    "text": "Control Name Plan Control ID DCM.1"
+  },
+  {
+    "page": 65,
+    "line": 4,
+    "text": "As part of the Plan control, the Entity shall create a Document and Content"
+  },
+  {
+    "page": 65,
+    "line": 5,
+    "text": "Control"
+  },
+  {
+    "page": 65,
+    "line": 10,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 65,
+    "line": 15,
+    "text": "Management Plan to implement and control"
+  },
+  {
+    "page": 65,
+    "line": 22,
+    "text": "DCM.1.1 milestones for implementation of Documents P1"
+  },
+  {
+    "page": 66,
+    "line": 11,
+    "text": "DCM.1.2 Digitization P1"
+  },
+  {
+    "page": 66,
+    "line": 25,
+    "text": "DCM.1.3 Entity's DMS. The result of the prioritization shall P1"
+  },
+  {
+    "page": 66,
+    "line": 32,
+    "text": "DCM.1.4 Workflows management of documents within the Entity. The P1"
+  },
+  {
+    "page": 67,
+    "line": 2,
+    "text": "Control Name Policy and Guidelines Control ID DCM.2"
+  },
+  {
+    "page": 67,
+    "line": 3,
+    "text": "As part of the Policy and Guidelines control, the Entity shall create a Document"
+  },
+  {
+    "page": 67,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 67,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 67,
+    "line": 18,
+    "text": "DCM.2.1 P1"
+  },
+  {
+    "page": 68,
+    "line": 2,
+    "text": "Control Name Training and Awareness Control ID DCM.3"
+  },
+  {
+    "page": 68,
+    "line": 3,
+    "text": "Control As part of the Training and Awareness control, the Entity shall conduct"
+  },
+  {
+    "page": 68,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 68,
+    "line": 15,
+    "text": "DCM.3.1 minimum, the following: P2"
+  },
+  {
+    "page": 69,
+    "line": 2,
+    "text": "Control Name Document and Content Operations Control ID DCM.4"
+  },
+  {
+    "page": 69,
+    "line": 3,
+    "text": "As part of the Document and Content Operations control, the Entity shall"
+  },
+  {
+    "page": 69,
+    "line": 4,
+    "text": "Control implement Documents and Content Management Tools, establish and follow"
+  },
+  {
+    "page": 69,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 69,
+    "line": 12,
+    "text": "DCM.4.1 P3"
+  },
+  {
+    "page": 69,
+    "line": 19,
+    "text": "DCM.4.2 and shall include (but not limited to) the following: P2"
+  },
+  {
+    "page": 69,
+    "line": 29,
+    "text": "DCM.4.3 P2"
+  },
+  {
+    "page": 69,
+    "line": 41,
+    "text": "DCM.4.4 Data Catalog automated tool. The population of P3"
+  },
+  {
+    "page": 70,
+    "line": 14,
+    "text": "DCM.4.5 and Content - Indexing of documents P3"
+  },
+  {
+    "page": 71,
+    "line": 2,
+    "text": "Control Name Performance Management Control ID DCM.5"
+  },
+  {
+    "page": 71,
+    "line": 3,
+    "text": "As part of the Performance Management control, the Entity shall define key"
+  },
+  {
+    "page": 71,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 71,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 71,
+    "line": 17,
+    "text": "DCM.5.1 Management managed within the Entity's Document P2"
+  },
+  {
+    "page": 73,
+    "line": 3,
+    "text": "Data Architecture and Modeling domain comprises of 7 controls and 13 specifications. This domain focuses on establishment"
+  },
+  {
+    "page": 73,
+    "line": 7,
+    "text": "Control Plan"
+  },
+  {
+    "page": 74,
+    "line": 1,
+    "text": "9.6.2. Controls and Specifications"
+  },
+  {
+    "page": 74,
+    "line": 3,
+    "text": "Control Name Plan Control ID DAM.1"
+  },
+  {
+    "page": 74,
+    "line": 4,
+    "text": "As part of the Plan control, the Entity shall create a Data Architecture and"
+  },
+  {
+    "page": 74,
+    "line": 5,
+    "text": "Control"
+  },
+  {
+    "page": 74,
+    "line": 10,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 74,
+    "line": 22,
+    "text": "and P1"
+  },
+  {
+    "page": 75,
+    "line": 2,
+    "text": "Control Name Policy and Guidelines Control ID DAM.2"
+  },
+  {
+    "page": 75,
+    "line": 3,
+    "text": "Control As part of Policy and Guidelines control, the Entity shall document and publish"
+  },
+  {
+    "page": 75,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 75,
+    "line": 18,
+    "text": "and 2. Target Data Architecture shall be P1"
+  },
+  {
+    "page": 76,
+    "line": 2,
+    "text": "Control Name Data Architecture Framework Definition Control ID DAM.3"
+  },
+  {
+    "page": 76,
+    "line": 3,
+    "text": "As part of the Data Architecture Framework Definition control, the Entity shall"
+  },
+  {
+    "page": 76,
+    "line": 5,
+    "text": "Control"
+  },
+  {
+    "page": 76,
+    "line": 11,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 76,
+    "line": 27,
+    "text": "P1"
+  },
+  {
+    "page": 77,
+    "line": 20,
+    "text": "DAM.3.2 relationships P2"
+  },
+  {
+    "page": 77,
+    "line": 41,
+    "text": "DAM.3.3 Gap P2"
+  },
+  {
+    "page": 77,
+    "line": 48,
+    "text": "DAM.3.4 requirements for developing a Data Lake P2"
+  },
+  {
+    "page": 78,
+    "line": 19,
+    "text": "DAM.3.5 Processing P2"
+  },
+  {
+    "page": 79,
+    "line": 2,
+    "text": "Control Name Data Modeling Definition Control ID DAM.4"
+  },
+  {
+    "page": 79,
+    "line": 3,
+    "text": "As part of the Data Modeling Definition control, the Entity shall select"
+  },
+  {
+    "page": 79,
+    "line": 4,
+    "text": "Control diagramming method for documenting the structure, relationships and notations"
+  },
+  {
+    "page": 79,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 79,
+    "line": 13,
+    "text": "DAM.4.1 P2"
+  },
+  {
+    "page": 79,
+    "line": 25,
+    "text": "DAM.4.2 along with data flow diagramming P2"
+  },
+  {
+    "page": 81,
+    "line": 2,
+    "text": "Control Name Data Lifecycle Management Control ID DAM.5"
+  },
+  {
+    "page": 81,
+    "line": 3,
+    "text": "As part of the Data Lifecycle Management control, the Entity shall establish an"
+  },
+  {
+    "page": 81,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 81,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 81,
+    "line": 16,
+    "text": "DAM.5.1 P2"
+  },
+  {
+    "page": 81,
+    "line": 30,
+    "text": "DAM.5.2 Architecture P2"
+  },
+  {
+    "page": 83,
+    "line": 2,
+    "text": "Control Name Performance Management Control ID DAM.6"
+  },
+  {
+    "page": 83,
+    "line": 3,
+    "text": "As part of the Performance Management control, the Entity shall develop key"
+  },
+  {
+    "page": 83,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 83,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 83,
+    "line": 16,
+    "text": "DAM.6.1 KPIs shall include, at minimum, metrics to track P2"
+  },
+  {
+    "page": 84,
+    "line": 2,
+    "text": "Control Name Artifacts Control ID DAM.7"
+  },
+  {
+    "page": 84,
+    "line": 3,
+    "text": "Control As part of the Artifacts control, the Entity shall store and maintain its Data"
+  },
+  {
+    "page": 84,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 84,
+    "line": 10,
+    "text": "DAM.7.1 P2"
+  },
+  {
+    "page": 86,
+    "line": 3,
+    "text": "Data Sharing and Interoperability domain comprises of 8 controls and 16 specifications. This domain involves the collection of"
+  },
+  {
+    "page": 86,
+    "line": 10,
+    "text": "Control Plan"
+  },
+  {
+    "page": 87,
+    "line": 1,
+    "text": "9.7.2. Controls and Specifications"
+  },
+  {
+    "page": 87,
+    "line": 3,
+    "text": "Control Name Plan Control ID DSI.1"
+  },
+  {
+    "page": 87,
+    "line": 4,
+    "text": "As part of the Plan control, the Entity shall perform an Initial Data Integration"
+  },
+  {
+    "page": 87,
+    "line": 5,
+    "text": "Control"
+  },
+  {
+    "page": 87,
+    "line": 10,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 87,
+    "line": 21,
+    "text": "DSI.1.1 Integration P1"
+  },
+  {
+    "page": 87,
+    "line": 36,
+    "text": "DSI.1.2 Integration At minimum, the Target Data Integration P1"
+  },
+  {
+    "page": 88,
+    "line": 20,
+    "text": "DSI.1.3 Integration milestones for the implementation of the P1"
+  },
+  {
+    "page": 89,
+    "line": 2,
+    "text": "Control Name Training and Awareness Control ID DSI.2"
+  },
+  {
+    "page": 89,
+    "line": 3,
+    "text": "As part of the Training and Awareness control, the Entity conduct training on"
+  },
+  {
+    "page": 89,
+    "line": 4,
+    "text": "Control the Data Sharing to ensure employees involved in the Data Sharing initiatives"
+  },
+  {
+    "page": 89,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 89,
+    "line": 16,
+    "text": "DSI.2.1 P2"
+  },
+  {
+    "page": 89,
+    "line": 22,
+    "text": "4. Data Sharing Principles and Controls"
+  },
+  {
+    "page": 90,
+    "line": 2,
+    "text": "Control Name Integration Solution Development Lifecycle Control ID DSI.3"
+  },
+  {
+    "page": 90,
+    "line": 3,
+    "text": "As part of the Integration Solution Development Lifecycle control, the Entity"
+  },
+  {
+    "page": 90,
+    "line": 4,
+    "text": "Control shall for each data integration initiative produce an Integration Requirements"
+  },
+  {
+    "page": 90,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 90,
+    "line": 17,
+    "text": "DSI.3.1 Requirements 2. Entity's Business goals and objectives to be P1"
+  },
+  {
+    "page": 90,
+    "line": 33,
+    "text": "DSI.3.2 Design 2. Target Data Integration Architecture P1"
+  },
+  {
+    "page": 91,
+    "line": 22,
+    "text": "DSI.3.3 Solution resolve any Data Quality issues or bugs P2"
+  },
+  {
+    "page": 91,
+    "line": 37,
+    "text": "DSI.3.4 and following: P3"
+  },
+  {
+    "page": 93,
+    "line": 2,
+    "text": "Control Name Data Processes Control ID DSI.4"
+  },
+  {
+    "page": 93,
+    "line": 3,
+    "text": "Control As part of the Data Processes control, the Entity shall design, document and"
+  },
+  {
+    "page": 93,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 93,
+    "line": 19,
+    "text": "ETL Process physical data store on disk or in a memory P2"
+  },
+  {
+    "page": 93,
+    "line": 36,
+    "text": "DSI.4.2 ELT Process P2"
+  },
+  {
+    "page": 95,
+    "line": 2,
+    "text": "Control Name Data Sharing Process Control ID DSI.5"
+  },
+  {
+    "page": 95,
+    "line": 3,
+    "text": "As part of the Data Sharing Process control, the Entity shall adopt the Data"
+  },
+  {
+    "page": 95,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 95,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 95,
+    "line": 21,
+    "text": "P1"
+  },
+  {
+    "page": 95,
+    "line": 28,
+    "text": "controls"
+  },
+  {
+    "page": 96,
+    "line": 2,
+    "text": "Control Name Data Sharing Requests Control ID DSI.6"
+  },
+  {
+    "page": 96,
+    "line": 3,
+    "text": "As part of the Data Sharing Requests control, the Entity shall establish a request"
+  },
+  {
+    "page": 96,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 96,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 96,
+    "line": 15,
+    "text": "DSI.6.1 submission and the reception of Data Sharing P1"
+  },
+  {
+    "page": 97,
+    "line": 2,
+    "text": "Control Name Data Sharing Agreements Control ID DSI.7"
+  },
+  {
+    "page": 97,
+    "line": 3,
+    "text": "Control As part of the Data Sharing Agreements control, the Entity shall design,"
+  },
+  {
+    "page": 97,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 97,
+    "line": 11,
+    "text": "DSI.7.1 Sharing P2"
+  },
+  {
+    "page": 97,
+    "line": 16,
+    "text": "required Data Sharing controls as defined in the"
+  },
+  {
+    "page": 97,
+    "line": 17,
+    "text": "Data Sharing Regulation. The controls shall be"
+  },
+  {
+    "page": 97,
+    "line": 24,
+    "text": "DSI.7.2 Data Sharing P1"
+  },
+  {
+    "page": 97,
+    "line": 37,
+    "text": "DSI.7.3 Agreements' and its outcome documented by the Data P2"
+  },
+  {
+    "page": 99,
+    "line": 2,
+    "text": "Control Name Performance Management Control ID DSI.8"
+  },
+  {
+    "page": 99,
+    "line": 3,
+    "text": "As part of Performance Management control, the Entity shall define and"
+  },
+  {
+    "page": 99,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 99,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 99,
+    "line": 23,
+    "text": "DSI.8.1 3. The number of Data Sharing requests P2"
+  },
+  {
+    "page": 101,
+    "line": 3,
+    "text": "Reference and Master Data Management domain comprises of 6 controls and 18 specifications. This domain allows to link all"
+  },
+  {
+    "page": 101,
+    "line": 7,
+    "text": "Control Plan Architecture"
+  },
+  {
+    "page": 102,
+    "line": 1,
+    "text": "9.8.2. Controls and Specifications"
+  },
+  {
+    "page": 102,
+    "line": 3,
+    "text": "Control Name Plan Control ID RMD.1"
+  },
+  {
+    "page": 102,
+    "line": 4,
+    "text": "As part of the Plan control, the Entity shall develop a Reference and Master"
+  },
+  {
+    "page": 102,
+    "line": 6,
+    "text": "Control"
+  },
+  {
+    "page": 102,
+    "line": 12,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 102,
+    "line": 23,
+    "text": "RMD.1.1 Master Data P1"
+  },
+  {
+    "page": 102,
+    "line": 40,
+    "text": "RMD.1.2 Identification P1"
+  },
+  {
+    "page": 103,
+    "line": 15,
+    "text": "RMD.1.3 Data managed by other Entities across P1"
+  },
+  {
+    "page": 103,
+    "line": 29,
+    "text": "RMD.1.4 P1"
+  },
+  {
+    "page": 104,
+    "line": 2,
+    "text": "Control Name Architecture Control ID RMD.2"
+  },
+  {
+    "page": 104,
+    "line": 3,
+    "text": "As part of the Architecture control, the Entity shall develop and document its"
+  },
+  {
+    "page": 104,
+    "line": 5,
+    "text": "Control and select a Reference and Master Data Hub architecture design, develop a"
+  },
+  {
+    "page": 104,
+    "line": 10,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 104,
+    "line": 25,
+    "text": "RMD.2.1 Master Data Records from different data P1"
+  },
+  {
+    "page": 104,
+    "line": 41,
+    "text": "RMD.2.2 Master Data Hub architecture design to P1"
+  },
+  {
+    "page": 105,
+    "line": 45,
+    "text": "RMD.2.3 Conceptual P1"
+  },
+  {
+    "page": 106,
+    "line": 28,
+    "text": "RMD.2.4 Information 3. Reference and Master Data Sources - P2"
+  },
+  {
+    "page": 106,
+    "line": 47,
+    "text": "RMD.2.5 P2"
+  },
+  {
+    "page": 107,
+    "line": 7,
+    "text": "2. Versioning Control - Tracking of changes to"
+  },
+  {
+    "page": 108,
+    "line": 2,
+    "text": "Control Name Training and Awareness Control ID RMD.3"
+  },
+  {
+    "page": 108,
+    "line": 3,
+    "text": "As part of the Training and Awareness control, the Entity shall conduct"
+  },
+  {
+    "page": 108,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 108,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 108,
+    "line": 21,
+    "text": "RMD.3.1 systems containing Master Data P2"
+  },
+  {
+    "page": 109,
+    "line": 2,
+    "text": "Control Name Data Lifecycle Management Control ID RMD.4"
+  },
+  {
+    "page": 109,
+    "line": 3,
+    "text": "As part of the Data Lifecycle Management control, the Entity shall assign Data"
+  },
+  {
+    "page": 109,
+    "line": 5,
+    "text": "Control"
+  },
+  {
+    "page": 109,
+    "line": 11,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 109,
+    "line": 14,
+    "text": "RMD.4.1 Stewardship Stewards to all identified Reference and Master P1"
+  },
+  {
+    "page": 109,
+    "line": 22,
+    "text": "RMD.4.2 P2"
+  },
+  {
+    "page": 109,
+    "line": 36,
+    "text": "RMD.4.3 P2"
+  },
+  {
+    "page": 110,
+    "line": 14,
+    "text": "RMD.4.4 system and application implemented requiring P2"
+  },
+  {
+    "page": 111,
+    "line": 2,
+    "text": "Control Name Performance Management Control ID RMD.5"
+  },
+  {
+    "page": 111,
+    "line": 3,
+    "text": "As part of the Performance Management control, the Entity shall establish"
+  },
+  {
+    "page": 111,
+    "line": 4,
+    "text": "Control Service Level Agreements for its Reference and Master Data requests and"
+  },
+  {
+    "page": 111,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 111,
+    "line": 12,
+    "text": "RMD.5.1 Level Management Process to effectively balance time P2"
+  },
+  {
+    "page": 111,
+    "line": 20,
+    "text": "RMD.5.2 Program 1. Number of incorrect data values in the P2"
+  },
+  {
+    "page": 112,
+    "line": 2,
+    "text": "Control Name Artifacts Control ID RMD.6"
+  },
+  {
+    "page": 112,
+    "line": 3,
+    "text": "As part of the Artifacts control, the Entity document in a register a historical"
+  },
+  {
+    "page": 112,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 112,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 112,
+    "line": 13,
+    "text": "RMD.6.1 P2"
+  },
+  {
+    "page": 112,
+    "line": 17,
+    "text": "RMD.6.2 Planning Statement of Architecture Work documents for P2"
+  },
+  {
+    "page": 114,
+    "line": 3,
+    "text": "Business Intelligence and Analytics domain comprises of 5 controls and 10 specifications. This domain focuses on analyzing"
+  },
+  {
+    "page": 114,
+    "line": 8,
+    "text": "Control Plan"
+  },
+  {
+    "page": 114,
+    "line": 11,
+    "text": "Control"
+  },
+  {
+    "page": 115,
+    "line": 1,
+    "text": "9.9.2. Controls and Specifications"
+  },
+  {
+    "page": 115,
+    "line": 3,
+    "text": "Control Name Plan Control ID BIA.1"
+  },
+  {
+    "page": 115,
+    "line": 4,
+    "text": "As part of the Plan control, the Entity shall create a Business Intelligence and"
+  },
+  {
+    "page": 115,
+    "line": 5,
+    "text": "Control Analytics Plan, prioritize the list of Analytics and AI use cases and develop an"
+  },
+  {
+    "page": 115,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 115,
+    "line": 20,
+    "text": "BIA.1.1 1. Roadmap with the activities and key P1"
+  },
+  {
+    "page": 115,
+    "line": 37,
+    "text": "BIA.1.2 P1"
+  },
+  {
+    "page": 116,
+    "line": 16,
+    "text": "BIA.1.3 Analytics Use 4. Stakeholders involved in the implementation P1"
+  },
+  {
+    "page": 116,
+    "line": 37,
+    "text": "BIA.1.4 Case P1"
+  },
+  {
+    "page": 118,
+    "line": 2,
+    "text": "Control Name Training and Awareness Control ID BIA.2"
+  },
+  {
+    "page": 118,
+    "line": 3,
+    "text": "As part of the Training and Awareness control, the Entity shall conduct Business"
+  },
+  {
+    "page": 118,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 118,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 118,
+    "line": 18,
+    "text": "BIA.2.1 and required for the analysis P2"
+  },
+  {
+    "page": 118,
+    "line": 35,
+    "text": "BIA.2.2 and P2"
+  },
+  {
+    "page": 120,
+    "line": 2,
+    "text": "Control Name Data Lifecycle Management Control ID BIA.3"
+  },
+  {
+    "page": 120,
+    "line": 3,
+    "text": "As part of the Data Lifecycle Management control, the Entity shall define and"
+  },
+  {
+    "page": 120,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 120,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 120,
+    "line": 19,
+    "text": "BIA.3.1 1. Analytics Use Case functional and non- P2"
+  },
+  {
+    "page": 120,
+    "line": 31,
+    "text": "BIA.3.2 P2"
+  },
+  {
+    "page": 121,
+    "line": 2,
+    "text": "Control Name Performance Management Control ID BIA.4"
+  },
+  {
+    "page": 121,
+    "line": 3,
+    "text": "As part of the Performance Management control, the Entity shall establish key"
+  },
+  {
+    "page": 121,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 121,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 121,
+    "line": 19,
+    "text": "BIA.4.1 2. Number of use cases piloted P2"
+  },
+  {
+    "page": 122,
+    "line": 2,
+    "text": "Control Name Artifacts Control ID BIA.5"
+  },
+  {
+    "page": 122,
+    "line": 3,
+    "text": "Control As part of the Artifacts control, the Entity shall document in a register its BI and"
+  },
+  {
+    "page": 122,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 122,
+    "line": 11,
+    "text": "BIA.5.1 P3"
+  },
+  {
+    "page": 124,
+    "line": 3,
+    "text": "Data Value Realization domain comprises of 4 controls and 8 specifications. This domain involves the continuous evaluation of"
+  },
+  {
+    "page": 124,
+    "line": 8,
+    "text": "Control Plan Generation Process Maintenance Management"
+  },
+  {
+    "page": 125,
+    "line": 1,
+    "text": "9.10.2. Controls and Specifications"
+  },
+  {
+    "page": 125,
+    "line": 3,
+    "text": "Control Name Plan Control ID DVR.1"
+  },
+  {
+    "page": 125,
+    "line": 4,
+    "text": "Control As part of the Plan control, the Entity shall identify and document Data Value"
+  },
+  {
+    "page": 125,
+    "line": 7,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 125,
+    "line": 20,
+    "text": "Realization collection, enrichment, preparation, analysis, P1"
+  },
+  {
+    "page": 125,
+    "line": 36,
+    "text": "Realization potential and drive data-related cost optimization P1"
+  },
+  {
+    "page": 127,
+    "line": 2,
+    "text": "Control Name Data Revenue Generation Process Control ID DVR.2"
+  },
+  {
+    "page": 127,
+    "line": 5,
+    "text": "Control"
+  },
+  {
+    "page": 127,
+    "line": 11,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 127,
+    "line": 16,
+    "text": "Scheme document an appropriate Pricing Scheme Model P2"
+  },
+  {
+    "page": 127,
+    "line": 26,
+    "text": "DVR.2.2 1. Data Collection Cost - Cost incurred for P2"
+  },
+  {
+    "page": 127,
+    "line": 40,
+    "text": "DVR.2.3 Model P2"
+  },
+  {
+    "page": 128,
+    "line": 8,
+    "text": "DVR.2.4 1. Description of Data or Data Product P2"
+  },
+  {
+    "page": 129,
+    "line": 2,
+    "text": "Control Name Monitoring and Maintenance Control ID DVR.3"
+  },
+  {
+    "page": 129,
+    "line": 3,
+    "text": "Control As part of the Monitoring and Maintenance control, the Entity shall actively"
+  },
+  {
+    "page": 129,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 129,
+    "line": 16,
+    "text": "DVR.3.1 P3"
+  },
+  {
+    "page": 130,
+    "line": 2,
+    "text": "Control Name Performance Management Control ID DVR.4"
+  },
+  {
+    "page": 130,
+    "line": 3,
+    "text": "As part of the Performance Management control, the Entity establish key"
+  },
+  {
+    "page": 130,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 130,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 130,
+    "line": 20,
+    "text": "DVR.4.1 Realization revenue P2"
+  },
+  {
+    "page": 132,
+    "line": 3,
+    "text": "Open Data domain comprises of 5 controls and 10 specifications. This domain focuses on the organization’s data which could"
+  },
+  {
+    "page": 132,
+    "line": 8,
+    "text": "Control Plan Awareness Management Management Artifacts"
+  },
+  {
+    "page": 133,
+    "line": 1,
+    "text": "9.11.2. Controls and Specifications"
+  },
+  {
+    "page": 133,
+    "line": 3,
+    "text": "Control Name Plan Control ID OD.1"
+  },
+  {
+    "page": 133,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 133,
+    "line": 5,
+    "text": "As part of the Plan control, the Entity shall develop an Open Data Plan"
+  },
+  {
+    "page": 133,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 133,
+    "line": 18,
+    "text": "OD.1.1 P1"
+  },
+  {
+    "page": 134,
+    "line": 2,
+    "text": "Control Name Training and Awareness Control ID OD.2"
+  },
+  {
+    "page": 134,
+    "line": 3,
+    "text": "Control As part of the Training and Awareness control, the Entity shall plan awareness"
+  },
+  {
+    "page": 134,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 134,
+    "line": 13,
+    "text": "OD.2.1 include, at minimum, the following: P2"
+  },
+  {
+    "page": 135,
+    "line": 2,
+    "text": "Control Name Data Lifecycle Management Control ID OD.3"
+  },
+  {
+    "page": 135,
+    "line": 3,
+    "text": "Control As part of the Data Lifecycle Management control, the Entity shall identify,"
+  },
+  {
+    "page": 135,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 135,
+    "line": 17,
+    "text": "OD.3.1 published and maintained to their P1"
+  },
+  {
+    "page": 135,
+    "line": 34,
+    "text": "OD.3.2 P1"
+  },
+  {
+    "page": 136,
+    "line": 6,
+    "text": "OD.3.3 P1"
+  },
+  {
+    "page": 136,
+    "line": 11,
+    "text": "OD.3.4 P2"
+  },
+  {
+    "page": 136,
+    "line": 20,
+    "text": "OD.3.5 P1"
+  },
+  {
+    "page": 136,
+    "line": 33,
+    "text": "OD.3.6 P3"
+  },
+  {
+    "page": 138,
+    "line": 2,
+    "text": "Control Name Performance Management Control ID OD.4"
+  },
+  {
+    "page": 138,
+    "line": 3,
+    "text": "Control As part of the Performance Management control, the Entity shall establish Key"
+  },
+  {
+    "page": 138,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 138,
+    "line": 15,
+    "text": "OD.4.1 Dataset P2"
+  },
+  {
+    "page": 139,
+    "line": 2,
+    "text": "Control Name Artifacts Control ID OD.5"
+  },
+  {
+    "page": 139,
+    "line": 3,
+    "text": "Control As part of the Artifacts control, the Entity document in a register the list of all"
+  },
+  {
+    "page": 139,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 139,
+    "line": 11,
+    "text": "OD.5.1 with a log of open data activities conducted and P2"
+  },
+  {
+    "page": 141,
+    "line": 3,
+    "text": "Freedom of Information domain comprises of 4 controls and 9 specifications. This domain focuses on providing Saudi citizens"
+  },
+  {
+    "page": 141,
+    "line": 9,
+    "text": "Control Plan Awareness Management Artifacts"
+  },
+  {
+    "page": 142,
+    "line": 1,
+    "text": "9.12.2. Controls and Specifications"
+  },
+  {
+    "page": 142,
+    "line": 3,
+    "text": "Control Name Plan Control ID FOI.1"
+  },
+  {
+    "page": 142,
+    "line": 4,
+    "text": "As part of the Plan control, the Entity shall develop a Freedom of Information"
+  },
+  {
+    "page": 142,
+    "line": 5,
+    "text": "Control"
+  },
+  {
+    "page": 142,
+    "line": 10,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 142,
+    "line": 22,
+    "text": "FOI.1.1 FOI Plan maintaining the Entity's compliance with P1"
+  },
+  {
+    "page": 143,
+    "line": 2,
+    "text": "Control Name Training and Awareness Control ID FOI.2"
+  },
+  {
+    "page": 143,
+    "line": 3,
+    "text": "As part of the Training and Awareness control, the Entity shall launch"
+  },
+  {
+    "page": 143,
+    "line": 4,
+    "text": "Control awareness campaigns to promote and enhance the culture of transparency and"
+  },
+  {
+    "page": 143,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 143,
+    "line": 19,
+    "text": "FOI.2.1 P2"
+  },
+  {
+    "page": 144,
+    "line": 2,
+    "text": "Control Name Data Lifecycle Management Control ID FOI.3"
+  },
+  {
+    "page": 144,
+    "line": 3,
+    "text": "As part of the Data Lifecycle Management control, the Entity shall design and"
+  },
+  {
+    "page": 144,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 144,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 144,
+    "line": 15,
+    "text": "FOI.3.1 P1"
+  },
+  {
+    "page": 144,
+    "line": 31,
+    "text": "FOI.3.2 Process P1"
+  },
+  {
+    "page": 145,
+    "line": 24,
+    "text": "FOI.3.3 P3"
+  },
+  {
+    "page": 146,
+    "line": 18,
+    "text": "FOI.3.4 P1"
+  },
+  {
+    "page": 146,
+    "line": 32,
+    "text": "FOI.3.5 Fees P2"
+  },
+  {
+    "page": 147,
+    "line": 9,
+    "text": "FOI.3.6 should be taken with a notification to the P2"
+  },
+  {
+    "page": 148,
+    "line": 2,
+    "text": "Control Name Artifacts Control ID FOI.4"
+  },
+  {
+    "page": 148,
+    "line": 3,
+    "text": "As part of the Artifacts control, the Entity document in a register compliance"
+  },
+  {
+    "page": 148,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 148,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 148,
+    "line": 19,
+    "text": "FOI.4.1 FOI Register Records P3"
+  },
+  {
+    "page": 150,
+    "line": 3,
+    "text": "Data Classification domain comprises of 5 controls and 10 specifications. This domain involves the categorization of data so"
+  },
+  {
+    "page": 150,
+    "line": 10,
+    "text": "Control Plan"
+  },
+  {
+    "page": 150,
+    "line": 11,
+    "text": "Controls Process Management"
+  },
+  {
+    "page": 150,
+    "line": 13,
+    "text": "Control"
+  },
+  {
+    "page": 151,
+    "line": 1,
+    "text": "9.13.2. Controls and Specifications"
+  },
+  {
+    "page": 151,
+    "line": 3,
+    "text": "Control Name Plan Control ID DC.1"
+  },
+  {
+    "page": 151,
+    "line": 4,
+    "text": "Control As part of the Plan control, the Entity shall develop a Data Classification Plan"
+  },
+  {
+    "page": 151,
+    "line": 7,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 151,
+    "line": 17,
+    "text": "DC.1.1 Classification P1"
+  },
+  {
+    "page": 151,
+    "line": 28,
+    "text": "DC.1.2 Classification prioritization shall be a list of ranked datasets P1"
+  },
+  {
+    "page": 152,
+    "line": 2,
+    "text": "Control Name Classification Controls Control ID DC.2"
+  },
+  {
+    "page": 152,
+    "line": 3,
+    "text": "Control As part of the Classification Controls, the Entity shall assign data handling and"
+  },
+  {
+    "page": 152,
+    "line": 4,
+    "text": "Description protection controls to datasets and artifacts"
+  },
+  {
+    "page": 152,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 152,
+    "line": 9,
+    "text": "protection controls to datasets and artifacts"
+  },
+  {
+    "page": 152,
+    "line": 12,
+    "text": "Controls handling, processing, sharing and disposal of by NCA"
+  },
+  {
+    "page": 153,
+    "line": 2,
+    "text": "Control Name Classification Process Control ID DC.3"
+  },
+  {
+    "page": 153,
+    "line": 3,
+    "text": "As part of the Classification Process control, the Entity shall identify all datasets"
+  },
+  {
+    "page": 153,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 153,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 153,
+    "line": 16,
+    "text": "DC.3.1 Management Office's Data Classification P1"
+  },
+  {
+    "page": 153,
+    "line": 32,
+    "text": "DC.3.2 P1"
+  },
+  {
+    "page": 154,
+    "line": 21,
+    "text": "DC.3.3 for Low Impact negative impacts P1"
+  },
+  {
+    "page": 154,
+    "line": 35,
+    "text": "DC.3.4 Classification most appropriate ones as part of the Data P2"
+  },
+  {
+    "page": 154,
+    "line": 42,
+    "text": "DC.3.5 Classification metadata registered within the Data Catalog P2"
+  },
+  {
+    "page": 156,
+    "line": 2,
+    "text": "Control Name Performance Management Control ID DC.4"
+  },
+  {
+    "page": 156,
+    "line": 3,
+    "text": "As part of the Performance Management control, the Entity shall establish key"
+  },
+  {
+    "page": 156,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 156,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 156,
+    "line": 18,
+    "text": "DC.4.1 Classificatio P2"
+  },
+  {
+    "page": 157,
+    "line": 2,
+    "text": "Control Name Artifacts Control ID DC.5"
+  },
+  {
+    "page": 157,
+    "line": 3,
+    "text": "As part of the Artifacts control, the Entity document in a register the list of all its"
+  },
+  {
+    "page": 157,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 157,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 157,
+    "line": 20,
+    "text": "DC.5.1 P2"
+  },
+  {
+    "page": 159,
+    "line": 3,
+    "text": "Personal Data Protection domain comprises of 5 controls and 10 specifications. This domain focuses on protection of a subject’s"
+  },
+  {
+    "page": 159,
+    "line": 8,
+    "text": "Control Plan"
+  },
+  {
+    "page": 159,
+    "line": 13,
+    "text": "Control"
+  },
+  {
+    "page": 160,
+    "line": 1,
+    "text": "9.14.2. Controls and Specifications"
+  },
+  {
+    "page": 160,
+    "line": 3,
+    "text": "Control Name Plan Control ID PDP.1"
+  },
+  {
+    "page": 160,
+    "line": 4,
+    "text": "As part of the Plan control, the Entity shall conduct an Initial Personal Data"
+  },
+  {
+    "page": 160,
+    "line": 5,
+    "text": "Control"
+  },
+  {
+    "page": 160,
+    "line": 10,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 160,
+    "line": 21,
+    "text": "PDP.1.1 Protection P1"
+  },
+  {
+    "page": 160,
+    "line": 39,
+    "text": "PDP.1.2 Protection Regulations. The plan shall include, P1"
+  },
+  {
+    "page": 162,
+    "line": 2,
+    "text": "Control Name Training and Awareness Control ID PDP.2"
+  },
+  {
+    "page": 162,
+    "line": 3,
+    "text": "As part of the Training and Awareness control, the Entity shall conduct a"
+  },
+  {
+    "page": 162,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 162,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 162,
+    "line": 21,
+    "text": "PDP.2.1 P1"
+  },
+  {
+    "page": 163,
+    "line": 2,
+    "text": "Control Name Data Breach Control ID PDP.3"
+  },
+  {
+    "page": 163,
+    "line": 3,
+    "text": "Control As part of the Data Breach control, the Entity shall establish a Data Breach"
+  },
+  {
+    "page": 163,
+    "line": 6,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 163,
+    "line": 8,
+    "text": "The Entity's Data Controller or Data Processor"
+  },
+  {
+    "page": 163,
+    "line": 14,
+    "text": "PDP.3.1 National Data Management Office's Personal P2"
+  },
+  {
+    "page": 163,
+    "line": 31,
+    "text": "PDP.3.2 Management Controller with the Regulatory Authority P1"
+  },
+  {
+    "page": 163,
+    "line": 34,
+    "text": "incident by the Data Controller and / or Data"
+  },
+  {
+    "page": 165,
+    "line": 2,
+    "text": "Control Name Data Lifecycle Management Control ID PDP.4"
+  },
+  {
+    "page": 165,
+    "line": 3,
+    "text": "As part of the Data Lifecycle Management control, the Entity shall establish a"
+  },
+  {
+    "page": 165,
+    "line": 4,
+    "text": "Control"
+  },
+  {
+    "page": 165,
+    "line": 9,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 165,
+    "line": 24,
+    "text": "PDP.4.1 P2"
+  },
+  {
+    "page": 165,
+    "line": 30,
+    "text": "4. In the event the Data Controller maintains a"
+  },
+  {
+    "page": 165,
+    "line": 41,
+    "text": "PDP.4.2 P2"
+  },
+  {
+    "page": 166,
+    "line": 23,
+    "text": "PDP.4.3 P3"
+  },
+  {
+    "page": 166,
+    "line": 37,
+    "text": "PDP.4.4 Monitoring with a notification to the Regulatory Authority P2"
+  },
+  {
+    "page": 168,
+    "line": 4,
+    "text": "Control Name Artifacts Control ID PDP.5"
+  },
+  {
+    "page": 168,
+    "line": 5,
+    "text": "Control As part of the Artefacts control, the Entity shall document in a register its"
+  },
+  {
+    "page": 168,
+    "line": 8,
+    "text": "Control Specification Priority"
+  },
+  {
+    "page": 168,
+    "line": 15,
+    "text": "PDP.5.1 P2"
+  },
+  {
+    "page": 170,
+    "line": 4,
+    "text": "from a regulatory and operational perspective. Hence, the controls and corresponding"
+  },
+  {
+    "page": 170,
+    "line": 10,
+    "text": "As such, the Data Security controls highlighted below provide a viewpoint to entities of the Data"
+  },
+  {
+    "page": 170,
+    "line": 12,
+    "text": "controls will be conducted by NCA, as per their requirements and methodology, and not as part"
+  },
+  {
+    "page": 170,
+    "line": 14,
+    "text": "Below is an overview of these Data Security and Protection controls:"
+  },
+  {
+    "page": 170,
+    "line": 15,
+    "text": "9.15.1. Controls"
+  },
+  {
+    "page": 170,
+    "line": 17,
+    "text": "Control Name Information Security Governance"
+  },
+  {
+    "page": 170,
+    "line": 19,
+    "text": "Control"
+  },
+  {
+    "page": 170,
+    "line": 23,
+    "text": "Control Name Information Security Architecture"
+  },
+  {
+    "page": 170,
+    "line": 24,
+    "text": "Control The fundamental concepts and properties of the Entity's systems to enable the"
+  },
+  {
+    "page": 170,
+    "line": 26,
+    "text": "Control Name Information Systems Design, Development and Testing"
+  },
+  {
+    "page": 170,
+    "line": 27,
+    "text": "Control Minimum Security provisions to include as components into a system during its"
+  },
+  {
+    "page": 171,
+    "line": 1,
+    "text": "Control Name Identity and Access Management"
+  },
+  {
+    "page": 171,
+    "line": 2,
+    "text": "Control Identity of users and information systems requesting to have access to the"
+  },
+  {
+    "page": 171,
+    "line": 4,
+    "text": "Control Name Third Party Supplier Security"
+  },
+  {
+    "page": 171,
+    "line": 5,
+    "text": "Control Obligations to ensure Information Security requirements are reflected in the"
+  },
+  {
+    "page": 171,
+    "line": 7,
+    "text": "Control Name Information Security Training, Awareness and Communication"
+  },
+  {
+    "page": 171,
+    "line": 9,
+    "text": "Control"
+  },
+  {
+    "page": 171,
+    "line": 13,
+    "text": "Control Name Information Asset Management"
+  },
+  {
+    "page": 171,
+    "line": 14,
+    "text": "Control Documented and maintained inventory of information assets containing critical"
+  },
+  {
+    "page": 171,
+    "line": 16,
+    "text": "Control Name Information Security Operations Management"
+  },
+  {
+    "page": 171,
+    "line": 17,
+    "text": "Control Operational duties by the Entity and its personnel to monitor, assess and protect"
+  },
+  {
+    "page": 171,
+    "line": 19,
+    "text": "Control Name Information Security Incident Management"
+  },
+  {
+    "page": 171,
+    "line": 21,
+    "text": "Control"
+  },
+  {
+    "page": 171,
+    "line": 25,
+    "text": "Control Name Information Security Risk Management"
+  },
+  {
+    "page": 171,
+    "line": 27,
+    "text": "Control"
+  },
+  {
+    "page": 172,
+    "line": 1,
+    "text": "Control Name Information Systems Continuity Management"
+  },
+  {
+    "page": 172,
+    "line": 2,
+    "text": "Control A framework for preserving and maintaining the confidentiality, integrity and"
+  }
+]
