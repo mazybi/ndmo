@@ -1961,9 +1961,12 @@ def show_templates_forms():
             st.write("✅ Compliance tracking")
             st.write("✅ Signatures section")
             st.write("✅ Professional layout")
-        
-        st.markdown("---")
-        st.markdown("### 📄 Use Case Brief")
+    
+    # ============================================
+    # USE CASE BRIEF SECTION
+    # ============================================
+    elif template_category == "📋 Use Case Brief":
+        st.subheader("📋 Use Case Brief")
         st.info("Create a simple Use Case Brief template with product image support")
         
         use_case_action = st.radio(
