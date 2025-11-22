@@ -161,12 +161,12 @@ def create_gap_analysis_report():
     story.append(Paragraph("Report Information", heading_style))
     
     report_data = [
-        [Paragraph('<b>Report Date:</b>', field_label_style), datetime.now().strftime("%Y-%m-%d"), 
-         Paragraph('<b>Entity Name:</b>', field_label_style), '_________________________________'],
-        [Paragraph('<b>Assessment Period:</b>', field_label_style), 'From: ___________  To: ___________', 
-         Paragraph('<b>Department:</b>', field_label_style), '_________________________________'],
-        [Paragraph('<b>Prepared By:</b>', field_label_style), '_________________________________', 
-         Paragraph('<b>Review Date:</b>', field_label_style), '_________________________________']
+        [Paragraph('<b>Report Date:</b>', field_label_style), Paragraph(datetime.now().strftime("%Y-%m-%d"), normal_style), 
+         Paragraph('<b>Entity Name:</b>', field_label_style), Paragraph('_________________________________', normal_style)],
+        [Paragraph('<b>Assessment Period:</b>', field_label_style), Paragraph('From: ___________  To: ___________', normal_style), 
+         Paragraph('<b>Department:</b>', field_label_style), Paragraph('_________________________________', normal_style)],
+        [Paragraph('<b>Prepared By:</b>', field_label_style), Paragraph('_________________________________', normal_style), 
+         Paragraph('<b>Review Date:</b>', field_label_style), Paragraph('_________________________________', normal_style)]
     ]
     
     report_table = Table(report_data, colWidths=[1.9*inch, 2.3*inch, 1.9*inch, 2.3*inch])
@@ -190,12 +190,12 @@ def create_gap_analysis_report():
     story.append(Paragraph("Gap Summary", heading_style))
     
     summary_data = [
-        [Paragraph('<b>Total Controls Assessed:</b>', field_label_style), '___________', 
-         Paragraph('<b>Compliant Controls:</b>', field_label_style), '___________'],
-        [Paragraph('<b>Partially Compliant:</b>', field_label_style), '___________', 
-         Paragraph('<b>Non-Compliant:</b>', field_label_style), '___________'],
-        [Paragraph('<b>Gap Percentage:</b>', field_label_style), '___________ %', 
-         Paragraph('<b>Priority Gaps (P1):</b>', field_label_style), '___________']
+        [Paragraph('<b>Total Controls Assessed:</b>', field_label_style), Paragraph('___________', normal_style), 
+         Paragraph('<b>Compliant Controls:</b>', field_label_style), Paragraph('___________', normal_style)],
+        [Paragraph('<b>Partially Compliant:</b>', field_label_style), Paragraph('___________', normal_style), 
+         Paragraph('<b>Non-Compliant:</b>', field_label_style), Paragraph('___________', normal_style)],
+        [Paragraph('<b>Gap Percentage:</b>', field_label_style), Paragraph('___________ %', normal_style), 
+         Paragraph('<b>Priority Gaps (P1):</b>', field_label_style), Paragraph('___________', normal_style)]
     ]
     
     summary_table = Table(summary_data, colWidths=[2.6*inch, 2.6*inch, 2.1*inch, 1.1*inch])
@@ -225,12 +225,12 @@ def create_gap_analysis_report():
     
     for i in range(8):
         gap_data.append([
-            '___________',
-            '___________',
-            '___________',
-            '☐ P1 ☐ P2 ☐ P3',
-            '☐ High ☐ Medium ☐ Low',
-            '☐ Open ☐ In Progress ☐ Closed'
+            Paragraph('___________', normal_style),
+            Paragraph('___________', normal_style),
+            Paragraph('___________', normal_style),
+            Paragraph('☐ P1 ☐ P2 ☐ P3', normal_style),
+            Paragraph('☐ High ☐ Medium ☐ Low', normal_style),
+            Paragraph('☐ Open ☐ In Progress ☐ Closed', normal_style)
         ])
     
     gap_table = Table(gap_data, colWidths=[1.2*inch, 1.2*inch, 2.2*inch, 1.1*inch, 1.1*inch, 1.1*inch])
@@ -255,15 +255,15 @@ def create_gap_analysis_report():
     story.append(Paragraph("Remediation Plan", heading_style))
     
     remediation_data = [
-        [Paragraph('<b>Gap ID:</b>', field_label_style), '___________', 
-         Paragraph('<b>Target Date:</b>', field_label_style), '___________'],
-        [Paragraph('<b>Remediation Action:</b>', field_label_style), '', '', ''],
-        ['', '', '', ''],
-        ['', '', '', ''],
-        [Paragraph('<b>Responsible Party:</b>', field_label_style), '___________', 
-         Paragraph('<b>Status:</b>', field_label_style), '☐ Not Started ☐ In Progress ☐ Completed'],
-        [Paragraph('<b>Resources Required:</b>', field_label_style), '', '', ''],
-        ['', '', '', '']
+        [Paragraph('<b>Gap ID:</b>', field_label_style), Paragraph('___________', normal_style), 
+         Paragraph('<b>Target Date:</b>', field_label_style), Paragraph('___________', normal_style)],
+        [Paragraph('<b>Remediation Action:</b>', field_label_style), Paragraph('', normal_style), Paragraph('', normal_style), Paragraph('', normal_style)],
+        [Paragraph('', normal_style), Paragraph('', normal_style), Paragraph('', normal_style), Paragraph('', normal_style)],
+        [Paragraph('', normal_style), Paragraph('', normal_style), Paragraph('', normal_style), Paragraph('', normal_style)],
+        [Paragraph('<b>Responsible Party:</b>', field_label_style), Paragraph('___________', normal_style), 
+         Paragraph('<b>Status:</b>', field_label_style), Paragraph('☐ Not Started ☐ In Progress ☐ Completed', normal_style)],
+        [Paragraph('<b>Resources Required:</b>', field_label_style), Paragraph('', normal_style), Paragraph('', normal_style), Paragraph('', normal_style)],
+        [Paragraph('', normal_style), Paragraph('', normal_style), Paragraph('', normal_style), Paragraph('', normal_style)]
     ]
     
     remediation_table = Table(remediation_data, colWidths=[2.2*inch, 2.3*inch, 1.6*inch, 2.3*inch])
@@ -288,12 +288,12 @@ def create_gap_analysis_report():
     # Signatures
     story.append(Paragraph("Approval", heading_style))
     signature_data = [
-        [Paragraph('<b>Prepared By:</b>', field_label_style), '_________________________', 
-         Paragraph('<b>Date:</b>', field_label_style), '_________________________'],
-        [Paragraph('<b>Reviewed By:</b>', field_label_style), '_________________________', 
-         Paragraph('<b>Date:</b>', field_label_style), '_________________________'],
-        [Paragraph('<b>Approved By:</b>', field_label_style), '_________________________', 
-         Paragraph('<b>Date:</b>', field_label_style), '_________________________']
+        [Paragraph('<b>Prepared By:</b>', field_label_style), Paragraph('_________________________', normal_style), 
+         Paragraph('<b>Date:</b>', field_label_style), Paragraph('_________________________', normal_style)],
+        [Paragraph('<b>Reviewed By:</b>', field_label_style), Paragraph('_________________________', normal_style), 
+         Paragraph('<b>Date:</b>', field_label_style), Paragraph('_________________________', normal_style)],
+        [Paragraph('<b>Approved By:</b>', field_label_style), Paragraph('_________________________', normal_style), 
+         Paragraph('<b>Date:</b>', field_label_style), Paragraph('_________________________', normal_style)]
     ]
     
     sig_table = Table(signature_data, colWidths=[1.6*inch, 2.1*inch, 1.6*inch, 2.1*inch])
@@ -416,12 +416,12 @@ def create_risk_assessment_report():
     story.append(Paragraph("Report Information", heading_style))
     
     report_data = [
-        [Paragraph('<b>Report Date:</b>', field_label_style), datetime.now().strftime("%Y-%m-%d"), 
-         Paragraph('<b>Entity Name:</b>', field_label_style), '_________________________________'],
-        [Paragraph('<b>Assessment Date:</b>', field_label_style), '___________', 
-         Paragraph('<b>Department:</b>', field_label_style), '_________________________________'],
-        [Paragraph('<b>Assessed By:</b>', field_label_style), '_________________________________', 
-         Paragraph('<b>Review Date:</b>', field_label_style), '___________']
+        [Paragraph('<b>Report Date:</b>', field_label_style), Paragraph(datetime.now().strftime("%Y-%m-%d"), normal_style), 
+         Paragraph('<b>Entity Name:</b>', field_label_style), Paragraph('_________________________________', normal_style)],
+        [Paragraph('<b>Assessment Date:</b>', field_label_style), Paragraph('___________', normal_style), 
+         Paragraph('<b>Department:</b>', field_label_style), Paragraph('_________________________________', normal_style)],
+        [Paragraph('<b>Assessed By:</b>', field_label_style), Paragraph('_________________________________', normal_style), 
+         Paragraph('<b>Review Date:</b>', field_label_style), Paragraph('___________', normal_style)]
     ]
     
     report_table = Table(report_data, colWidths=[1.9*inch, 2.3*inch, 1.9*inch, 2.3*inch])
@@ -445,12 +445,12 @@ def create_risk_assessment_report():
     story.append(Paragraph("Risk Summary", heading_style))
     
     summary_data = [
-        [Paragraph('<b>Total Risks Identified:</b>', field_label_style), '___________', 
-         Paragraph('<b>High Risk:</b>', field_label_style), '___________'],
-        [Paragraph('<b>Medium Risk:</b>', field_label_style), '___________', 
-         Paragraph('<b>Low Risk:</b>', field_label_style), '___________'],
-        [Paragraph('<b>Risk Score (Average):</b>', field_label_style), '___________', 
-         Paragraph('<b>Mitigation Status:</b>', field_label_style), '☐ Planned ☐ In Progress ☐ Completed']
+        [Paragraph('<b>Total Risks Identified:</b>', field_label_style), Paragraph('___________', normal_style), 
+         Paragraph('<b>High Risk:</b>', field_label_style), Paragraph('___________', normal_style)],
+        [Paragraph('<b>Medium Risk:</b>', field_label_style), Paragraph('___________', normal_style), 
+         Paragraph('<b>Low Risk:</b>', field_label_style), Paragraph('___________', normal_style)],
+        [Paragraph('<b>Risk Score (Average):</b>', field_label_style), Paragraph('___________', normal_style), 
+         Paragraph('<b>Mitigation Status:</b>', field_label_style), Paragraph('☐ Planned ☐ In Progress ☐ Completed', normal_style)]
     ]
     
     summary_table = Table(summary_data, colWidths=[2.6*inch, 2.6*inch, 2.1*inch, 1.1*inch])
@@ -480,12 +480,12 @@ def create_risk_assessment_report():
     
     for i in range(8):
         risk_data.append([
-            '___________',
-            '___________',
-            '☐ High ☐ Medium ☐ Low',
-            '☐ High ☐ Medium ☐ Low',
-            '☐ High ☐ Medium ☐ Low',
-            '☐ Yes ☐ No'
+            Paragraph('___________', normal_style),
+            Paragraph('___________', normal_style),
+            Paragraph('☐ High ☐ Medium ☐ Low', normal_style),
+            Paragraph('☐ High ☐ Medium ☐ Low', normal_style),
+            Paragraph('☐ High ☐ Medium ☐ Low', normal_style),
+            Paragraph('☐ Yes ☐ No', normal_style)
         ])
     
     risk_table = Table(risk_data, colWidths=[1.1*inch, 2.5*inch, 1.1*inch, 1.1*inch, 1.1*inch, 1.1*inch])
@@ -510,13 +510,13 @@ def create_risk_assessment_report():
     story.append(Paragraph("Mitigation Plan", heading_style))
     
     mitigation_data = [
-        [Paragraph('<b>Risk ID:</b>', field_label_style), '___________', 
-         Paragraph('<b>Target Date:</b>', field_label_style), '___________'],
-        [Paragraph('<b>Mitigation Action:</b>', field_label_style), '', '', ''],
-        ['', '', '', ''],
-        ['', '', '', ''],
-        [Paragraph('<b>Responsible Party:</b>', field_label_style), '___________', 
-         Paragraph('<b>Status:</b>', field_label_style), '☐ Not Started ☐ In Progress ☐ Completed']
+        [Paragraph('<b>Risk ID:</b>', field_label_style), Paragraph('___________', normal_style), 
+         Paragraph('<b>Target Date:</b>', field_label_style), Paragraph('___________', normal_style)],
+        [Paragraph('<b>Mitigation Action:</b>', field_label_style), Paragraph('', normal_style), Paragraph('', normal_style), Paragraph('', normal_style)],
+        [Paragraph('', normal_style), Paragraph('', normal_style), Paragraph('', normal_style), Paragraph('', normal_style)],
+        [Paragraph('', normal_style), Paragraph('', normal_style), Paragraph('', normal_style), Paragraph('', normal_style)],
+        [Paragraph('<b>Responsible Party:</b>', field_label_style), Paragraph('___________', normal_style), 
+         Paragraph('<b>Status:</b>', field_label_style), Paragraph('☐ Not Started ☐ In Progress ☐ Completed', normal_style)]
     ]
     
     mitigation_table = Table(mitigation_data, colWidths=[2.2*inch, 2.3*inch, 1.6*inch, 2.3*inch])
@@ -540,12 +540,12 @@ def create_risk_assessment_report():
     # Signatures
     story.append(Paragraph("Approval", heading_style))
     signature_data = [
-        [Paragraph('<b>Assessed By:</b>', field_label_style), '_________________________', 
-         Paragraph('<b>Date:</b>', field_label_style), '_________________________'],
-        [Paragraph('<b>Reviewed By:</b>', field_label_style), '_________________________', 
-         Paragraph('<b>Date:</b>', field_label_style), '_________________________'],
-        [Paragraph('<b>Approved By:</b>', field_label_style), '_________________________', 
-         Paragraph('<b>Date:</b>', field_label_style), '_________________________']
+        [Paragraph('<b>Assessed By:</b>', field_label_style), Paragraph('_________________________', normal_style), 
+         Paragraph('<b>Date:</b>', field_label_style), Paragraph('_________________________', normal_style)],
+        [Paragraph('<b>Reviewed By:</b>', field_label_style), Paragraph('_________________________', normal_style), 
+         Paragraph('<b>Date:</b>', field_label_style), Paragraph('_________________________', normal_style)],
+        [Paragraph('<b>Approved By:</b>', field_label_style), Paragraph('_________________________', normal_style), 
+         Paragraph('<b>Date:</b>', field_label_style), Paragraph('_________________________', normal_style)]
     ]
     
     sig_table = Table(signature_data, colWidths=[1.6*inch, 2.1*inch, 1.6*inch, 2.1*inch])

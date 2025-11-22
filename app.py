@@ -1909,53 +1909,444 @@ def show_templates_forms():
             horizontal=True
         )
         
-        if tech_report_type == "Gap Analysis Report":
-            st.markdown("### Gap Analysis Report")
-            st.write("Use this template to document gaps between current state and NDMO/NDI requirements")
-            
-            if st.button("📥 Generate & Download Gap Analysis Report", use_container_width=True):
-                try:
-                    from technical_reports import create_gap_analysis_report
-                    filename = create_gap_analysis_report()
-                    
-                    with open(filename, 'rb') as f:
-                        st.download_button(
-                            "📥 Download Gap Analysis Report (PDF)",
-                            f.read(),
-                            file_name=f"Gap_Analysis_Report_{datetime.now().strftime('%Y%m%d')}.pdf",
-                            mime="application/pdf",
-                            use_container_width=True
-                        )
-                    st.success("✅ Gap Analysis Report template generated!")
-                except Exception as e:
-                    st.error(f"Error: {str(e)}")
-                    import traceback
-                    with st.expander("Error Details"):
-                        st.code(traceback.format_exc())
+        action_type = st.radio(
+            "Choose Action",
+            ["Fill Form Directly", "Download Template"],
+            horizontal=True
+        )
         
-        elif tech_report_type == "Risk Assessment Report":
-            st.markdown("### Risk Assessment Report")
-            st.write("Use this template to assess and document risks related to data governance compliance")
-            
-            if st.button("📥 Generate & Download Risk Assessment Report", use_container_width=True):
-                try:
-                    from technical_reports import create_risk_assessment_report
-                    filename = create_risk_assessment_report()
+        if action_type == "Fill Form Directly":
+            if tech_report_type == "Gap Analysis Report":
+                st.markdown("### Fill Gap Analysis Report")
+                
+                from fillable_technical_reports import load_technical_report_form, save_technical_report_form, generate_pdf_from_technical_report
+                saved_data = load_technical_report_form("gap_analysis")
+                
+                with st.form("gap_analysis_form", clear_on_submit=False):
+                    st.markdown("#### Report Information")
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        report_date = st.date_input("Report Date *", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('report_date') else datetime.strptime(saved_data['data'].get('report_date'), "%Y-%m-%d").date())
+                        entity_name = st.text_input("Entity Name *", value=saved_data['data'].get('entity_name', '') if saved_data and saved_data.get('data') else '')
+                        period_from = st.date_input("Assessment Period From *", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('period_from') else datetime.strptime(saved_data['data'].get('period_from'), "%Y-%m-%d").date())
+                        department = st.text_input("Department", value=saved_data['data'].get('department', '') if saved_data and saved_data.get('data') else '')
+                    with col2:
+                        period_to = st.date_input("Assessment Period To *", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('period_to') else datetime.strptime(saved_data['data'].get('period_to'), "%Y-%m-%d").date())
+                        prepared_by = st.text_input("Prepared By *", value=saved_data['data'].get('prepared_by', '') if saved_data and saved_data.get('data') else '')
+                        review_date = st.date_input("Review Date", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('review_date') else datetime.strptime(saved_data['data'].get('review_date'), "%Y-%m-%d").date())
                     
-                    with open(filename, 'rb') as f:
-                        st.download_button(
-                            "📥 Download Risk Assessment Report (PDF)",
-                            f.read(),
-                            file_name=f"Risk_Assessment_Report_{datetime.now().strftime('%Y%m%d')}.pdf",
-                            mime="application/pdf",
-                            use_container_width=True
-                        )
-                    st.success("✅ Risk Assessment Report template generated!")
-                except Exception as e:
-                    st.error(f"Error: {str(e)}")
-                    import traceback
-                    with st.expander("Error Details"):
-                        st.code(traceback.format_exc())
+                    st.markdown("---")
+                    st.markdown("#### Gap Summary")
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        total_controls = st.number_input("Total Controls Assessed", min_value=0, value=saved_data['data'].get('total_controls', 0) if saved_data and saved_data.get('data') else 0)
+                        compliant_controls = st.number_input("Compliant Controls", min_value=0, value=saved_data['data'].get('compliant_controls', 0) if saved_data and saved_data.get('data') else 0)
+                    with col2:
+                        partially_compliant = st.number_input("Partially Compliant", min_value=0, value=saved_data['data'].get('partially_compliant', 0) if saved_data and saved_data.get('data') else 0)
+                        non_compliant = st.number_input("Non-Compliant", min_value=0, value=saved_data['data'].get('non_compliant', 0) if saved_data and saved_data.get('data') else 0)
+                    with col3:
+                        gap_percentage = st.number_input("Gap Percentage", min_value=0.0, max_value=100.0, value=float(saved_data['data'].get('gap_percentage', 0)) if saved_data and saved_data.get('data') else 0.0)
+                        priority_gaps = st.number_input("Priority Gaps (P1)", min_value=0, value=saved_data['data'].get('priority_gaps', 0) if saved_data and saved_data.get('data') else 0)
+                    
+                    st.markdown("---")
+                    st.markdown("#### Gap Details")
+                    gap_details = st.text_area("Gap Details", value=saved_data['data'].get('gap_details', '') if saved_data and saved_data.get('data') else '', height=150)
+                    
+                    st.markdown("---")
+                    st.markdown("#### Remediation Plan")
+                    remediation_plan = st.text_area("Remediation Plan", value=saved_data['data'].get('remediation_plan', '') if saved_data and saved_data.get('data') else '', height=150)
+                    
+                    st.markdown("---")
+                    st.markdown("#### Signatures")
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        prepared_by_signature = st.text_input("Prepared By", value=saved_data['data'].get('prepared_by_signature', '') if saved_data and saved_data.get('data') else '')
+                        prepared_date = st.date_input("Prepared Date", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('prepared_date') else datetime.strptime(saved_data['data'].get('prepared_date'), "%Y-%m-%d").date())
+                        reviewed_by = st.text_input("Reviewed By", value=saved_data['data'].get('reviewed_by', '') if saved_data and saved_data.get('data') else '')
+                        reviewed_date = st.date_input("Reviewed Date", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('reviewed_date') else datetime.strptime(saved_data['data'].get('reviewed_date'), "%Y-%m-%d").date())
+                    with col2:
+                        approved_by = st.text_input("Approved By", value=saved_data['data'].get('approved_by', '') if saved_data and saved_data.get('data') else '')
+                        approved_date = st.date_input("Approved Date", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('approved_date') else datetime.strptime(saved_data['data'].get('approved_date'), "%Y-%m-%d").date())
+                    
+                    submitted = st.form_submit_button("💾 Save & Generate PDF", use_container_width=True)
+                    
+                    if submitted:
+                        if not entity_name or not prepared_by or not period_from or not period_to:
+                            st.error("Please fill in all required fields (marked with *)")
+                        else:
+                            form_data = {
+                                'report_date': report_date.strftime("%Y-%m-%d"),
+                                'entity_name': entity_name,
+                                'period_from': period_from.strftime("%Y-%m-%d"),
+                                'period_to': period_to.strftime("%Y-%m-%d"),
+                                'department': department,
+                                'prepared_by': prepared_by,
+                                'review_date': review_date.strftime("%Y-%m-%d"),
+                                'total_controls': total_controls,
+                                'compliant_controls': compliant_controls,
+                                'partially_compliant': partially_compliant,
+                                'non_compliant': non_compliant,
+                                'gap_percentage': gap_percentage,
+                                'priority_gaps': priority_gaps,
+                                'gap_details': gap_details,
+                                'remediation_plan': remediation_plan,
+                                'prepared_by_signature': prepared_by_signature,
+                                'prepared_date': prepared_date.strftime("%Y-%m-%d"),
+                                'reviewed_by': reviewed_by,
+                                'reviewed_date': reviewed_date.strftime("%Y-%m-%d"),
+                                'approved_by': approved_by,
+                                'approved_date': approved_date.strftime("%Y-%m-%d")
+                            }
+                            
+                            progress_bar = st.progress(0)
+                            status_text = st.empty()
+                            
+                            try:
+                                status_text.info("💾 Saving form data...")
+                                progress_bar.progress(20)
+                                
+                                json_file = save_technical_report_form("gap_analysis", form_data)
+                                
+                                status_text.info("📄 Generating PDF...")
+                                progress_bar.progress(50)
+                                
+                                pdf_file = generate_pdf_from_technical_report("gap_analysis", form_data)
+                                
+                                progress_bar.progress(80)
+                                status_text.info("✅ Finalizing...")
+                                
+                                st.session_state['gap_analysis_json'] = json_file
+                                st.session_state['gap_analysis_pdf'] = pdf_file
+                                
+                                progress_bar.progress(100)
+                                status_text.success("✅ Form saved successfully! Scroll down to download.")
+                                progress_bar.empty()
+                            except Exception as e:
+                                progress_bar.empty()
+                                status_text.error(f"❌ Error: {str(e)}")
+                                import traceback
+                                with st.expander("Error Details"):
+                                    st.code(traceback.format_exc())
+                
+                # Download buttons outside form
+                if 'gap_analysis_json' in st.session_state and 'gap_analysis_pdf' in st.session_state:
+                    st.markdown("---")
+                    st.markdown("### 📥 Download Files")
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        try:
+                            with open(st.session_state['gap_analysis_json'], 'rb') as f:
+                                json_data = f.read()
+                                st.download_button(
+                                    "📥 Download JSON", 
+                                    json_data, 
+                                    file_name=f"Gap_Analysis_Report_{datetime.now().strftime('%Y%m%d')}.json",
+                                    mime="application/json",
+                                    key="download_json_gap",
+                                    use_container_width=True
+                                )
+                        except Exception as e:
+                            st.error(f"Error loading JSON: {str(e)}")
+                    with col2:
+                        try:
+                            with open(st.session_state['gap_analysis_pdf'], 'rb') as f:
+                                pdf_data = f.read()
+                                st.download_button(
+                                    "📥 Download PDF", 
+                                    pdf_data,
+                                    file_name=f"Gap_Analysis_Report_{datetime.now().strftime('%Y%m%d')}.pdf",
+                                    mime="application/pdf",
+                                    key="download_pdf_gap",
+                                    use_container_width=True
+                                )
+                        except Exception as e:
+                            st.error(f"Error loading PDF: {str(e)}")
+            
+            elif tech_report_type == "Risk Assessment Report":
+                st.markdown("### Fill Risk Assessment Report")
+                
+                from fillable_technical_reports import load_technical_report_form, save_technical_report_form, generate_pdf_from_technical_report
+                saved_data = load_technical_report_form("risk_assessment")
+                
+                with st.form("risk_assessment_form", clear_on_submit=False):
+                    st.markdown("#### Report Information")
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        report_date = st.date_input("Report Date *", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('report_date') else datetime.strptime(saved_data['data'].get('report_date'), "%Y-%m-%d").date())
+                        entity_name = st.text_input("Entity Name *", value=saved_data['data'].get('entity_name', '') if saved_data and saved_data.get('data') else '')
+                        assessment_date = st.date_input("Assessment Date *", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('assessment_date') else datetime.strptime(saved_data['data'].get('assessment_date'), "%Y-%m-%d").date())
+                        department = st.text_input("Department", value=saved_data['data'].get('department', '') if saved_data and saved_data.get('data') else '')
+                    with col2:
+                        assessed_by = st.text_input("Assessed By *", value=saved_data['data'].get('assessed_by', '') if saved_data and saved_data.get('data') else '')
+                        review_date = st.date_input("Review Date", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('review_date') else datetime.strptime(saved_data['data'].get('review_date'), "%Y-%m-%d").date())
+                    
+                    st.markdown("---")
+                    st.markdown("#### Risk Summary")
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        total_risks = st.number_input("Total Risks Identified", min_value=0, value=saved_data['data'].get('total_risks', 0) if saved_data and saved_data.get('data') else 0)
+                        high_risk = st.number_input("High Risk", min_value=0, value=saved_data['data'].get('high_risk', 0) if saved_data and saved_data.get('data') else 0)
+                    with col2:
+                        medium_risk = st.number_input("Medium Risk", min_value=0, value=saved_data['data'].get('medium_risk', 0) if saved_data and saved_data.get('data') else 0)
+                        low_risk = st.number_input("Low Risk", min_value=0, value=saved_data['data'].get('low_risk', 0) if saved_data and saved_data.get('data') else 0)
+                    with col3:
+                        risk_score = st.number_input("Risk Score (Average)", min_value=0.0, max_value=10.0, value=float(saved_data['data'].get('risk_score', 0)) if saved_data and saved_data.get('data') else 0.0)
+                        mitigation_status = st.selectbox("Mitigation Status", ["Planned", "In Progress", "Completed"], 
+                                                         index=0 if not saved_data or not saved_data.get('data') or saved_data['data'].get('mitigation_status') not in ["Planned", "In Progress", "Completed"] else ["Planned", "In Progress", "Completed"].index(saved_data['data'].get('mitigation_status')))
+                    
+                    st.markdown("---")
+                    st.markdown("#### Risk Details")
+                    risk_details = st.text_area("Risk Details", value=saved_data['data'].get('risk_details', '') if saved_data and saved_data.get('data') else '', height=150)
+                    
+                    st.markdown("---")
+                    st.markdown("#### Mitigation Plan")
+                    mitigation_plan = st.text_area("Mitigation Plan", value=saved_data['data'].get('mitigation_plan', '') if saved_data and saved_data.get('data') else '', height=150)
+                    
+                    st.markdown("---")
+                    st.markdown("#### Signatures")
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        assessed_by_signature = st.text_input("Assessed By", value=saved_data['data'].get('assessed_by_signature', '') if saved_data and saved_data.get('data') else '')
+                        assessed_date = st.date_input("Assessed Date", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('assessed_date') else datetime.strptime(saved_data['data'].get('assessed_date'), "%Y-%m-%d").date())
+                        reviewed_by = st.text_input("Reviewed By", value=saved_data['data'].get('reviewed_by', '') if saved_data and saved_data.get('data') else '')
+                        reviewed_date = st.date_input("Reviewed Date", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('reviewed_date') else datetime.strptime(saved_data['data'].get('reviewed_date'), "%Y-%m-%d").date())
+                    with col2:
+                        approved_by = st.text_input("Approved By", value=saved_data['data'].get('approved_by', '') if saved_data and saved_data.get('data') else '')
+                        approved_date = st.date_input("Approved Date", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('approved_date') else datetime.strptime(saved_data['data'].get('approved_date'), "%Y-%m-%d").date())
+                    
+                    submitted = st.form_submit_button("💾 Save & Generate PDF", use_container_width=True)
+                    
+                    if submitted:
+                        if not entity_name or not assessed_by or not assessment_date:
+                            st.error("Please fill in all required fields (marked with *)")
+                        else:
+                            form_data = {
+                                'report_date': report_date.strftime("%Y-%m-%d"),
+                                'entity_name': entity_name,
+                                'assessment_date': assessment_date.strftime("%Y-%m-%d"),
+                                'department': department,
+                                'assessed_by': assessed_by,
+                                'review_date': review_date.strftime("%Y-%m-%d"),
+                                'total_risks': total_risks,
+                                'high_risk': high_risk,
+                                'medium_risk': medium_risk,
+                                'low_risk': low_risk,
+                                'risk_score': risk_score,
+                                'mitigation_status': mitigation_status,
+                                'risk_details': risk_details,
+                                'mitigation_plan': mitigation_plan,
+                                'assessed_by_signature': assessed_by_signature,
+                                'assessed_date': assessed_date.strftime("%Y-%m-%d"),
+                                'reviewed_by': reviewed_by,
+                                'reviewed_date': reviewed_date.strftime("%Y-%m-%d"),
+                                'approved_by': approved_by,
+                                'approved_date': approved_date.strftime("%Y-%m-%d")
+                            }
+                            
+                            progress_bar = st.progress(0)
+                            status_text = st.empty()
+                            
+                            try:
+                                status_text.info("💾 Saving form data...")
+                                progress_bar.progress(20)
+                                
+                                json_file = save_technical_report_form("risk_assessment", form_data)
+                                
+                                status_text.info("📄 Generating PDF...")
+                                progress_bar.progress(50)
+                                
+                                pdf_file = generate_pdf_from_technical_report("risk_assessment", form_data)
+                                
+                                progress_bar.progress(80)
+                                status_text.info("✅ Finalizing...")
+                                
+                                st.session_state['risk_assessment_json'] = json_file
+                                st.session_state['risk_assessment_pdf'] = pdf_file
+                                
+                                progress_bar.progress(100)
+                                status_text.success("✅ Form saved successfully! Scroll down to download.")
+                                progress_bar.empty()
+                            except Exception as e:
+                                progress_bar.empty()
+                                status_text.error(f"❌ Error: {str(e)}")
+                                import traceback
+                                with st.expander("Error Details"):
+                                    st.code(traceback.format_exc())
+                
+                # Download buttons outside form
+                if 'risk_assessment_json' in st.session_state and 'risk_assessment_pdf' in st.session_state:
+                    st.markdown("---")
+                    st.markdown("### 📥 Download Files")
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        try:
+                            with open(st.session_state['risk_assessment_json'], 'rb') as f:
+                                json_data = f.read()
+                                st.download_button(
+                                    "📥 Download JSON", 
+                                    json_data, 
+                                    file_name=f"Risk_Assessment_Report_{datetime.now().strftime('%Y%m%d')}.json",
+                                    mime="application/json",
+                                    key="download_json_risk",
+                                    use_container_width=True
+                                )
+                        except Exception as e:
+                            st.error(f"Error loading JSON: {str(e)}")
+                    with col2:
+                        try:
+                            with open(st.session_state['risk_assessment_pdf'], 'rb') as f:
+                                pdf_data = f.read()
+                                st.download_button(
+                                    "📥 Download PDF", 
+                                    pdf_data,
+                                    file_name=f"Risk_Assessment_Report_{datetime.now().strftime('%Y%m%d')}.pdf",
+                                    mime="application/pdf",
+                                    key="download_pdf_risk",
+                                    use_container_width=True
+                                )
+                        except Exception as e:
+                            st.error(f"Error loading PDF: {str(e)}")
+        
+        else:  # Download Template
+            if tech_report_type == "Gap Analysis Report":
+                st.markdown("### Download Gap Analysis Report Template")
+                st.write("Download a blank template to fill manually")
+                
+                template_key = 'gap_analysis_template_file'
+                
+                if template_key not in st.session_state:
+                    generate_button = st.button("📥 Generate & Download Gap Analysis Report Template", use_container_width=True, key="generate_gap_btn")
+                    if generate_button:
+                        progress_bar = st.progress(0)
+                        status_text = st.empty()
+                        try:
+                            status_text.info("🔄 Starting PDF generation...")
+                            progress_bar.progress(10)
+                            
+                            from technical_reports import create_gap_analysis_report
+                            
+                            status_text.info("📄 Creating template structure...")
+                            progress_bar.progress(30)
+                            
+                            status_text.info("🖼️ Adding logo and formatting...")
+                            progress_bar.progress(60)
+                            
+                            filename = create_gap_analysis_report()
+                            
+                            progress_bar.progress(90)
+                            status_text.info("💾 Saving file...")
+                            
+                            st.session_state[template_key] = filename
+                            st.session_state['gap_template_generated'] = True
+                            
+                            progress_bar.progress(100)
+                            status_text.success("✅ Template generated successfully! Download button appears below.")
+                            progress_bar.empty()
+                        except Exception as e:
+                            progress_bar.empty()
+                            status_text.error(f"❌ Error: {str(e)}")
+                            import traceback
+                            with st.expander("Error Details"):
+                                st.code(traceback.format_exc())
+                
+                if template_key in st.session_state:
+                    try:
+                        with open(st.session_state[template_key], 'rb') as f:
+                            pdf_data = f.read()
+                            st.markdown("---")
+                            st.markdown("### 📥 Download Template")
+                            st.download_button(
+                                "📥 Download Gap Analysis Report (PDF)",
+                                pdf_data,
+                                file_name=f"Gap_Analysis_Report_{datetime.now().strftime('%Y%m%d')}.pdf",
+                                mime="application/pdf",
+                                use_container_width=True,
+                                key="download_template_gap"
+                            )
+                            if st.button("🔄 Generate New Template", use_container_width=True, key="regenerate_gap_btn"):
+                                if template_key in st.session_state:
+                                    try:
+                                        os.remove(st.session_state[template_key])
+                                    except:
+                                        pass
+                                del st.session_state[template_key]
+                                if 'gap_template_generated' in st.session_state:
+                                    del st.session_state['gap_template_generated']
+                                st.success("🔄 Template cleared. Click 'Generate & Download' to create a new one.")
+                    except Exception as e:
+                        st.error(f"Error loading template: {str(e)}")
+                        if template_key in st.session_state:
+                            del st.session_state[template_key]
+            
+            elif tech_report_type == "Risk Assessment Report":
+                st.markdown("### Download Risk Assessment Report Template")
+                st.write("Download a blank template to fill manually")
+                
+                template_key = 'risk_assessment_template_file'
+                
+                if template_key not in st.session_state:
+                    generate_button = st.button("📥 Generate & Download Risk Assessment Report Template", use_container_width=True, key="generate_risk_btn")
+                    if generate_button:
+                        progress_bar = st.progress(0)
+                        status_text = st.empty()
+                        try:
+                            status_text.info("🔄 Starting PDF generation...")
+                            progress_bar.progress(10)
+                            
+                            from technical_reports import create_risk_assessment_report
+                            
+                            status_text.info("📄 Creating template structure...")
+                            progress_bar.progress(30)
+                            
+                            status_text.info("🖼️ Adding logo and formatting...")
+                            progress_bar.progress(60)
+                            
+                            filename = create_risk_assessment_report()
+                            
+                            progress_bar.progress(90)
+                            status_text.info("💾 Saving file...")
+                            
+                            st.session_state[template_key] = filename
+                            st.session_state['risk_template_generated'] = True
+                            
+                            progress_bar.progress(100)
+                            status_text.success("✅ Template generated successfully! Download button appears below.")
+                            progress_bar.empty()
+                        except Exception as e:
+                            progress_bar.empty()
+                            status_text.error(f"❌ Error: {str(e)}")
+                            import traceback
+                            with st.expander("Error Details"):
+                                st.code(traceback.format_exc())
+                
+                if template_key in st.session_state:
+                    try:
+                        with open(st.session_state[template_key], 'rb') as f:
+                            pdf_data = f.read()
+                            st.markdown("---")
+                            st.markdown("### 📥 Download Template")
+                            st.download_button(
+                                "📥 Download Risk Assessment Report (PDF)",
+                                pdf_data,
+                                file_name=f"Risk_Assessment_Report_{datetime.now().strftime('%Y%m%d')}.pdf",
+                                mime="application/pdf",
+                                use_container_width=True,
+                                key="download_template_risk"
+                            )
+                            if st.button("🔄 Generate New Template", use_container_width=True, key="regenerate_risk_btn"):
+                                if template_key in st.session_state:
+                                    try:
+                                        os.remove(st.session_state[template_key])
+                                    except:
+                                        pass
+                                del st.session_state[template_key]
+                                if 'risk_template_generated' in st.session_state:
+                                    del st.session_state['risk_template_generated']
+                                st.success("🔄 Template cleared. Click 'Generate & Download' to create a new one.")
+                    except Exception as e:
+                        st.error(f"Error loading template: {str(e)}")
+                        if template_key in st.session_state:
+                            del st.session_state[template_key]
         
     with tab5:
         st.subheader("📥 Download Professional Templates")
