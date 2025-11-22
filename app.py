@@ -922,10 +922,29 @@ def show_templates_forms():
     st.header("📋 Templates & Forms")
     st.markdown("Fill out NDMO/NDI templates directly in the tool and save them")
     
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Fill Evidence Form", "Fill Compliance Report", "Fill Audit Checklist", "Download Professional Templates", "Saved Forms"])
+    # Main categories
+    template_category = st.selectbox(
+        "Select Template Category",
+        ["📄 Evidence Forms", "📊 Compliance Reports", "✅ Audit Checklists", "🤝 Data Share Templates", "📈 Technical Reports", "📋 Use Case Brief"],
+        key="template_category_select"
+    )
     
-    with tab1:
-        st.subheader("Fill Evidence Collection Form")
+    # ============================================
+    # EVIDENCE FORMS SECTION
+    # ============================================
+    if template_category == "📄 Evidence Forms":
+        st.subheader("📄 Evidence Forms")
+        st.info("Fill out evidence collection forms directly or download professional templates")
+        
+        evidence_action = st.radio(
+            "Choose Action",
+            ["Fill Form Directly", "Download Professional Template"],
+            horizontal=True,
+            key="evidence_action"
+        )
+        
+        if evidence_action == "Fill Form Directly":
+            st.subheader("Fill Evidence Collection Form")
         st.info("Fill out the evidence collection form directly in the tool")
         
         all_controls = get_all_controls()
@@ -1115,8 +1134,6 @@ def show_templates_forms():
                             st.session_state.compliance_data[control_id]['score'] = compliance_score
                             st.session_state.compliance_data[control_id]['last_updated'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
-    with tab2:
-        st.subheader("Fill Compliance Report")
         st.info("Fill out the compliance report directly in the tool")
         
         all_controls = get_all_controls()
@@ -1269,8 +1286,6 @@ def show_templates_forms():
                                 key=f"download_pdf_compliance_{control_id}"
                             )
     
-    with tab3:
-        st.subheader("Fill Audit Checklist")
         st.info("Fill out the audit checklist directly in the tool")
         
         all_controls = get_all_controls()
@@ -1434,9 +1449,6 @@ def show_templates_forms():
                                 key=f"download_pdf_audit_{control_id}"
                             )
     
-    with tab4:
-        st.subheader("📊 Data Share Templates")
-        st.info("Fill out data sharing forms directly or download templates")
         
         action_type = st.radio(
             "Choose Action",
