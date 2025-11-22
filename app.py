@@ -748,25 +748,34 @@ def show_controls_specifications():
                     score = st.session_state.compliance_data[ctrl_id].get('score', 0)
                     st.metric("Compliance Score", f"{score}%")
 
-def update_control_status(ctrl_id):
-    status_key = f"status_{ctrl_id}"
-    # The value is stored in session state with the key
-    if status_key in st.session_state:
-        new_status = st.session_state[status_key]
-        if ctrl_id not in st.session_state.compliance_data:
-            st.session_state.compliance_data[ctrl_id] = {}
-        st.session_state.compliance_data[ctrl_id]['status'] = new_status
-        st.session_state.compliance_data[ctrl_id]['last_updated'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
-        # Auto-calculate score based on status
-        if new_status == 'Compliant':
-            st.session_state.compliance_data[ctrl_id]['score'] = 100
-        elif new_status == 'In Progress':
-            st.session_state.compliance_data[ctrl_id]['score'] = 50
-        elif new_status == 'Non-Compliant':
-            st.session_state.compliance_data[ctrl_id]['score'] = 0
+def update_control_status(ctrl_id, new_status=None):
+    # If new_status is not provided, try to get it from session state
+    if new_status is None:
+        status_key = f"status_{ctrl_id}"
+        if status_key in st.session_state:
+            new_status = st.session_state[status_key]
         else:
-            st.session_state.compliance_data[ctrl_id]['score'] = 0
+            # Try to get from selectbox key
+            selectbox_key = f"status_select_{ctrl_id}"
+            if selectbox_key in st.session_state:
+                new_status = st.session_state[selectbox_key]
+            else:
+                return  # No status to update
+    
+    if ctrl_id not in st.session_state.compliance_data:
+        st.session_state.compliance_data[ctrl_id] = {}
+    st.session_state.compliance_data[ctrl_id]['status'] = new_status
+    st.session_state.compliance_data[ctrl_id]['last_updated'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    # Auto-calculate score based on status
+    if new_status == 'Compliant':
+        st.session_state.compliance_data[ctrl_id]['score'] = 100
+    elif new_status == 'In Progress':
+        st.session_state.compliance_data[ctrl_id]['score'] = 50
+    elif new_status == 'Non-Compliant':
+        st.session_state.compliance_data[ctrl_id]['score'] = 0
+    else:
+        st.session_state.compliance_data[ctrl_id]['score'] = 0
 
 def show_specifications_by_priority(key_suffix=""):
     st.header("📋 Specifications by Priority")
