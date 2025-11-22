@@ -2009,9 +2009,27 @@ def show_templates_forms():
                 
                 # Check if saved image exists
                 saved_image_path = None
-                if saved_data and saved_data.get('image_path') and os.path.exists(saved_data['image_path']):
-                    st.image(saved_data['image_path'], caption="Saved Product Image", width=400)
-                    saved_image_path = saved_data['image_path']
+                if saved_data and saved_data.get('image_path'):
+                    try:
+                        if os.path.exists(saved_data['image_path']):
+                            st.image(saved_data['image_path'], caption="Saved Product Image", width=400)
+                            saved_image_path = saved_data['image_path']
+                    except:
+                        pass
+                
+                st.markdown("---")
+                st.markdown("#### Capabilities & Features")
+                capabilities = st.text_area("Capabilities", value=saved_data['data'].get('capabilities', '') if saved_data and saved_data.get('data') else '', height=100, help="Describe the key capabilities and features of the product/use case")
+                
+                st.markdown("---")
+                st.markdown("#### Links & Resources")
+                col1, col2 = st.columns(2)
+                with col1:
+                    documentation_link = st.text_input("Documentation Link", value=saved_data['data'].get('documentation_link', '') if saved_data and saved_data.get('data') else '', help="URL to product documentation")
+                    demo_link = st.text_input("Demo Link", value=saved_data['data'].get('demo_link', '') if saved_data and saved_data.get('data') else '', help="URL to product demo")
+                with col2:
+                    repository_link = st.text_input("Repository Link", value=saved_data['data'].get('repository_link', '') if saved_data and saved_data.get('data') else '', help="URL to code repository")
+                    additional_links = st.text_area("Additional Links", value=saved_data['data'].get('additional_links', '') if saved_data and saved_data.get('data') else '', height=60, help="Additional relevant links (one per line)")
                 
                 st.markdown("---")
                 st.markdown("#### Technical Details")
@@ -2057,10 +2075,14 @@ def show_templates_forms():
                         # Save uploaded image
                         image_path = saved_image_path
                         if product_image:
-                            os.makedirs("uploaded_images", exist_ok=True)
-                            image_path = f"uploaded_images/product_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{product_image.name}"
-                            with open(image_path, "wb") as f:
-                                f.write(product_image.getbuffer())
+                            try:
+                                os.makedirs("uploaded_images", exist_ok=True)
+                                image_path = f"uploaded_images/product_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{product_image.name}"
+                                with open(image_path, "wb") as f:
+                                    f.write(product_image.getbuffer())
+                            except Exception as e:
+                                st.warning(f"Could not save image: {str(e)}")
+                                image_path = None
                         
                         form_data = {
                             'use_case_id': use_case_id,
@@ -2072,6 +2094,11 @@ def show_templates_forms():
                             'description': description,
                             'business_objective': business_objective,
                             'stakeholders': stakeholders,
+                            'capabilities': capabilities,
+                            'documentation_link': documentation_link,
+                            'demo_link': demo_link,
+                            'repository_link': repository_link,
+                            'additional_links': additional_links,
                             'data_sources': data_sources,
                             'data_types': data_types,
                             'data_volume': data_volume,

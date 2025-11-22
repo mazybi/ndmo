@@ -211,6 +211,43 @@ def generate_pdf_from_use_case_brief(form_data, image_path=None):
     
     story.append(Spacer(1, 0.2*inch))
     
+    # Capabilities & Features
+    story.append(Paragraph("Capabilities & Features", heading_style))
+    capabilities = form_data.get('capabilities', '')
+    if capabilities:
+        story.append(Paragraph(capabilities, normal_style))
+        story.append(Spacer(1, 0.15*inch))
+    
+    # Links & Resources
+    story.append(Paragraph("Links & Resources", heading_style))
+    links_info = []
+    if form_data.get('documentation_link'):
+        links_info.append([Paragraph('<b>Documentation:</b>', field_label_style), Paragraph(str(form_data.get('documentation_link', '')), normal_style)])
+    if form_data.get('demo_link'):
+        links_info.append([Paragraph('<b>Demo:</b>', field_label_style), Paragraph(str(form_data.get('demo_link', '')), normal_style)])
+    if form_data.get('repository_link'):
+        links_info.append([Paragraph('<b>Repository:</b>', field_label_style), Paragraph(str(form_data.get('repository_link', '')), normal_style)])
+    if form_data.get('additional_links'):
+        links_info.append([Paragraph('<b>Additional Links:</b>', field_label_style), Paragraph(str(form_data.get('additional_links', '')), normal_style)])
+    
+    if links_info:
+        links_table = Table(links_info, colWidths=[2.5*inch, 4.6*inch])
+        links_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f8f9fa')),
+            ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+            ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+            ('ALIGN', (1, 0), (1, -1), 'LEFT'),
+            ('FONTSIZE', (0, 0), (-1, -1), 11),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
+            ('TOPPADDING', (0, 0), (-1, -1), 10),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#dee2e6')),
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('LEFTPADDING', (0, 0), (-1, -1), 8),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 8)
+        ]))
+        story.append(links_table)
+        story.append(Spacer(1, 0.2*inch))
+    
     # Technical Details
     story.append(Paragraph("Technical Details", heading_style))
     

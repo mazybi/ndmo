@@ -166,6 +166,54 @@ def create_use_case_brief_template():
     story.append(Paragraph("(Image placeholder - Upload product image in fillable form)", normal_style))
     story.append(Spacer(1, 0.2*inch))
     
+    # Capabilities & Features
+    story.append(Paragraph("Capabilities & Features", heading_style))
+    capabilities_data = [
+        [Paragraph('<b>Capabilities:</b>', field_label_style), Paragraph('', normal_style)],
+        [Paragraph('', normal_style), Paragraph('', normal_style)],
+        [Paragraph('', normal_style), Paragraph('', normal_style)]
+    ]
+    capabilities_table = Table(capabilities_data, colWidths=[2.2*inch, 4.9*inch])
+    capabilities_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f8f9fa')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTSIZE', (0, 0), (-1, -1), 11),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
+        ('TOPPADDING', (0, 0), (-1, -1), 10),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#dee2e6')),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('SPAN', (1, 0), (1, 2)),
+        ('LEFTPADDING', (0, 0), (-1, -1), 10),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 10)
+    ]))
+    story.append(capabilities_table)
+    story.append(Spacer(1, 0.2*inch))
+    
+    # Links & Resources
+    story.append(Paragraph("Links & Resources", heading_style))
+    links_data = [
+        [Paragraph('<b>Documentation Link:</b>', field_label_style), Paragraph('_________________________________', normal_style)],
+        [Paragraph('<b>Demo Link:</b>', field_label_style), Paragraph('_________________________________', normal_style)],
+        [Paragraph('<b>Repository Link:</b>', field_label_style), Paragraph('_________________________________', normal_style)],
+        [Paragraph('<b>Additional Links:</b>', field_label_style), Paragraph('_________________________________', normal_style)]
+    ]
+    links_table = Table(links_data, colWidths=[2.2*inch, 4.9*inch])
+    links_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f8f9fa')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTSIZE', (0, 0), (-1, -1), 11),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
+        ('TOPPADDING', (0, 0), (-1, -1), 10),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#dee2e6')),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 10),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 10)
+    ]))
+    story.append(links_table)
+    story.append(Spacer(1, 0.2*inch))
+    
     # Technical Details
     story.append(Paragraph("Technical Details", heading_style))
     
