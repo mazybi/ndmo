@@ -493,13 +493,13 @@ def main():
         st.markdown("---")
         col1, col2 = st.columns(2)
         with col1:
-            show_specifications_by_priority()
+            show_specifications_by_priority(key_suffix="_tab2")
         with col2:
             st.subheader("NDI Controls")
             st.info("NDI Controls information will be displayed here")
     
     with tab3:
-        show_specifications_by_priority()
+        show_specifications_by_priority(key_suffix="_tab3")
         st.markdown("---")
         show_calculations_scoring()
         st.markdown("---")
@@ -768,7 +768,7 @@ def update_control_status(ctrl_id):
         else:
             st.session_state.compliance_data[ctrl_id]['score'] = 0
 
-def show_specifications_by_priority():
+def show_specifications_by_priority(key_suffix=""):
     st.header("📋 Specifications by Priority")
     
     try:
@@ -797,7 +797,7 @@ def show_specifications_by_priority():
         selected_priority = st.selectbox(
             "Filter by Priority",
             ["All", "P1", "P2", "P3"],
-            key="filter_priority_specs"
+            key=f"filter_priority_specs{key_suffix}"
         )
         
         # Domain filter
@@ -805,7 +805,7 @@ def show_specifications_by_priority():
         selected_domain = st.selectbox(
             "Filter by Domain",
             domain_options,
-            key="filter_domain_specs"
+            key=f"filter_domain_specs{key_suffix}"
         )
         
         # Get specifications (prefer SANS data)
