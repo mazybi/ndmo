@@ -4,6 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
 import json
+import os
 from data_models import (
     get_all_controls,
     get_phases,
@@ -1533,29 +1534,48 @@ def show_templates_forms():
                                 'pia_status': pia_status
                             }
                             
-                            json_file = save_data_share_form("data_share_agreement", form_data)
-                            pdf_file = generate_pdf_from_data_share_form("data_share_agreement", form_data)
+                            with st.spinner("⏳ Saving form and generating PDF... Please wait..."):
+                                json_file = save_data_share_form("data_share_agreement", form_data)
+                                pdf_file = generate_pdf_from_data_share_form("data_share_agreement", form_data)
+                                
+                                st.session_state['data_share_agreement_json'] = json_file
+                                st.session_state['data_share_agreement_pdf'] = pdf_file
                             
-                            st.session_state['data_share_agreement_json'] = json_file
-                            st.session_state['data_share_agreement_pdf'] = pdf_file
-                            
-                            st.success("✅ Form saved successfully!")
+                            st.success("✅ Form saved successfully! Scroll down to download.")
                 
                 # Download buttons outside form
-                if 'data_share_agreement_json' in st.session_state:
+                if 'data_share_agreement_json' in st.session_state and 'data_share_agreement_pdf' in st.session_state:
+                    st.markdown("---")
+                    st.markdown("### 📥 Download Files")
                     col1, col2 = st.columns(2)
                     with col1:
-                        with open(st.session_state['data_share_agreement_json'], 'rb') as f:
-                            st.download_button("📥 Download JSON", f.read(), 
-                                              file_name=f"Data_Share_Agreement_{datetime.now().strftime('%Y%m%d')}.json",
-                                              mime="application/json",
-                                              key="download_json_agreement")
+                        try:
+                            with open(st.session_state['data_share_agreement_json'], 'rb') as f:
+                                json_data = f.read()
+                                st.download_button(
+                                    "📥 Download JSON", 
+                                    json_data, 
+                                    file_name=f"Data_Share_Agreement_{datetime.now().strftime('%Y%m%d')}.json",
+                                    mime="application/json",
+                                    key="download_json_agreement",
+                                    use_container_width=True
+                                )
+                        except Exception as e:
+                            st.error(f"Error loading JSON: {str(e)}")
                     with col2:
-                        with open(st.session_state['data_share_agreement_pdf'], 'rb') as f:
-                            st.download_button("📥 Download PDF", f.read(),
-                                              file_name=f"Data_Share_Agreement_{datetime.now().strftime('%Y%m%d')}.pdf",
-                                              mime="application/pdf",
-                                              key="download_pdf_agreement")
+                        try:
+                            with open(st.session_state['data_share_agreement_pdf'], 'rb') as f:
+                                pdf_data = f.read()
+                                st.download_button(
+                                    "📥 Download PDF", 
+                                    pdf_data,
+                                    file_name=f"Data_Share_Agreement_{datetime.now().strftime('%Y%m%d')}.pdf",
+                                    mime="application/pdf",
+                                    key="download_pdf_agreement",
+                                    use_container_width=True
+                                )
+                        except Exception as e:
+                            st.error(f"Error loading PDF: {str(e)}")
             
             elif data_share_type == "Data Sharing Report":
                 st.markdown("### Fill Data Sharing Report")
@@ -1637,78 +1657,141 @@ def show_templates_forms():
                                 'recommendations': recommendations
                             }
                             
-                            json_file = save_data_share_form("data_sharing_report", form_data)
-                            pdf_file = generate_pdf_from_data_share_form("data_sharing_report", form_data)
+                            with st.spinner("⏳ Saving form and generating PDF... Please wait..."):
+                                json_file = save_data_share_form("data_sharing_report", form_data)
+                                pdf_file = generate_pdf_from_data_share_form("data_sharing_report", form_data)
+                                
+                                st.session_state['data_sharing_report_json'] = json_file
+                                st.session_state['data_sharing_report_pdf'] = pdf_file
                             
-                            st.session_state['data_sharing_report_json'] = json_file
-                            st.session_state['data_sharing_report_pdf'] = pdf_file
-                            
-                            st.success("✅ Form saved successfully!")
+                            st.success("✅ Form saved successfully! Scroll down to download.")
                 
                 # Download buttons outside form
-                if 'data_sharing_report_json' in st.session_state:
+                if 'data_sharing_report_json' in st.session_state and 'data_sharing_report_pdf' in st.session_state:
+                    st.markdown("---")
+                    st.markdown("### 📥 Download Files")
                     col1, col2 = st.columns(2)
                     with col1:
-                        with open(st.session_state['data_sharing_report_json'], 'rb') as f:
-                            st.download_button("📥 Download JSON", f.read(),
-                                              file_name=f"Data_Sharing_Report_{datetime.now().strftime('%Y%m%d')}.json",
-                                              mime="application/json",
-                                              key="download_json_report")
+                        try:
+                            with open(st.session_state['data_sharing_report_json'], 'rb') as f:
+                                json_data = f.read()
+                                st.download_button(
+                                    "📥 Download JSON", 
+                                    json_data,
+                                    file_name=f"Data_Sharing_Report_{datetime.now().strftime('%Y%m%d')}.json",
+                                    mime="application/json",
+                                    key="download_json_report",
+                                    use_container_width=True
+                                )
+                        except Exception as e:
+                            st.error(f"Error loading JSON: {str(e)}")
                     with col2:
-                        with open(st.session_state['data_sharing_report_pdf'], 'rb') as f:
-                            st.download_button("📥 Download PDF", f.read(),
-                                              file_name=f"Data_Sharing_Report_{datetime.now().strftime('%Y%m%d')}.pdf",
-                                              mime="application/pdf",
-                                              key="download_pdf_report")
+                        try:
+                            with open(st.session_state['data_sharing_report_pdf'], 'rb') as f:
+                                pdf_data = f.read()
+                                st.download_button(
+                                    "📥 Download PDF", 
+                                    pdf_data,
+                                    file_name=f"Data_Sharing_Report_{datetime.now().strftime('%Y%m%d')}.pdf",
+                                    mime="application/pdf",
+                                    key="download_pdf_report",
+                                    use_container_width=True
+                                )
+                        except Exception as e:
+                            st.error(f"Error loading PDF: {str(e)}")
         
         else:  # Download Template
             if data_share_type == "Data Share Agreement":
                 st.markdown("### Download Data Share Agreement Template")
                 st.write("Download a blank template to fill manually")
                 
-                if st.button("📥 Generate & Download Data Share Agreement Template", use_container_width=True):
+                # Check if template already generated in session
+                template_key = 'data_share_agreement_template_file'
+                
+                if template_key not in st.session_state:
+                    if st.button("📥 Generate & Download Data Share Agreement Template", use_container_width=True):
+                        try:
+                            with st.spinner("⏳ Generating PDF template... Please wait..."):
+                                from data_share_templates import create_data_share_agreement_template
+                                filename = create_data_share_agreement_template()
+                                st.session_state[template_key] = filename
+                                st.rerun()
+                        except Exception as e:
+                            st.error(f"Error: {str(e)}")
+                            import traceback
+                            with st.expander("Error Details"):
+                                st.code(traceback.format_exc())
+                else:
+                    # Template already generated, show download button
                     try:
-                        from data_share_templates import create_data_share_agreement_template
-                        filename = create_data_share_agreement_template()
-                        
-                        with open(filename, 'rb') as f:
+                        with open(st.session_state[template_key], 'rb') as f:
+                            pdf_data = f.read()
                             st.download_button(
                                 "📥 Download Data Share Agreement (PDF)",
-                                f.read(),
+                                pdf_data,
                                 file_name=f"Data_Share_Agreement_{datetime.now().strftime('%Y%m%d')}.pdf",
                                 mime="application/pdf",
-                                use_container_width=True
+                                use_container_width=True,
+                                key="download_template_agreement"
                             )
-                        st.success("✅ Data Share Agreement template generated!")
+                        if st.button("🔄 Generate New Template", use_container_width=True):
+                            if template_key in st.session_state:
+                                try:
+                                    os.remove(st.session_state[template_key])
+                                except:
+                                    pass
+                            del st.session_state[template_key]
+                            st.rerun()
                     except Exception as e:
-                        st.error(f"Error: {str(e)}")
-                        import traceback
-                        with st.expander("Error Details"):
-                            st.code(traceback.format_exc())
+                        st.error(f"Error loading template: {str(e)}")
+                        if template_key in st.session_state:
+                            del st.session_state[template_key]
             
             elif data_share_type == "Data Sharing Report":
                 st.markdown("### Download Data Sharing Report Template")
                 st.write("Download a blank template to fill manually")
                 
-                if st.button("📥 Generate & Download Data Sharing Report Template", use_container_width=True):
+                # Check if template already generated in session
+                template_key = 'data_sharing_report_template_file'
+                
+                if template_key not in st.session_state:
+                    if st.button("📥 Generate & Download Data Sharing Report Template", use_container_width=True):
+                        try:
+                            with st.spinner("⏳ Generating PDF template... Please wait..."):
+                                from data_share_templates import create_data_sharing_report_template
+                                filename = create_data_sharing_report_template()
+                                st.session_state[template_key] = filename
+                                st.rerun()
+                        except Exception as e:
+                            st.error(f"Error: {str(e)}")
+                            import traceback
+                            with st.expander("Error Details"):
+                                st.code(traceback.format_exc())
+                else:
+                    # Template already generated, show download button
                     try:
-                        from data_share_templates import create_data_sharing_report_template
-                        filename = create_data_sharing_report_template()
-                        
-                        with open(filename, 'rb') as f:
+                        with open(st.session_state[template_key], 'rb') as f:
+                            pdf_data = f.read()
                             st.download_button(
                                 "📥 Download Data Sharing Report (PDF)",
-                                f.read(),
+                                pdf_data,
                                 file_name=f"Data_Sharing_Report_{datetime.now().strftime('%Y%m%d')}.pdf",
                                 mime="application/pdf",
-                                use_container_width=True
+                                use_container_width=True,
+                                key="download_template_report"
                             )
-                        st.success("✅ Data Sharing Report template generated!")
+                        if st.button("🔄 Generate New Template", use_container_width=True):
+                            if template_key in st.session_state:
+                                try:
+                                    os.remove(st.session_state[template_key])
+                                except:
+                                    pass
+                            del st.session_state[template_key]
+                            st.rerun()
                     except Exception as e:
-                        st.error(f"Error: {str(e)}")
-                        import traceback
-                        with st.expander("Error Details"):
-                            st.code(traceback.format_exc())
+                        st.error(f"Error loading template: {str(e)}")
+                        if template_key in st.session_state:
+                            del st.session_state[template_key]
         
         st.markdown("---")
         st.markdown("### ✨ Data Share Template Features")
