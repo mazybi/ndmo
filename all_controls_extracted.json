@@ -1,0 +1,367 @@
+{
+  "total_specifications": 44,
+  "p1_count": 21,
+  "p2_count": 20,
+  "p3_count": 3,
+  "unique_controls": 21,
+  "specifications": {
+    "P1": [
+      {
+        "spec_id": "DG.1.1",
+        "control_id": "DG.1",
+        "text": "business strategy as well as external",
+        "priority": "P1",
+        "domain": "Data Governance",
+        "page": 16
+      },
+      {
+        "spec_id": "DG.2.1",
+        "control_id": "DG.2",
+        "text": "related standards and policies currently",
+        "priority": "P1",
+        "domain": "Data Governance",
+        "page": 19
+      },
+      {
+        "spec_id": "DG.2.2",
+        "control_id": "DG.2",
+        "text": "Personal Data",
+        "priority": "P1",
+        "domain": "Data Governance",
+        "page": 19
+      },
+      {
+        "spec_id": "DG.4.1",
+        "control_id": "DG.4",
+        "text": "Management",
+        "priority": "P1",
+        "domain": "Data Governance",
+        "page": 22
+      },
+      {
+        "spec_id": "DG.4.2",
+        "control_id": "DG.4",
+        "text": "Management",
+        "priority": "P1",
+        "domain": "Data Governance",
+        "page": 22
+      },
+      {
+        "spec_id": "DG.4.3",
+        "control_id": "DG.4",
+        "text": "Officer's (CDO) responsibilities shall be",
+        "priority": "P1",
+        "domain": "Data Governance",
+        "page": 22
+      },
+      {
+        "spec_id": "DG.4.4",
+        "control_id": "DG.4",
+        "text": "Governance Officer's responsibilities shall be highlighted in a",
+        "priority": "P1",
+        "domain": "Data Governance",
+        "page": 22
+      },
+      {
+        "spec_id": "DG.4.5",
+        "control_id": "DG.4",
+        "text": "and",
+        "priority": "P1",
+        "domain": "Data Governance",
+        "page": 22
+      },
+      {
+        "spec_id": "DG.4.7",
+        "control_id": "DG.4",
+        "text": "Data Protection Officer's responsibilities shall be",
+        "priority": "P1",
+        "domain": "Data Governance",
+        "page": 23
+      },
+      {
+        "spec_id": "DG.4.8",
+        "control_id": "DG.4",
+        "text": "Data The Business Data Executive's responsibilities",
+        "priority": "P1",
+        "domain": "Data Governance",
+        "page": 23
+      },
+      {
+        "spec_id": "DG.4.9",
+        "control_id": "DG.4",
+        "text": "Data Data Steward responsibilities shall be highlighted",
+        "priority": "P1",
+        "domain": "Data Governance",
+        "page": 23
+      },
+      {
+        "spec_id": "DG.4.10",
+        "control_id": "DG.4",
+        "text": "Steward responsibilities shall be highlighted in a",
+        "priority": "P1",
+        "domain": "Data Governance",
+        "page": 23
+      },
+      {
+        "spec_id": "DQ.1.1",
+        "control_id": "DQ.1",
+        "text": "be a ranked list of data to be followed when",
+        "priority": "P1",
+        "domain": "Data Quality",
+        "page": 44
+      },
+      {
+        "spec_id": "DO.1.1",
+        "control_id": "DO.1",
+        "text": "Operations",
+        "priority": "P1",
+        "domain": "Data Operations",
+        "page": 55
+      },
+      {
+        "spec_id": "DO.1.3",
+        "control_id": "DO.1",
+        "text": "Systems",
+        "priority": "P1",
+        "domain": "Data Operations",
+        "page": 56
+      },
+      {
+        "spec_id": "DO.2.1",
+        "control_id": "DO.2",
+        "text": "Retention 2. Retention periods of data based on its type,",
+        "priority": "P1",
+        "domain": "Data Operations",
+        "page": 57
+      },
+      {
+        "spec_id": "OD.3.1",
+        "control_id": "OD.3",
+        "text": "published and maintained to their",
+        "priority": "P1",
+        "domain": "Open Data",
+        "page": 135
+      },
+      {
+        "spec_id": "DC.1.1",
+        "control_id": "DC.1",
+        "text": "Classification",
+        "priority": "P1",
+        "domain": "Data Classification",
+        "page": 151
+      },
+      {
+        "spec_id": "DC.1.2",
+        "control_id": "DC.1",
+        "text": "Classification prioritization shall be a list of ranked datasets",
+        "priority": "P1",
+        "domain": "Data Classification",
+        "page": 151
+      },
+      {
+        "spec_id": "DC.3.1",
+        "control_id": "DC.3",
+        "text": "Management Office's Data Classification",
+        "priority": "P1",
+        "domain": "Data Classification",
+        "page": 153
+      },
+      {
+        "spec_id": "DC.3.3",
+        "control_id": "DC.3",
+        "text": "for Low Impact negative impacts",
+        "priority": "P1",
+        "domain": "Data Classification",
+        "page": 154
+      }
+    ],
+    "P2": [
+      {
+        "spec_id": "DG.5.1",
+        "control_id": "DG.5",
+        "text": "compliance audits",
+        "priority": "P2",
+        "domain": "Data Governance",
+        "page": 25
+      },
+      {
+        "spec_id": "DG.5.2",
+        "control_id": "DG.5",
+        "text": "Audit 2. Clearly articulated findings with supporting",
+        "priority": "P2",
+        "domain": "Data Governance",
+        "page": 25
+      },
+      {
+        "spec_id": "DG.6.1",
+        "control_id": "DG.6",
+        "text": "Periodic Plan",
+        "priority": "P2",
+        "domain": "Data Governance",
+        "page": 27
+      },
+      {
+        "spec_id": "DG.6.2",
+        "control_id": "DG.6",
+        "text": "Communications",
+        "priority": "P2",
+        "domain": "Data Governance",
+        "page": 27
+      },
+      {
+        "spec_id": "DG.7.1",
+        "control_id": "DG.7",
+        "text": "Governance",
+        "priority": "P2",
+        "domain": "Data Governance",
+        "page": 29
+      },
+      {
+        "spec_id": "DG.8.1",
+        "control_id": "DG.8",
+        "text": "approved data governance decisions along with",
+        "priority": "P2",
+        "domain": "Data Governance",
+        "page": 30
+      },
+      {
+        "spec_id": "DG.8.3",
+        "control_id": "DG.8",
+        "text": "control for data management documents and",
+        "priority": "P2",
+        "domain": "Data Governance",
+        "page": 30
+      },
+      {
+        "spec_id": "DQ.2.1",
+        "control_id": "DQ.2",
+        "text": "Rules",
+        "priority": "P2",
+        "domain": "Data Quality",
+        "page": 46
+      },
+      {
+        "spec_id": "DQ.2.3",
+        "control_id": "DQ.2",
+        "text": "Issues 1c. Definition of the options for resolving the",
+        "priority": "P2",
+        "domain": "Data Quality",
+        "page": 47
+      },
+      {
+        "spec_id": "DO.1.4",
+        "control_id": "DO.1",
+        "text": "Technology 2. Availability of resources skilled in the",
+        "priority": "P2",
+        "domain": "Data Operations",
+        "page": 56
+      },
+      {
+        "spec_id": "DO.3.2",
+        "control_id": "DO.3",
+        "text": "Access",
+        "priority": "P2",
+        "domain": "Data Operations",
+        "page": 58
+      },
+      {
+        "spec_id": "DO.3.3",
+        "control_id": "DO.3",
+        "text": "Configuration 1. Configuration identification - identification and",
+        "priority": "P2",
+        "domain": "Data Operations",
+        "page": 58
+      },
+      {
+        "spec_id": "DO.3.5",
+        "control_id": "DO.3",
+        "text": "limited to) the following:",
+        "priority": "P2",
+        "domain": "Data Operations",
+        "page": 59
+      },
+      {
+        "spec_id": "DO.4.3",
+        "control_id": "DO.4",
+        "text": "Data Access 1. Change request initiating the process",
+        "priority": "P2",
+        "domain": "Data Operations",
+        "page": 61
+      },
+      {
+        "spec_id": "OD.2.1",
+        "control_id": "OD.2",
+        "text": "include, at minimum, the following:",
+        "priority": "P2",
+        "domain": "Open Data",
+        "page": 134
+      },
+      {
+        "spec_id": "OD.4.1",
+        "control_id": "OD.4",
+        "text": "Dataset",
+        "priority": "P2",
+        "domain": "Open Data",
+        "page": 138
+      },
+      {
+        "spec_id": "OD.5.1",
+        "control_id": "OD.5",
+        "text": "with a log of open data activities conducted and",
+        "priority": "P2",
+        "domain": "Open Data",
+        "page": 139
+      },
+      {
+        "spec_id": "DC.3.4",
+        "control_id": "DC.3",
+        "text": "Classification most appropriate ones as part of the Data",
+        "priority": "P2",
+        "domain": "Data Classification",
+        "page": 154
+      },
+      {
+        "spec_id": "DC.3.5",
+        "control_id": "DC.3",
+        "text": "Classification metadata registered within the Data Catalog",
+        "priority": "P2",
+        "domain": "Data Classification",
+        "page": 154
+      },
+      {
+        "spec_id": "DC.4.1",
+        "control_id": "DC.4",
+        "text": "Classificatio",
+        "priority": "P2",
+        "domain": "Data Classification",
+        "page": 156
+      }
+    ],
+    "P3": [
+      {
+        "spec_id": "DG.8.2",
+        "control_id": "DG.8",
+        "text": "Issue",
+        "priority": "P3",
+        "domain": "Data Governance",
+        "page": 30
+      },
+      {
+        "spec_id": "DQ.4.2",
+        "control_id": "DQ.4",
+        "text": "process shall be implemented as a workflow in the",
+        "priority": "P3",
+        "domain": "Data Quality",
+        "page": 51
+      },
+      {
+        "spec_id": "DQ.4.3",
+        "control_id": "DQ.4",
+        "text": "automated tool. The population of the metadata",
+        "priority": "P3",
+        "domain": "Data Quality",
+        "page": 51
+      }
+    ]
+  }
+}

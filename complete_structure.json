@@ -1,0 +1,826 @@
+{
+  "domains": [
+    {
+      "number": 1,
+      "name": "Data Governance",
+      "code": "DG",
+      "page": 3
+    },
+    {
+      "number": 2,
+      "name": "Data Catalog and Metadata",
+      "code": "DC",
+      "page": 3
+    },
+    {
+      "number": 3,
+      "name": "Data Quality",
+      "code": "DQ",
+      "page": 3
+    },
+    {
+      "number": 4,
+      "name": "Data Operations",
+      "code": "DO",
+      "page": 3
+    },
+    {
+      "number": 5,
+      "name": "Document and Content Management",
+      "code": "DM",
+      "page": 3
+    },
+    {
+      "number": 6,
+      "name": "Data Architecture and Modeling",
+      "code": "DA",
+      "page": 3
+    },
+    {
+      "number": 7,
+      "name": "Data Sharing and Interoperability",
+      "code": "DS",
+      "page": 3
+    },
+    {
+      "number": 8,
+      "name": "Reference and Master Data Management",
+      "code": "RM",
+      "page": 3
+    },
+    {
+      "number": 9,
+      "name": "Business Intelligence and Analytics",
+      "code": "BI",
+      "page": 3
+    },
+    {
+      "number": 10,
+      "name": "Data Value Realization",
+      "code": "DV",
+      "page": 3
+    },
+    {
+      "number": 11,
+      "name": "Open Data",
+      "code": "OD",
+      "page": 3
+    },
+    {
+      "number": 12,
+      "name": "Freedom of Information",
+      "code": "FO",
+      "page": 3
+    },
+    {
+      "number": 13,
+      "name": "Data Classification",
+      "code": "CL",
+      "page": 3
+    },
+    {
+      "number": 14,
+      "name": "Personal Data Protection",
+      "code": "PD",
+      "page": 3
+    },
+    {
+      "number": 15,
+      "name": "Data Security and Protection",
+      "code": "SP",
+      "page": 3
+    },
+    {
+      "number": 1,
+      "name": "Data Governance",
+      "code": "DG",
+      "page": 15
+    },
+    {
+      "number": 2,
+      "name": "Data Catalog and Metadata",
+      "code": "DC",
+      "page": 32
+    },
+    {
+      "number": 3,
+      "name": "Data Quality",
+      "code": "DQ",
+      "page": 43
+    },
+    {
+      "number": 4,
+      "name": "Data Operations",
+      "code": "DO",
+      "page": 54
+    },
+    {
+      "number": 5,
+      "name": "Document and Content Management",
+      "code": "DM",
+      "page": 64
+    },
+    {
+      "number": 6,
+      "name": "Data Architecture and Modeling",
+      "code": "DA",
+      "page": 73
+    },
+    {
+      "number": 7,
+      "name": "Data Sharing and Interoperability",
+      "code": "DS",
+      "page": 86
+    },
+    {
+      "number": 8,
+      "name": "Reference and Master Data Management",
+      "code": "RM",
+      "page": 101
+    },
+    {
+      "number": 9,
+      "name": "Business Intelligence and Analytics",
+      "code": "BI",
+      "page": 114
+    },
+    {
+      "number": 10,
+      "name": "Data Value Realization",
+      "code": "DV",
+      "page": 124
+    },
+    {
+      "number": 11,
+      "name": "Open Data",
+      "code": "OD",
+      "page": 132
+    },
+    {
+      "number": 12,
+      "name": "Freedom of Information",
+      "code": "FO",
+      "page": 141
+    },
+    {
+      "number": 13,
+      "name": "Data Classification",
+      "code": "CL",
+      "page": 150
+    },
+    {
+      "number": 14,
+      "name": "Personal Data Protection",
+      "code": "PD",
+      "page": 159
+    },
+    {
+      "number": 15,
+      "name": "Data Security and Protection",
+      "code": "SP",
+      "page": 170
+    }
+  ],
+  "controls": [],
+  "specifications": [
+    {
+      "spec_id": "DG.1.1",
+      "control_id": "DG.1",
+      "specification_text": "business strategy as well as external",
+      "priority": "P1",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 16
+    },
+    {
+      "spec_id": "DG.1.3",
+      "control_id": "DG.1",
+      "specification_text": "P1",
+      "priority": "Unknown",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 17
+    },
+    {
+      "spec_id": "DG.2.1",
+      "control_id": "DG.2",
+      "specification_text": "related standards and policies currently",
+      "priority": "P1",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 19
+    },
+    {
+      "spec_id": "DG.2.2",
+      "control_id": "DG.2",
+      "specification_text": "Personal Data",
+      "priority": "P1",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 19
+    },
+    {
+      "spec_id": "DG.3.1",
+      "control_id": "DG.3",
+      "specification_text": "and standards, and their applicability on the",
+      "priority": "Unknown",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 21
+    },
+    {
+      "spec_id": "DG.4.1",
+      "control_id": "DG.4",
+      "specification_text": "Management",
+      "priority": "P1",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 22
+    },
+    {
+      "spec_id": "DG.4.2",
+      "control_id": "DG.4",
+      "specification_text": "Management",
+      "priority": "P1",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 22
+    },
+    {
+      "spec_id": "DG.4.3",
+      "control_id": "DG.4",
+      "specification_text": "Officer's (CDO) responsibilities shall be",
+      "priority": "P1",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 22
+    },
+    {
+      "spec_id": "DG.4.4",
+      "control_id": "DG.4",
+      "specification_text": "Governance Officer's responsibilities shall be highlighted in a",
+      "priority": "P1",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 22
+    },
+    {
+      "spec_id": "DG.4.5",
+      "control_id": "DG.4",
+      "specification_text": "and",
+      "priority": "P1",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 22
+    },
+    {
+      "spec_id": "DG.4.6",
+      "control_id": "DG.4",
+      "specification_text": "P1",
+      "priority": "Unknown",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 23
+    },
+    {
+      "spec_id": "DG.4.7",
+      "control_id": "DG.4",
+      "specification_text": "Data Protection Officer's responsibilities shall be",
+      "priority": "P1",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 23
+    },
+    {
+      "spec_id": "DG.4.8",
+      "control_id": "DG.4",
+      "specification_text": "Data The Business Data Executive's responsibilities",
+      "priority": "P1",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 23
+    },
+    {
+      "spec_id": "DG.4.9",
+      "control_id": "DG.4",
+      "specification_text": "Data Data Steward responsibilities shall be highlighted",
+      "priority": "P1",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 23
+    },
+    {
+      "spec_id": "DG.4.10",
+      "control_id": "DG.4",
+      "specification_text": "Steward responsibilities shall be highlighted in a",
+      "priority": "P1",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 23
+    },
+    {
+      "spec_id": "DG.4.11",
+      "control_id": "DG.4",
+      "specification_text": "P1",
+      "priority": "Unknown",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 24
+    },
+    {
+      "spec_id": "DG.5.1",
+      "control_id": "DG.5",
+      "specification_text": "compliance audits",
+      "priority": "P2",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 25
+    },
+    {
+      "spec_id": "DG.5.2",
+      "control_id": "DG.5",
+      "specification_text": "Audit 2. Clearly articulated findings with supporting",
+      "priority": "P2",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 25
+    },
+    {
+      "spec_id": "DG.5.3",
+      "control_id": "DG.5",
+      "specification_text": "P2",
+      "priority": "Unknown",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 25
+    },
+    {
+      "spec_id": "DG.6.1",
+      "control_id": "DG.6",
+      "specification_text": "Periodic Plan",
+      "priority": "P2",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 27
+    },
+    {
+      "spec_id": "DG.6.2",
+      "control_id": "DG.6",
+      "specification_text": "Communications",
+      "priority": "P2",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 27
+    },
+    {
+      "spec_id": "DG.7.1",
+      "control_id": "DG.7",
+      "specification_text": "Governance",
+      "priority": "P2",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 29
+    },
+    {
+      "spec_id": "DG.7.2",
+      "control_id": "DG.7",
+      "specification_text": "P2",
+      "priority": "Unknown",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 29
+    },
+    {
+      "spec_id": "DG.8.1",
+      "control_id": "DG.8",
+      "specification_text": "approved data governance decisions along with",
+      "priority": "P2",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 30
+    },
+    {
+      "spec_id": "DG.8.2",
+      "control_id": "DG.8",
+      "specification_text": "Issue",
+      "priority": "P3",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 30
+    },
+    {
+      "spec_id": "DG.8.3",
+      "control_id": "DG.8",
+      "specification_text": "control for data management documents and",
+      "priority": "P2",
+      "domain": "Data Governance",
+      "domain_code": "DG",
+      "page": 30
+    },
+    {
+      "spec_id": "DQ.1.1",
+      "control_id": "DQ.1",
+      "specification_text": "be a ranked list of data to be followed when",
+      "priority": "P1",
+      "domain": "Data Quality",
+      "domain_code": "DQ",
+      "page": 44
+    },
+    {
+      "spec_id": "DQ.1.2",
+      "control_id": "DQ.1",
+      "specification_text": "Plan milestones for implementation of the Entity's",
+      "priority": "Unknown",
+      "domain": "Data Quality",
+      "domain_code": "DQ",
+      "page": 44
+    },
+    {
+      "spec_id": "DQ.1.3",
+      "control_id": "DQ.1",
+      "specification_text": "shall include, at minimum, the following:",
+      "priority": "Unknown",
+      "domain": "Data Quality",
+      "domain_code": "DQ",
+      "page": 44
+    },
+    {
+      "spec_id": "DQ.2.1",
+      "control_id": "DQ.2",
+      "specification_text": "Rules",
+      "priority": "P2",
+      "domain": "Data Quality",
+      "domain_code": "DQ",
+      "page": 46
+    },
+    {
+      "spec_id": "DQ.2.2",
+      "control_id": "DQ.2",
+      "specification_text": "Data Quality",
+      "priority": "Unknown",
+      "domain": "Data Quality",
+      "domain_code": "DQ",
+      "page": 47
+    },
+    {
+      "spec_id": "DQ.2.3",
+      "control_id": "DQ.2",
+      "specification_text": "Issues 1c. Definition of the options for resolving the",
+      "priority": "P2",
+      "domain": "Data Quality",
+      "domain_code": "DQ",
+      "page": 47
+    },
+    {
+      "spec_id": "DQ.2.4",
+      "control_id": "DQ.2",
+      "specification_text": "P2",
+      "priority": "Unknown",
+      "domain": "Data Quality",
+      "domain_code": "DQ",
+      "page": 48
+    },
+    {
+      "spec_id": "DQ.2.5",
+      "control_id": "DQ.2",
+      "specification_text": "P2",
+      "priority": "Unknown",
+      "domain": "Data Quality",
+      "domain_code": "DQ",
+      "page": 48
+    },
+    {
+      "spec_id": "DQ.3.1",
+      "control_id": "DQ.3",
+      "specification_text": "P2",
+      "priority": "Unknown",
+      "domain": "Data Quality",
+      "domain_code": "DQ",
+      "page": 49
+    },
+    {
+      "spec_id": "DQ.4.1",
+      "control_id": "DQ.4",
+      "specification_text": "P2",
+      "priority": "Unknown",
+      "domain": "Data Quality",
+      "domain_code": "DQ",
+      "page": 51
+    },
+    {
+      "spec_id": "DQ.4.2",
+      "control_id": "DQ.4",
+      "specification_text": "process shall be implemented as a workflow in the",
+      "priority": "P3",
+      "domain": "Data Quality",
+      "domain_code": "DQ",
+      "page": 51
+    },
+    {
+      "spec_id": "DQ.4.3",
+      "control_id": "DQ.4",
+      "specification_text": "automated tool. The population of the metadata",
+      "priority": "P3",
+      "domain": "Data Quality",
+      "domain_code": "DQ",
+      "page": 51
+    },
+    {
+      "spec_id": "DO.1.1",
+      "control_id": "DO.1",
+      "specification_text": "Operations",
+      "priority": "P1",
+      "domain": "Data Operations",
+      "domain_code": "DO",
+      "page": 55
+    },
+    {
+      "spec_id": "DO.1.2",
+      "control_id": "DO.1",
+      "specification_text": "P2",
+      "priority": "Unknown",
+      "domain": "Data Operations",
+      "domain_code": "DO",
+      "page": 55
+    },
+    {
+      "spec_id": "DO.1.3",
+      "control_id": "DO.1",
+      "specification_text": "Systems",
+      "priority": "P1",
+      "domain": "Data Operations",
+      "domain_code": "DO",
+      "page": 56
+    },
+    {
+      "spec_id": "DO.1.4",
+      "control_id": "DO.1",
+      "specification_text": "Technology 2. Availability of resources skilled in the",
+      "priority": "P2",
+      "domain": "Data Operations",
+      "domain_code": "DO",
+      "page": 56
+    },
+    {
+      "spec_id": "DO.2.1",
+      "control_id": "DO.2",
+      "specification_text": "Retention 2. Retention periods of data based on its type,",
+      "priority": "P1",
+      "domain": "Data Operations",
+      "domain_code": "DO",
+      "page": 57
+    },
+    {
+      "spec_id": "DO.3.1",
+      "control_id": "DO.3",
+      "specification_text": "P2",
+      "priority": "Unknown",
+      "domain": "Data Operations",
+      "domain_code": "DO",
+      "page": 58
+    },
+    {
+      "spec_id": "DO.3.2",
+      "control_id": "DO.3",
+      "specification_text": "Access",
+      "priority": "P2",
+      "domain": "Data Operations",
+      "domain_code": "DO",
+      "page": 58
+    },
+    {
+      "spec_id": "DO.3.3",
+      "control_id": "DO.3",
+      "specification_text": "Configuration 1. Configuration identification - identification and",
+      "priority": "P2",
+      "domain": "Data Operations",
+      "domain_code": "DO",
+      "page": 58
+    },
+    {
+      "spec_id": "DO.3.4",
+      "control_id": "DO.3",
+      "specification_text": "P3",
+      "priority": "Unknown",
+      "domain": "Data Operations",
+      "domain_code": "DO",
+      "page": 59
+    },
+    {
+      "spec_id": "DO.3.5",
+      "control_id": "DO.3",
+      "specification_text": "limited to) the following:",
+      "priority": "P2",
+      "domain": "Data Operations",
+      "domain_code": "DO",
+      "page": 59
+    },
+    {
+      "spec_id": "DO.4.1",
+      "control_id": "DO.4",
+      "specification_text": "P2",
+      "priority": "Unknown",
+      "domain": "Data Operations",
+      "domain_code": "DO",
+      "page": 60
+    },
+    {
+      "spec_id": "DO.4.2",
+      "control_id": "DO.4",
+      "specification_text": "P2",
+      "priority": "Unknown",
+      "domain": "Data Operations",
+      "domain_code": "DO",
+      "page": 60
+    },
+    {
+      "spec_id": "DO.4.3",
+      "control_id": "DO.4",
+      "specification_text": "Data Access 1. Change request initiating the process",
+      "priority": "P2",
+      "domain": "Data Operations",
+      "domain_code": "DO",
+      "page": 61
+    },
+    {
+      "spec_id": "DO.5.1",
+      "control_id": "DO.5",
+      "specification_text": "P2",
+      "priority": "Unknown",
+      "domain": "Data Operations",
+      "domain_code": "DO",
+      "page": 62
+    },
+    {
+      "spec_id": "OD.1.1",
+      "control_id": "OD.1",
+      "specification_text": "P1",
+      "priority": "Unknown",
+      "domain": "Open Data",
+      "domain_code": "OD",
+      "page": 133
+    },
+    {
+      "spec_id": "OD.2.1",
+      "control_id": "OD.2",
+      "specification_text": "include, at minimum, the following:",
+      "priority": "P2",
+      "domain": "Open Data",
+      "domain_code": "OD",
+      "page": 134
+    },
+    {
+      "spec_id": "OD.3.1",
+      "control_id": "OD.3",
+      "specification_text": "published and maintained to their",
+      "priority": "P1",
+      "domain": "Open Data",
+      "domain_code": "OD",
+      "page": 135
+    },
+    {
+      "spec_id": "OD.3.2",
+      "control_id": "OD.3",
+      "specification_text": "P1",
+      "priority": "Unknown",
+      "domain": "Open Data",
+      "domain_code": "OD",
+      "page": 135
+    },
+    {
+      "spec_id": "OD.3.3",
+      "control_id": "OD.3",
+      "specification_text": "P1",
+      "priority": "Unknown",
+      "domain": "Open Data",
+      "domain_code": "OD",
+      "page": 136
+    },
+    {
+      "spec_id": "OD.3.4",
+      "control_id": "OD.3",
+      "specification_text": "P2",
+      "priority": "Unknown",
+      "domain": "Open Data",
+      "domain_code": "OD",
+      "page": 136
+    },
+    {
+      "spec_id": "OD.3.5",
+      "control_id": "OD.3",
+      "specification_text": "P1",
+      "priority": "Unknown",
+      "domain": "Open Data",
+      "domain_code": "OD",
+      "page": 136
+    },
+    {
+      "spec_id": "OD.3.6",
+      "control_id": "OD.3",
+      "specification_text": "P3",
+      "priority": "Unknown",
+      "domain": "Open Data",
+      "domain_code": "OD",
+      "page": 136
+    },
+    {
+      "spec_id": "OD.4.1",
+      "control_id": "OD.4",
+      "specification_text": "Dataset",
+      "priority": "P2",
+      "domain": "Open Data",
+      "domain_code": "OD",
+      "page": 138
+    },
+    {
+      "spec_id": "OD.5.1",
+      "control_id": "OD.5",
+      "specification_text": "with a log of open data activities conducted and",
+      "priority": "P2",
+      "domain": "Open Data",
+      "domain_code": "OD",
+      "page": 139
+    },
+    {
+      "spec_id": "DC.1.1",
+      "control_id": "DC.1",
+      "specification_text": "Classification",
+      "priority": "P1",
+      "domain": "Data Classification",
+      "domain_code": "DC",
+      "page": 151
+    },
+    {
+      "spec_id": "DC.1.2",
+      "control_id": "DC.1",
+      "specification_text": "Classification prioritization shall be a list of ranked datasets",
+      "priority": "P1",
+      "domain": "Data Classification",
+      "domain_code": "DC",
+      "page": 151
+    },
+    {
+      "spec_id": "DC.3.1",
+      "control_id": "DC.3",
+      "specification_text": "Management Office's Data Classification",
+      "priority": "P1",
+      "domain": "Data Classification",
+      "domain_code": "DC",
+      "page": 153
+    },
+    {
+      "spec_id": "DC.3.2",
+      "control_id": "DC.3",
+      "specification_text": "P1",
+      "priority": "Unknown",
+      "domain": "Data Classification",
+      "domain_code": "DC",
+      "page": 153
+    },
+    {
+      "spec_id": "DC.3.3",
+      "control_id": "DC.3",
+      "specification_text": "for Low Impact negative impacts",
+      "priority": "P1",
+      "domain": "Data Classification",
+      "domain_code": "DC",
+      "page": 154
+    },
+    {
+      "spec_id": "DC.3.4",
+      "control_id": "DC.3",
+      "specification_text": "Classification most appropriate ones as part of the Data",
+      "priority": "P2",
+      "domain": "Data Classification",
+      "domain_code": "DC",
+      "page": 154
+    },
+    {
+      "spec_id": "DC.3.5",
+      "control_id": "DC.3",
+      "specification_text": "Classification metadata registered within the Data Catalog",
+      "priority": "P2",
+      "domain": "Data Classification",
+      "domain_code": "DC",
+      "page": 154
+    },
+    {
+      "spec_id": "DC.4.1",
+      "control_id": "DC.4",
+      "specification_text": "Classificatio",
+      "priority": "P2",
+      "domain": "Data Classification",
+      "domain_code": "DC",
+      "page": 156
+    },
+    {
+      "spec_id": "DC.5.1",
+      "control_id": "DC.5",
+      "specification_text": "P2",
+      "priority": "Unknown",
+      "domain": "Data Classification",
+      "domain_code": "DC",
+      "page": 157
+    }
+  ]
+}
