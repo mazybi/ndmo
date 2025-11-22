@@ -996,7 +996,7 @@ def show_templates_forms():
                     status_index = 0
                     if saved_data and saved_data.get('data') and saved_data['data'].get('compliance_status') in status_options:
                         status_index = status_options.index(saved_data['data'].get('compliance_status', 'Compliant'))
-                    compliance_status = st.radio("Compliance Status *", status_options, index=status_index)
+                    compliance_status = st.radio("Compliance Status *", status_options, index=status_index, key=f"compliance_status_{control_id}_{spec_id}")
                     
                     col1, col2 = st.columns(2)
                     with col1:
@@ -1335,7 +1335,7 @@ def show_templates_forms():
                             f"{i+1}. {item}",
                             ["Yes", "No", "N/A"],
                             horizontal=True,
-                            key=f"checklist_{i}",
+                            key=f"checklist_{control_id}_{i}",
                             index=0 if not saved_data or not saved_data.get('data') or f"checklist_{i}" not in saved_data['data'] else 
                             ["Yes", "No", "N/A"].index(saved_data['data'][f"checklist_{i}"]) if saved_data['data'][f"checklist_{i}"] in ["Yes", "No", "N/A"] else 0
                         )
@@ -1441,13 +1441,15 @@ def show_templates_forms():
         action_type = st.radio(
             "Choose Action",
             ["Fill Form Directly", "Download Template"],
-            horizontal=True
+            horizontal=True,
+            key="data_share_action"
         )
         
         data_share_type = st.radio(
             "Select Template Type",
             ["Data Share Agreement", "Data Sharing Report"],
-            horizontal=True
+            horizontal=True,
+            key="data_share_type"
         )
         
         if action_type == "Fill Form Directly":
@@ -1900,19 +1902,281 @@ def show_templates_forms():
             st.write("✅ Professional layout")
         
         st.markdown("---")
+        st.markdown("### 📄 Use Case Brief")
+        st.info("Create a simple Use Case Brief template with product image support")
+        
+        use_case_action = st.radio(
+            "Choose Action",
+            ["Fill Form Directly", "Download Template"],
+            horizontal=True,
+            key="use_case_action"
+        )
+        
+        if use_case_action == "Fill Form Directly":
+            st.markdown("### Fill Use Case Brief")
+            
+            from fillable_use_case_brief import load_use_case_brief_form, save_use_case_brief_form, generate_pdf_from_use_case_brief
+            saved_data = load_use_case_brief_form()
+            
+            with st.form("use_case_brief_form", clear_on_submit=False):
+                st.markdown("#### Document Information")
+                col1, col2 = st.columns(2)
+                with col1:
+                    use_case_id = st.text_input("Use Case ID *", value=saved_data['data'].get('use_case_id', '') if saved_data and saved_data.get('data') else '')
+                    use_case_name = st.text_input("Use Case Name *", value=saved_data['data'].get('use_case_name', '') if saved_data and saved_data.get('data') else '')
+                    date = st.date_input("Date *", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('date') else datetime.strptime(saved_data['data'].get('date'), "%Y-%m-%d").date())
+                with col2:
+                    version = st.text_input("Version", value=saved_data['data'].get('version', '1.0') if saved_data and saved_data.get('data') else '1.0')
+                    department = st.text_input("Department", value=saved_data['data'].get('department', '') if saved_data and saved_data.get('data') else '')
+                    status = st.selectbox("Status", ["Draft", "Review", "Approved"], 
+                                         index=0 if not saved_data or not saved_data.get('data') or saved_data['data'].get('status') not in ["Draft", "Review", "Approved"] else ["Draft", "Review", "Approved"].index(saved_data['data'].get('status')))
+                
+                st.markdown("---")
+                st.markdown("#### Use Case Overview")
+                description = st.text_area("Description *", value=saved_data['data'].get('description', '') if saved_data and saved_data.get('data') else '', height=100)
+                business_objective = st.text_area("Business Objective *", value=saved_data['data'].get('business_objective', '') if saved_data and saved_data.get('data') else '', height=100)
+                stakeholders = st.text_input("Stakeholders", value=saved_data['data'].get('stakeholders', '') if saved_data and saved_data.get('data') else '')
+                
+                st.markdown("---")
+                st.markdown("#### Product Image")
+                product_image = st.file_uploader("Upload Product Image", type=['png', 'jpg', 'jpeg'], 
+                                                help="Upload an image of the product (PNG, JPG, JPEG)")
+                
+                # Show uploaded image if exists
+                if product_image:
+                    st.image(product_image, caption="Product Image Preview", width=400)
+                
+                # Check if saved image exists
+                saved_image_path = None
+                if saved_data and saved_data.get('image_path') and os.path.exists(saved_data['image_path']):
+                    st.image(saved_data['image_path'], caption="Saved Product Image", width=400)
+                    saved_image_path = saved_data['image_path']
+                
+                st.markdown("---")
+                st.markdown("#### Technical Details")
+                col1, col2 = st.columns(2)
+                with col1:
+                    data_sources = st.text_input("Data Sources", value=saved_data['data'].get('data_sources', '') if saved_data and saved_data.get('data') else '')
+                    data_types = st.text_input("Data Types", value=saved_data['data'].get('data_types', '') if saved_data and saved_data.get('data') else '')
+                with col2:
+                    data_volume = st.text_input("Data Volume", value=saved_data['data'].get('data_volume', '') if saved_data and saved_data.get('data') else '')
+                processing_requirements = st.text_area("Processing Requirements", value=saved_data['data'].get('processing_requirements', '') if saved_data and saved_data.get('data') else '', height=80)
+                
+                st.markdown("---")
+                st.markdown("#### Compliance & Security")
+                col1, col2 = st.columns(2)
+                with col1:
+                    ndmo_compliance = st.selectbox("NDMO Compliance", ["Compliant", "Non-Compliant"], 
+                                                   index=0 if not saved_data or not saved_data.get('data') or saved_data['data'].get('ndmo_compliance') not in ["Compliant", "Non-Compliant"] else ["Compliant", "Non-Compliant"].index(saved_data['data'].get('ndmo_compliance')))
+                    data_classification = st.selectbox("Data Classification", ["Public", "Internal", "Restricted", "Confidential"], 
+                                                      index=0 if not saved_data or not saved_data.get('data') or saved_data['data'].get('data_classification') not in ["Public", "Internal", "Restricted", "Confidential"] else ["Public", "Internal", "Restricted", "Confidential"].index(saved_data['data'].get('data_classification')))
+                with col2:
+                    ndi_compliance = st.selectbox("NDI Compliance", ["Compliant", "Non-Compliant"], 
+                                                  index=0 if not saved_data or not saved_data.get('data') or saved_data['data'].get('ndi_compliance') not in ["Compliant", "Non-Compliant"] else ["Compliant", "Non-Compliant"].index(saved_data['data'].get('ndi_compliance')))
+                security_requirements = st.text_area("Security Requirements", value=saved_data['data'].get('security_requirements', '') if saved_data and saved_data.get('data') else '', height=80)
+                
+                st.markdown("---")
+                st.markdown("#### Signatures")
+                col1, col2 = st.columns(2)
+                with col1:
+                    prepared_by = st.text_input("Prepared By", value=saved_data['data'].get('prepared_by', '') if saved_data and saved_data.get('data') else '')
+                    prepared_date = st.date_input("Prepared Date", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('prepared_date') else datetime.strptime(saved_data['data'].get('prepared_date'), "%Y-%m-%d").date())
+                    reviewed_by = st.text_input("Reviewed By", value=saved_data['data'].get('reviewed_by', '') if saved_data and saved_data.get('data') else '')
+                    reviewed_date = st.date_input("Reviewed Date", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('reviewed_date') else datetime.strptime(saved_data['data'].get('reviewed_date'), "%Y-%m-%d").date())
+                with col2:
+                    approved_by = st.text_input("Approved By", value=saved_data['data'].get('approved_by', '') if saved_data and saved_data.get('data') else '')
+                    approved_date = st.date_input("Approved Date", value=datetime.now().date() if not saved_data or not saved_data.get('data') or not saved_data['data'].get('approved_date') else datetime.strptime(saved_data['data'].get('approved_date'), "%Y-%m-%d").date())
+                
+                submitted = st.form_submit_button("💾 Save & Generate PDF", use_container_width=True)
+                
+                if submitted:
+                    if not use_case_id or not use_case_name or not description or not business_objective:
+                        st.error("Please fill in all required fields (marked with *)")
+                    else:
+                        # Save uploaded image
+                        image_path = saved_image_path
+                        if product_image:
+                            os.makedirs("uploaded_images", exist_ok=True)
+                            image_path = f"uploaded_images/product_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{product_image.name}"
+                            with open(image_path, "wb") as f:
+                                f.write(product_image.getbuffer())
+                        
+                        form_data = {
+                            'use_case_id': use_case_id,
+                            'use_case_name': use_case_name,
+                            'date': date.strftime("%Y-%m-%d"),
+                            'version': version,
+                            'department': department,
+                            'status': status,
+                            'description': description,
+                            'business_objective': business_objective,
+                            'stakeholders': stakeholders,
+                            'data_sources': data_sources,
+                            'data_types': data_types,
+                            'data_volume': data_volume,
+                            'processing_requirements': processing_requirements,
+                            'ndmo_compliance': ndmo_compliance,
+                            'ndi_compliance': ndi_compliance,
+                            'data_classification': data_classification,
+                            'security_requirements': security_requirements,
+                            'prepared_by': prepared_by,
+                            'prepared_date': prepared_date.strftime("%Y-%m-%d"),
+                            'reviewed_by': reviewed_by,
+                            'reviewed_date': reviewed_date.strftime("%Y-%m-%d"),
+                            'approved_by': approved_by,
+                            'approved_date': approved_date.strftime("%Y-%m-%d")
+                        }
+                        
+                        progress_bar = st.progress(0)
+                        status_text = st.empty()
+                        
+                        try:
+                            status_text.info("💾 Saving form data...")
+                            progress_bar.progress(20)
+                            
+                            json_file = save_use_case_brief_form(form_data, image_path)
+                            
+                            status_text.info("📄 Generating PDF...")
+                            progress_bar.progress(50)
+                            
+                            pdf_file = generate_pdf_from_use_case_brief(form_data, image_path)
+                            
+                            progress_bar.progress(80)
+                            status_text.info("✅ Finalizing...")
+                            
+                            st.session_state['use_case_brief_json'] = json_file
+                            st.session_state['use_case_brief_pdf'] = pdf_file
+                            
+                            progress_bar.progress(100)
+                            status_text.success("✅ Form saved successfully! Scroll down to download.")
+                            progress_bar.empty()
+                        except Exception as e:
+                            progress_bar.empty()
+                            status_text.error(f"❌ Error: {str(e)}")
+                            import traceback
+                            with st.expander("Error Details"):
+                                st.code(traceback.format_exc())
+            
+            # Download buttons outside form
+            if 'use_case_brief_json' in st.session_state and 'use_case_brief_pdf' in st.session_state:
+                st.markdown("---")
+                st.markdown("### 📥 Download Files")
+                col1, col2 = st.columns(2)
+                with col1:
+                    try:
+                        with open(st.session_state['use_case_brief_json'], 'rb') as f:
+                            json_data = f.read()
+                            st.download_button(
+                                "📥 Download JSON", 
+                                json_data, 
+                                file_name=f"Use_Case_Brief_{datetime.now().strftime('%Y%m%d')}.json",
+                                mime="application/json",
+                                key="download_json_use_case",
+                                use_container_width=True
+                            )
+                    except Exception as e:
+                        st.error(f"Error loading JSON: {str(e)}")
+                with col2:
+                    try:
+                        with open(st.session_state['use_case_brief_pdf'], 'rb') as f:
+                            pdf_data = f.read()
+                            st.download_button(
+                                "📥 Download PDF", 
+                                pdf_data,
+                                file_name=f"Use_Case_Brief_{datetime.now().strftime('%Y%m%d')}.pdf",
+                                mime="application/pdf",
+                                key="download_pdf_use_case",
+                                use_container_width=True
+                            )
+                    except Exception as e:
+                        st.error(f"Error loading PDF: {str(e)}")
+        
+        else:  # Download Template
+            st.markdown("### Download Use Case Brief Template")
+            st.write("Download a blank template to fill manually")
+            
+            template_key = 'use_case_brief_template_file'
+            
+            if template_key not in st.session_state:
+                generate_button = st.button("📥 Generate & Download Use Case Brief Template", use_container_width=True, key="generate_use_case_btn")
+                if generate_button:
+                    progress_bar = st.progress(0)
+                    status_text = st.empty()
+                    try:
+                        status_text.info("🔄 Starting PDF generation...")
+                        progress_bar.progress(10)
+                        
+                        from use_case_brief_template import create_use_case_brief_template
+                        
+                        status_text.info("📄 Creating template structure...")
+                        progress_bar.progress(30)
+                        
+                        status_text.info("🖼️ Adding logo and formatting...")
+                        progress_bar.progress(60)
+                        
+                        filename = create_use_case_brief_template()
+                        
+                        progress_bar.progress(90)
+                        status_text.info("💾 Saving file...")
+                        
+                        st.session_state[template_key] = filename
+                        st.session_state['use_case_template_generated'] = True
+                        
+                        progress_bar.progress(100)
+                        status_text.success("✅ Template generated successfully! Download button appears below.")
+                        progress_bar.empty()
+                    except Exception as e:
+                        progress_bar.empty()
+                        status_text.error(f"❌ Error: {str(e)}")
+                        import traceback
+                        with st.expander("Error Details"):
+                            st.code(traceback.format_exc())
+            
+            if template_key in st.session_state:
+                try:
+                    with open(st.session_state[template_key], 'rb') as f:
+                        pdf_data = f.read()
+                        st.markdown("---")
+                        st.markdown("### 📥 Download Template")
+                        st.download_button(
+                            "📥 Download Use Case Brief (PDF)",
+                            pdf_data,
+                            file_name=f"Use_Case_Brief_{datetime.now().strftime('%Y%m%d')}.pdf",
+                            mime="application/pdf",
+                            use_container_width=True,
+                            key="download_template_use_case"
+                        )
+                        if st.button("🔄 Generate New Template", use_container_width=True, key="regenerate_use_case_btn"):
+                            if template_key in st.session_state:
+                                try:
+                                    os.remove(st.session_state[template_key])
+                                except:
+                                    pass
+                            del st.session_state[template_key]
+                            if 'use_case_template_generated' in st.session_state:
+                                del st.session_state['use_case_template_generated']
+                            st.success("🔄 Template cleared. Click 'Generate & Download' to create a new one.")
+                except Exception as e:
+                    st.error(f"Error loading template: {str(e)}")
+                    if template_key in st.session_state:
+                        del st.session_state[template_key]
+        
+        st.markdown("---")
         st.markdown("### 📊 Technical Reports")
         st.info("Additional technical reports for comprehensive compliance documentation")
         
         tech_report_type = st.radio(
             "Select Technical Report",
             ["Gap Analysis Report", "Risk Assessment Report"],
-            horizontal=True
+            horizontal=True,
+            key="tech_report_type"
         )
         
         action_type = st.radio(
             "Choose Action",
             ["Fill Form Directly", "Download Template"],
-            horizontal=True
+            horizontal=True,
+            key="tech_report_action"
         )
         
         if action_type == "Fill Form Directly":
@@ -2357,7 +2621,8 @@ def show_templates_forms():
         template_type = st.radio(
             "Select Template Type",
             ["Evidence Template", "Compliance Report", "Audit Checklist"],
-            horizontal=True
+            horizontal=True,
+            key="template_type_select"
         )
         
         selected_control = st.selectbox(
