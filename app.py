@@ -1448,7 +1448,56 @@ def show_templates_forms():
                                 mime="application/pdf",
                                 key=f"download_pdf_audit_{control_id}"
                             )
+        else:  # Download Professional Template
+            st.markdown("### Download Professional Audit Checklist")
+            st.info("Download a professional audit checklist with logo and classification")
+            
+            all_controls = get_all_controls()
+            
+            selected_control = st.selectbox(
+                "Select Control",
+                [f"{c['id']} - {c['title']}" for c in all_controls],
+                key="download_audit_template_control"
+            )
+            
+            if selected_control:
+                control_id = selected_control.split(" - ")[0]
+                control = next((c for c in all_controls if c['id'] == control_id), None)
+                
+                if control:
+                    if st.button("📥 Generate & Download Professional Audit Checklist", use_container_width=True):
+                        try:
+                            from professional_templates import create_professional_audit_checklist
+                            
+                            from sans_data_loader import get_all_specifications
+                            all_specs = get_all_specifications()
+                            specifications = [s for s in all_specs if s.get('control_id') == control_id]
+                            
+                            filename = create_professional_audit_checklist(
+                                control_id,
+                                control['title'],
+                                control.get('domain', control.get('category', 'Unknown')),
+                                specifications
+                            )
+                            
+                            with open(filename, 'rb') as f:
+                                st.download_button(
+                                    "📥 Download Audit Checklist (PDF)",
+                                    f.read(),
+                                    file_name=f"Audit_Checklist_{control_id.replace('.', '_')}_{datetime.now().strftime('%Y%m%d')}.pdf",
+                                    mime="application/pdf",
+                                    use_container_width=True
+                                )
+                            st.success("✅ Professional checklist generated!")
+                        except Exception as e:
+                            st.error(f"Error: {str(e)}")
     
+    # ============================================
+    # DATA SHARE TEMPLATES SECTION
+    # ============================================
+    elif template_category == "🤝 Data Share Templates":
+        st.subheader("🤝 Data Share Templates")
+        st.info("Fill out data sharing forms directly or download templates")
         
         action_type = st.radio(
             "Choose Action",
@@ -2172,9 +2221,12 @@ def show_templates_forms():
                     st.error(f"Error loading template: {str(e)}")
                     if template_key in st.session_state:
                         del st.session_state[template_key]
-        
-        st.markdown("---")
-        st.markdown("### 📊 Technical Reports")
+    
+    # ============================================
+    # TECHNICAL REPORTS SECTION
+    # ============================================
+    elif template_category == "📈 Technical Reports":
+        st.subheader("📈 Technical Reports")
         st.info("Additional technical reports for comprehensive compliance documentation")
         
         tech_report_type = st.radio(
