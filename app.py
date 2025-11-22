@@ -1534,14 +1534,35 @@ def show_templates_forms():
                                 'pia_status': pia_status
                             }
                             
-                            with st.spinner("⏳ Saving form and generating PDF... Please wait..."):
+                            progress_bar = st.progress(0)
+                            status_text = st.empty()
+                            
+                            try:
+                                status_text.info("💾 Saving form data...")
+                                progress_bar.progress(20)
+                                
                                 json_file = save_data_share_form("data_share_agreement", form_data)
+                                
+                                status_text.info("📄 Generating PDF...")
+                                progress_bar.progress(50)
+                                
                                 pdf_file = generate_pdf_from_data_share_form("data_share_agreement", form_data)
+                                
+                                progress_bar.progress(80)
+                                status_text.info("✅ Finalizing...")
                                 
                                 st.session_state['data_share_agreement_json'] = json_file
                                 st.session_state['data_share_agreement_pdf'] = pdf_file
-                            
-                            st.success("✅ Form saved successfully! Scroll down to download.")
+                                
+                                progress_bar.progress(100)
+                                status_text.success("✅ Form saved successfully! Scroll down to download.")
+                                progress_bar.empty()
+                            except Exception as e:
+                                progress_bar.empty()
+                                status_text.error(f"❌ Error: {str(e)}")
+                                import traceback
+                                with st.expander("Error Details"):
+                                    st.code(traceback.format_exc())
                 
                 # Download buttons outside form
                 if 'data_share_agreement_json' in st.session_state and 'data_share_agreement_pdf' in st.session_state:
@@ -1657,14 +1678,35 @@ def show_templates_forms():
                                 'recommendations': recommendations
                             }
                             
-                            with st.spinner("⏳ Saving form and generating PDF... Please wait..."):
+                            progress_bar = st.progress(0)
+                            status_text = st.empty()
+                            
+                            try:
+                                status_text.info("💾 Saving form data...")
+                                progress_bar.progress(20)
+                                
                                 json_file = save_data_share_form("data_sharing_report", form_data)
+                                
+                                status_text.info("📄 Generating PDF...")
+                                progress_bar.progress(50)
+                                
                                 pdf_file = generate_pdf_from_data_share_form("data_sharing_report", form_data)
+                                
+                                progress_bar.progress(80)
+                                status_text.info("✅ Finalizing...")
                                 
                                 st.session_state['data_sharing_report_json'] = json_file
                                 st.session_state['data_sharing_report_pdf'] = pdf_file
-                            
-                            st.success("✅ Form saved successfully! Scroll down to download.")
+                                
+                                progress_bar.progress(100)
+                                status_text.success("✅ Form saved successfully! Scroll down to download.")
+                                progress_bar.empty()
+                            except Exception as e:
+                                progress_bar.empty()
+                                status_text.error(f"❌ Error: {str(e)}")
+                                import traceback
+                                with st.expander("Error Details"):
+                                    st.code(traceback.format_exc())
                 
                 # Download buttons outside form
                 if 'data_sharing_report_json' in st.session_state and 'data_sharing_report_pdf' in st.session_state:
@@ -1709,23 +1751,47 @@ def show_templates_forms():
                 template_key = 'data_share_agreement_template_file'
                 
                 if template_key not in st.session_state:
-                    if st.button("📥 Generate & Download Data Share Agreement Template", use_container_width=True):
+                    generate_button = st.button("📥 Generate & Download Data Share Agreement Template", use_container_width=True, key="generate_agreement_btn")
+                    if generate_button:
+                        progress_bar = st.progress(0)
+                        status_text = st.empty()
                         try:
-                            with st.spinner("⏳ Generating PDF template... Please wait..."):
-                                from data_share_templates import create_data_share_agreement_template
-                                filename = create_data_share_agreement_template()
-                                st.session_state[template_key] = filename
-                                st.rerun()
+                            status_text.info("🔄 Starting PDF generation...")
+                            progress_bar.progress(10)
+                            
+                            from data_share_templates import create_data_share_agreement_template
+                            
+                            status_text.info("📄 Creating template structure...")
+                            progress_bar.progress(30)
+                            
+                            status_text.info("🖼️ Adding logo and formatting...")
+                            progress_bar.progress(60)
+                            
+                            filename = create_data_share_agreement_template()
+                            
+                            progress_bar.progress(90)
+                            status_text.info("💾 Saving file...")
+                            
+                            st.session_state[template_key] = filename
+                            st.session_state['agreement_template_generated'] = True
+                            
+                            progress_bar.progress(100)
+                            status_text.success("✅ Template generated successfully! Download button appears below.")
+                            progress_bar.empty()
                         except Exception as e:
-                            st.error(f"Error: {str(e)}")
+                            progress_bar.empty()
+                            status_text.error(f"❌ Error: {str(e)}")
                             import traceback
                             with st.expander("Error Details"):
                                 st.code(traceback.format_exc())
-                else:
-                    # Template already generated, show download button
+                
+                # Show download button if template is ready
+                if template_key in st.session_state:
                     try:
                         with open(st.session_state[template_key], 'rb') as f:
                             pdf_data = f.read()
+                            st.markdown("---")
+                            st.markdown("### 📥 Download Template")
                             st.download_button(
                                 "📥 Download Data Share Agreement (PDF)",
                                 pdf_data,
@@ -1734,14 +1800,16 @@ def show_templates_forms():
                                 use_container_width=True,
                                 key="download_template_agreement"
                             )
-                        if st.button("🔄 Generate New Template", use_container_width=True):
-                            if template_key in st.session_state:
-                                try:
-                                    os.remove(st.session_state[template_key])
-                                except:
-                                    pass
-                            del st.session_state[template_key]
-                            st.rerun()
+                            if st.button("🔄 Generate New Template", use_container_width=True, key="regenerate_agreement_btn"):
+                                if template_key in st.session_state:
+                                    try:
+                                        os.remove(st.session_state[template_key])
+                                    except:
+                                        pass
+                                del st.session_state[template_key]
+                                if 'agreement_template_generated' in st.session_state:
+                                    del st.session_state['agreement_template_generated']
+                                st.success("🔄 Template cleared. Click 'Generate & Download' to create a new one.")
                     except Exception as e:
                         st.error(f"Error loading template: {str(e)}")
                         if template_key in st.session_state:
@@ -1755,23 +1823,47 @@ def show_templates_forms():
                 template_key = 'data_sharing_report_template_file'
                 
                 if template_key not in st.session_state:
-                    if st.button("📥 Generate & Download Data Sharing Report Template", use_container_width=True):
+                    generate_button = st.button("📥 Generate & Download Data Sharing Report Template", use_container_width=True, key="generate_report_btn")
+                    if generate_button:
+                        progress_bar = st.progress(0)
+                        status_text = st.empty()
                         try:
-                            with st.spinner("⏳ Generating PDF template... Please wait..."):
-                                from data_share_templates import create_data_sharing_report_template
-                                filename = create_data_sharing_report_template()
-                                st.session_state[template_key] = filename
-                                st.rerun()
+                            status_text.info("🔄 Starting PDF generation...")
+                            progress_bar.progress(10)
+                            
+                            from data_share_templates import create_data_sharing_report_template
+                            
+                            status_text.info("📄 Creating template structure...")
+                            progress_bar.progress(30)
+                            
+                            status_text.info("🖼️ Adding logo and formatting...")
+                            progress_bar.progress(60)
+                            
+                            filename = create_data_sharing_report_template()
+                            
+                            progress_bar.progress(90)
+                            status_text.info("💾 Saving file...")
+                            
+                            st.session_state[template_key] = filename
+                            st.session_state['report_template_generated'] = True
+                            
+                            progress_bar.progress(100)
+                            status_text.success("✅ Template generated successfully! Download button appears below.")
+                            progress_bar.empty()
                         except Exception as e:
-                            st.error(f"Error: {str(e)}")
+                            progress_bar.empty()
+                            status_text.error(f"❌ Error: {str(e)}")
                             import traceback
                             with st.expander("Error Details"):
                                 st.code(traceback.format_exc())
-                else:
-                    # Template already generated, show download button
+                
+                # Show download button if template is ready
+                if template_key in st.session_state:
                     try:
                         with open(st.session_state[template_key], 'rb') as f:
                             pdf_data = f.read()
+                            st.markdown("---")
+                            st.markdown("### 📥 Download Template")
                             st.download_button(
                                 "📥 Download Data Sharing Report (PDF)",
                                 pdf_data,
@@ -1780,14 +1872,16 @@ def show_templates_forms():
                                 use_container_width=True,
                                 key="download_template_report"
                             )
-                        if st.button("🔄 Generate New Template", use_container_width=True):
-                            if template_key in st.session_state:
-                                try:
-                                    os.remove(st.session_state[template_key])
-                                except:
-                                    pass
-                            del st.session_state[template_key]
-                            st.rerun()
+                            if st.button("🔄 Generate New Template", use_container_width=True, key="regenerate_report_btn"):
+                                if template_key in st.session_state:
+                                    try:
+                                        os.remove(st.session_state[template_key])
+                                    except:
+                                        pass
+                                del st.session_state[template_key]
+                                if 'report_template_generated' in st.session_state:
+                                    del st.session_state['report_template_generated']
+                                st.success("🔄 Template cleared. Click 'Generate & Download' to create a new one.")
                     except Exception as e:
                         st.error(f"Error loading template: {str(e)}")
                         if template_key in st.session_state:
