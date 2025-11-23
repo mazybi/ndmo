@@ -3822,21 +3822,123 @@ def show_data_quality_dashboard():
                         st.session_state.schema_analysis = analysis
                         
                         # Display results
-                        st.markdown("### Analysis Results")
+                        st.markdown("### 📊 Analysis Summary")
                         
-                        col1, col2, col3 = st.columns(3)
+                        col1, col2, col3, col4 = st.columns(4)
                         with col1:
-                            st.metric("Total Fields", analysis.get('total_fields', 0))
+                            st.metric("Total Columns", analysis.get('total_columns', analysis.get('total_fields', 0)))
                         with col2:
                             st.metric("Has Primary Key", "✅ Yes" if analysis.get('has_primary_key') else "❌ No")
                         with col3:
                             st.metric("Has Audit Trail", "✅ Yes" if analysis.get('has_audit_trail') else "❌ No")
+                        with col4:
+                            total_cols = len(analysis.get('column_analysis', []))
+                            compliant_cols = sum(1 for col in analysis.get('ndmo_compliance', {}).values() if col.get('score', 0) >= 0.7)
+                            st.metric("NDMO Compliant Columns", f"{compliant_cols}/{total_cols}")
                         
-                        # Data Types
-                        st.markdown("### Data Types Distribution")
+                        # Data Types Distribution
+                        st.markdown("### 📈 Data Types Distribution")
                         if analysis.get('data_types'):
                             data_types_df = pd.DataFrame(list(analysis['data_types'].items()), columns=['Data Type', 'Count'])
                             st.bar_chart(data_types_df.set_index('Data Type'))
+                        
+                        # Detailed Column Analysis
+                        st.markdown("### 🔍 Detailed Column Analysis")
+                        st.markdown("Comprehensive analysis of each column according to NDMO standards")
+                        
+                        column_analysis = analysis.get('column_analysis', [])
+                        ndmo_compliance = analysis.get('ndmo_compliance', {})
+                        
+                        if column_analysis:
+                            # Create DataFrame for better display
+                            display_data = []
+                            for col_info in column_analysis:
+                                col_name = col_info['column_name']
+                                compliance_info = ndmo_compliance.get(col_name, {})
+                                
+                                display_data.append({
+                                    'Column Name': col_name,
+                                    'Data Type': col_info.get('detected_type', 'Unknown'),
+                                    'Completeness %': f"{col_info.get('completeness', 0):.1f}%",
+                                    'Uniqueness %': f"{col_info.get('uniqueness', 0):.1f}%",
+                                    'Non-Null': col_info.get('non_null_count', 0),
+                                    'Null': col_info.get('null_count', 0),
+                                    'Unique Values': col_info.get('unique_count', 0),
+                                    'NDMO Score': f"{compliance_info.get('score', 0)*100:.1f}%",
+                                    'Standards': ', '.join(compliance_info.get('standards', [])) or 'N/A',
+                                    'Primary Key': "✅" if col_info.get('is_primary_key') else "❌",
+                                    'Audit Field': "✅" if col_info.get('is_audit_field') else "❌"
+                                })
+                            
+                            df_display = pd.DataFrame(display_data)
+                            st.dataframe(df_display, use_container_width=True, height=400)
+                            
+                            # Column-by-column detailed view
+                            st.markdown("### 📋 Column Details")
+                            
+                            selected_column = st.selectbox(
+                                "Select Column for Detailed Analysis",
+                                [col['column_name'] for col in column_analysis],
+                                key="column_detail_select"
+                            )
+                            
+                            if selected_column:
+                                col_info = next((c for c in column_analysis if c['column_name'] == selected_column), None)
+                                compliance_info = ndmo_compliance.get(selected_column, {})
+                                
+                                if col_info:
+                                    st.markdown(f"#### Column: **{selected_column}**")
+                                    
+                                    col1, col2, col3, col4 = st.columns(4)
+                                    with col1:
+                                        st.metric("Data Type", col_info.get('detected_type', 'Unknown'))
+                                    with col2:
+                                        st.metric("Completeness", f"{col_info.get('completeness', 0):.1f}%")
+                                    with col3:
+                                        st.metric("Uniqueness", f"{col_info.get('uniqueness', 0):.1f}%")
+                                    with col4:
+                                        score = compliance_info.get('score', 0) * 100
+                                        st.metric("NDMO Score", f"{score:.1f}%")
+                                    
+                                    st.markdown("---")
+                                    
+                                    # NDMO Standards Assessment
+                                    st.markdown("#### 🛡️ NDMO Standards Assessment")
+                                    standards_list = compliance_info.get('standards', [])
+                                    
+                                    if standards_list:
+                                        for std_id in standards_list:
+                                            st.success(f"✅ **{std_id}**: Applicable to this column")
+                                    else:
+                                        st.info("No specific NDMO standards identified for this column")
+                                    
+                                    # Column Statistics
+                                    st.markdown("#### 📊 Column Statistics")
+                                    stats_col1, stats_col2 = st.columns(2)
+                                    with stats_col1:
+                                        st.write(f"**Total Rows:** {col_info.get('total_count', 0)}")
+                                        st.write(f"**Non-Null Values:** {col_info.get('non_null_count', 0)}")
+                                        st.write(f"**Null Values:** {col_info.get('null_count', 0)}")
+                                    with stats_col2:
+                                        st.write(f"**Unique Values:** {col_info.get('unique_count', 0)}")
+                                        st.write(f"**Primary Key:** {'Yes' if col_info.get('is_primary_key') else 'No'}")
+                                        st.write(f"**Audit Field:** {'Yes' if col_info.get('is_audit_field') else 'No'}")
+                                    
+                                    # Recommendations for this column
+                                    recommendations = []
+                                    if col_info.get('completeness', 100) < 100:
+                                        recommendations.append("⚠️ **DQ001**: Improve data completeness - some values are missing")
+                                    if col_info.get('uniqueness', 100) < 100 and col_info.get('is_primary_key'):
+                                        recommendations.append("⚠️ **DQ004**: Primary key should have 100% uniqueness")
+                                    if not col_info.get('is_primary_key') and 'id' in selected_column.lower():
+                                        recommendations.append("💡 **DG001**: Consider making this column a primary key")
+                                    if not col_info.get('is_audit_field') and any(kw in selected_column.lower() for kw in ['date', 'time', 'created', 'updated']):
+                                        recommendations.append("💡 **DS004**: This could be an audit trail field")
+                                    
+                                    if recommendations:
+                                        st.markdown("#### 💡 Recommendations")
+                                        for rec in recommendations:
+                                            st.info(rec)
                         
                         # Issues
                         if analysis.get('issues'):
@@ -3846,7 +3948,7 @@ def show_data_quality_dashboard():
                         
                         # Recommendations
                         if analysis.get('recommendations'):
-                            st.markdown("### 💡 Recommendations")
+                            st.markdown("### 💡 General Recommendations")
                             for rec in analysis['recommendations']:
                                 st.info(f"**{rec.get('type', 'Info')}**: {rec.get('message', '')}")
                 
