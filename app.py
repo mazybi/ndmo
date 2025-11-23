@@ -2477,13 +2477,9 @@ def show_templates_forms():
                             'approved_by': approved_by,
                             'approved_date': approved_date.strftime("%Y-%m-%d")
                         }
-                        
-                        progress_bar = st.progress(0)
-                        status_text = st.empty()
-                        
-                        try:
+                            
                             status_text.info("💾 Saving form data...")
-                            progress_bar.progress(20)
+                            progress_bar.progress(30)
                             
                             json_file = save_use_case_brief_form(form_data, image_path)
                             
