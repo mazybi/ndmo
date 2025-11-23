@@ -482,6 +482,16 @@ def create_professional_compliance_report(control_id, control_name, domain, spec
         borderPadding=8
     )
     
+    # Field label style for table labels
+    field_label_style = ParagraphStyle(
+        'FieldLabelStyle',
+        parent=styles['Normal'],
+        fontSize=11,
+        textColor=colors.black,
+        fontName='Helvetica-Bold',
+        leading=14
+    )
+    
     # Normal text style for tables
     normal_style = ParagraphStyle(
         'NormalStyle',
