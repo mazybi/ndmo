@@ -172,14 +172,180 @@ st.markdown("""
         margin-bottom: 1rem;
     }
     
-    /* Login page */
+    /* Login page - Professional Design */
     .login-container {
-        max-width: 500px;
-        margin: 5rem auto;
-        padding: 3rem;
+        max-width: 480px;
+        margin: 3rem auto;
+        padding: 3.5rem;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 1.5rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        border: 1px solid rgba(31, 119, 180, 0.1);
+        animation: slideInUp 0.6s ease-out;
+    }
+    
+    .login-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+    
+    .login-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #1f77b4 0%, #667eea 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+        animation: fadeInDown 0.8s ease;
+    }
+    
+    .login-subtitle {
+        font-size: 1rem;
+        color: #6c757d;
+        margin-bottom: 2rem;
+        animation: fadeIn 1s ease;
+    }
+    
+    .login-logo {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 2rem;
+        border-radius: 50%;
+        box-shadow: 0 8px 25px rgba(31, 119, 180, 0.2);
+        animation: logoPulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes logoPulse {
+        0%, 100% { transform: scale(1); box-shadow: 0 8px 25px rgba(31, 119, 180, 0.2); }
+        50% { transform: scale(1.05); box-shadow: 0 12px 35px rgba(31, 119, 180, 0.3); }
+    }
+    
+    .login-form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .login-input-wrapper {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+    
+    .login-input-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        font-size: 1.2rem;
+        z-index: 1;
+    }
+    
+    .login-button-primary {
+        background: linear-gradient(135deg, #1f77b4 0%, #667eea 100%);
+        color: white;
+        border: none;
+        padding: 0.875rem 2rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        font-size: 1rem;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(31, 119, 180, 0.3);
+        margin-top: 1rem;
+    }
+    
+    .login-button-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(31, 119, 180, 0.4);
+    }
+    
+    .login-button-secondary {
         background: white;
-        border-radius: 1rem;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        color: #1f77b4;
+        border: 2px solid #1f77b4;
+        padding: 0.875rem 2rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        font-size: 1rem;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 0.75rem;
+    }
+    
+    .login-button-secondary:hover {
+        background: #f8f9fa;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(31, 119, 180, 0.2);
+    }
+    
+    .login-divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 2rem 0;
+        color: #6c757d;
+    }
+    
+    .login-divider::before,
+    .login-divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .login-divider span {
+        padding: 0 1rem;
+        font-size: 0.875rem;
+    }
+    
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Global Loading Overlay */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    .loading-spinner-large {
+        width: 60px;
+        height: 60px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #1f77b4;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1.5rem;
+    }
+    
+    .loading-text {
+        font-size: 1.1rem;
+        color: #1f77b4;
+        font-weight: 600;
+        animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
     }
     
     /* Animations */
@@ -411,42 +577,128 @@ def show_welcome_page():
             st.rerun()
 
 def show_login_page():
-    """Show login page"""
+    """Show professional login page with modern design"""
+    # Center the login form
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
-        st.markdown("""
-        <div class="login-container">
-            <h2 style="text-align: center; color: #1f77b4; margin-bottom: 2rem;">Login</h2>
-        </div>
-        """, unsafe_allow_html=True)
+        # Logo
+        logo_html = """
+        <div class="login-header">
+            <div class="login-logo-container" style="text-align: center; margin-bottom: 2rem;">
+        """
+        try:
+            import base64
+            with open("logo@3x.png", "rb") as f:
+                logo_data = base64.b64encode(f.read()).decode()
+                logo_html += f'<img src="data:image/png;base64,{logo_data}" class="login-logo" alt="NDMO/NDI Logo">'
+        except:
+            logo_html += '<div class="login-logo" style="background: linear-gradient(135deg, #1f77b4 0%, #667eea 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: bold;">📊</div>'
         
-        with st.form("login_form"):
-            username = st.text_input("Username", placeholder="Enter your username")
-            password = st.text_input("Password", type="password", placeholder="Enter your password")
+        logo_html += """
+            </div>
+            <h1 class="login-title">Welcome Back</h1>
+            <p class="login-subtitle">Sign in to access the NDMO/NDI Compliance System</p>
+        </div>
+        """
+        st.markdown(logo_html, unsafe_allow_html=True)
+        
+        # Login Form
+        with st.form("login_form", clear_on_submit=False):
+            st.markdown("""
+            <div class="login-form-group">
+            </div>
+            """, unsafe_allow_html=True)
             
-            col1, col2 = st.columns(2)
-            with col1:
-                login_button = st.form_submit_button("Login", use_container_width=True, type="primary")
-            with col2:
-                guest_button = st.form_submit_button("Continue as Guest", use_container_width=True)
+            # Username with icon
+            username = st.text_input(
+                "👤 Username",
+                placeholder="Enter your username",
+                key="login_username",
+                help="Enter your registered username"
+            )
             
+            # Password with icon
+            password = st.text_input(
+                "🔒 Password",
+                type="password",
+                placeholder="Enter your password",
+                key="login_password",
+                help="Enter your password"
+            )
+            
+            # Remember me checkbox
+            remember_me = st.checkbox("Remember me", key="remember_me")
+            
+            # Login button
+            login_button = st.form_submit_button(
+                "🚀 Sign In",
+                use_container_width=True,
+                type="primary"
+            )
+            
+            # Divider
+            st.markdown("""
+            <div class="login-divider">
+                <span>OR</span>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Guest button
+            guest_button = st.form_submit_button(
+                "👤 Continue as Guest",
+                use_container_width=True
+            )
+            
+            # Handle form submission
             if login_button:
                 if username and password:
-                    with st.spinner("Authenticating..."):
-                        import time
-                        time.sleep(0.3)
+                    # Show loading overlay
+                    loading_html = """
+                    <div class="loading-overlay">
+                        <div class="loading-spinner-large"></div>
+                        <div class="loading-text">Authenticating...</div>
+                    </div>
+                    """
+                    st.markdown(loading_html, unsafe_allow_html=True)
+                    
+                    import time
+                    time.sleep(0.5)  # Simulate authentication
+                    
                     st.session_state.authenticated = True
                     st.session_state.user_name = username
-                    st.success(f"Welcome {username}!")
+                    st.session_state.remember_me = remember_me
+                    st.success(f"✅ Welcome {username}!")
                     st.rerun()
                 else:
-                    st.error("Please enter username and password")
+                    st.error("⚠️ Please enter both username and password")
             
             if guest_button:
+                # Show loading overlay
+                loading_html = """
+                <div class="loading-overlay">
+                    <div class="loading-spinner-large"></div>
+                    <div class="loading-text">Loading...</div>
+                </div>
+                """
+                st.markdown(loading_html, unsafe_allow_html=True)
+                
+                import time
+                time.sleep(0.3)
+                
                 st.session_state.authenticated = True
                 st.session_state.user_name = "Guest"
                 st.rerun()
+        
+        # Footer links
+        st.markdown("""
+        <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #dee2e6;">
+            <p style="color: #6c757d; font-size: 0.875rem;">
+                Need help? <a href="#" style="color: #1f77b4; text-decoration: none;">Contact Support</a> | 
+                <a href="#" style="color: #1f77b4; text-decoration: none;">Forgot Password?</a>
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
 
 def main():
     # Check authentication
