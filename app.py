@@ -571,8 +571,18 @@ def show_welcome_page():
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("🚀 Enter System", use_container_width=True, type="primary"):
-            with st.spinner("Loading dashboard..."):
-                time.sleep(0.3)
+            # Show loading overlay
+            loading_html = """
+            <div class="loading-overlay">
+                <div class="loading-spinner-large"></div>
+                <div class="loading-text">Loading Dashboard...</div>
+            </div>
+            """
+            st.markdown(loading_html, unsafe_allow_html=True)
+            
+            import time
+            time.sleep(0.5)  # Simulate loading
+            
             st.session_state.authenticated = True
             st.rerun()
 
@@ -1320,6 +1330,15 @@ def show_templates_forms():
                         if not spec_id or not evidence_description or not uploaded_by:
                             st.error("Please fill in all required fields (marked with *)")
                         else:
+                            # Show loading overlay
+                            loading_html = """
+                            <div class="loading-overlay">
+                                <div class="loading-spinner-large"></div>
+                                <div class="loading-text">Saving form and generating PDF...</div>
+                            </div>
+                            """
+                            st.markdown(loading_html, unsafe_allow_html=True)
+                            
                             from fillable_forms import save_form_data, generate_pdf_from_form
                             
                             form_data = {
@@ -1477,6 +1496,15 @@ def show_templates_forms():
                         if not entity_name or not prepared_by:
                             st.error("Please fill in all required fields (marked with *)")
                         else:
+                            # Show loading overlay
+                            loading_html = """
+                            <div class="loading-overlay">
+                                <div class="loading-spinner-large"></div>
+                                <div class="loading-text">Saving compliance report and generating PDF...</div>
+                            </div>
+                            """
+                            st.markdown(loading_html, unsafe_allow_html=True)
+                            
                             from fillable_forms import save_form_data, generate_pdf_from_form
                             
                             form_data = {
@@ -1647,6 +1675,15 @@ def show_templates_forms():
                         if not auditor_name or not entity_name:
                             st.error("Please fill in all required fields (marked with *)")
                         else:
+                            # Show loading overlay
+                            loading_html = """
+                            <div class="loading-overlay">
+                                <div class="loading-spinner-large"></div>
+                                <div class="loading-text">Saving audit checklist and generating PDF...</div>
+                            </div>
+                            """
+                            st.markdown(loading_html, unsafe_allow_html=True)
+                            
                             from fillable_forms import save_form_data, generate_pdf_from_form
                             
                             form_data = {
@@ -1718,6 +1755,15 @@ def show_templates_forms():
                 
                 if control:
                     if st.button("📥 Generate & Download Professional Audit Checklist", use_container_width=True):
+                        # Show loading overlay
+                        loading_html = """
+                        <div class="loading-overlay">
+                            <div class="loading-spinner-large"></div>
+                            <div class="loading-text">Generating audit checklist...</div>
+                        </div>
+                        """
+                        st.markdown(loading_html, unsafe_allow_html=True)
+                        
                         try:
                             from professional_templates import create_professional_audit_checklist
                             
@@ -2140,6 +2186,15 @@ def show_templates_forms():
                 if template_key not in st.session_state:
                     generate_button = st.button("📥 Generate & Download Data Sharing Report Template", use_container_width=True, key="generate_report_btn")
                     if generate_button:
+                        # Show loading overlay
+                        loading_html = """
+                        <div class="loading-overlay">
+                            <div class="loading-spinner-large"></div>
+                            <div class="loading-text">Generating Data Sharing Report template...</div>
+                        </div>
+                        """
+                        st.markdown(loading_html, unsafe_allow_html=True)
+                        
                         progress_bar = st.progress(0)
                         status_text = st.empty()
                         try:
@@ -2443,6 +2498,15 @@ def show_templates_forms():
             if template_key not in st.session_state:
                 generate_button = st.button("📥 Generate & Download Use Case Brief Template", use_container_width=True, key="generate_use_case_btn")
                 if generate_button:
+                    # Show loading overlay
+                    loading_html = """
+                    <div class="loading-overlay">
+                        <div class="loading-spinner-large"></div>
+                        <div class="loading-text">Generating Use Case Brief template...</div>
+                    </div>
+                    """
+                    st.markdown(loading_html, unsafe_allow_html=True)
+                    
                     progress_bar = st.progress(0)
                     status_text = st.empty()
                     try:
@@ -2827,6 +2891,15 @@ def show_templates_forms():
                 if template_key not in st.session_state:
                     generate_button = st.button("📥 Generate & Download Gap Analysis Report Template", use_container_width=True, key="generate_gap_btn")
                     if generate_button:
+                        # Show loading overlay
+                        loading_html = """
+                        <div class="loading-overlay">
+                            <div class="loading-spinner-large"></div>
+                            <div class="loading-text">Generating Gap Analysis Report template...</div>
+                        </div>
+                        """
+                        st.markdown(loading_html, unsafe_allow_html=True)
+                        
                         progress_bar = st.progress(0)
                         status_text = st.empty()
                         try:
@@ -2897,6 +2970,15 @@ def show_templates_forms():
                 if template_key not in st.session_state:
                     generate_button = st.button("📥 Generate & Download Risk Assessment Report Template", use_container_width=True, key="generate_risk_btn")
                     if generate_button:
+                        # Show loading overlay
+                        loading_html = """
+                        <div class="loading-overlay">
+                            <div class="loading-spinner-large"></div>
+                            <div class="loading-text">Generating Risk Assessment Report template...</div>
+                        </div>
+                        """
+                        st.markdown(loading_html, unsafe_allow_html=True)
+                        
                         progress_bar = st.progress(0)
                         status_text = st.empty()
                         try:
