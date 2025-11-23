@@ -2391,6 +2391,15 @@ def show_templates_forms():
                     if not use_case_id or not use_case_name or not description or not business_objective:
                         st.error("Please fill in all required fields (marked with *)")
                     else:
+                        # Show loading overlay
+                        loading_html = """
+                        <div class="loading-overlay">
+                            <div class="loading-spinner-large"></div>
+                            <div class="loading-text">Saving Use Case Brief and generating PDF...</div>
+                        </div>
+                        """
+                        st.markdown(loading_html, unsafe_allow_html=True)
+                        
                         # Save uploaded image
                         image_path = saved_image_path
                         if product_image:
