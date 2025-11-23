@@ -21,99 +21,86 @@ class SmartSchemaAnalyzer:
             if not os.path.exists(schema_file_path):
                 return {'error': f'Schema file not found: {schema_file_path}'}
             
-            # Try to read as Excel - CRITICAL: Read ALL columns including empty ones
+            # CRITICAL: Use openpyxl directly to get ALL columns (including empty ones)
+            import openpyxl
             df = None
             actual_column_count = 0
+            column_names = []
             
             try:
-                # First: Read with header=None to get ALL columns (including empty ones)
-                df_raw = pd.read_excel(schema_file_path, header=None, engine='openpyxl', nrows=10)
-                actual_column_count = len(df_raw.columns)
+                # Step 1: Read Excel file with openpyxl to get exact column count
+                wb = openpyxl.load_workbook(schema_file_path, read_only=True, data_only=True)
+                ws = wb.active
                 
-                # Check if first row looks like column headers
-                if len(df_raw) > 0:
-                    first_row = df_raw.iloc[0]
-                    # If first row has many non-null values, it's likely column headers
-                    non_null_count = first_row.notna().sum()
-                    
-                    if non_null_count > actual_column_count * 0.3:
-                        # First row is headers - use it
-                        df = pd.read_excel(schema_file_path, header=0, engine='openpyxl')
-                        # Ensure we keep all columns even if some are empty
-                        if len(df.columns) < actual_column_count:
-                            # Some columns were dropped - read again with all columns
-                            df = pd.read_excel(schema_file_path, header=0, engine='openpyxl', usecols=None)
+                # Get actual maximum column from Excel file
+                max_col = ws.max_column
+                actual_column_count = max_col
+                
+                # Get column names from first row
+                for col_idx in range(1, max_col + 1):
+                    cell_value = ws.cell(row=1, column=col_idx).value
+                    if cell_value and str(cell_value).strip():
+                        column_names.append(str(cell_value).strip())
                     else:
-                        # No clear headers - read as data with numeric column names
-                        df = pd.read_excel(schema_file_path, header=None, engine='openpyxl')
-                        df.columns = [f'Column_{i}' for i in range(len(df.columns))]
+                        column_names.append(f'Column_{col_idx}')
                 
-                # If still no data, try reading with default settings
-                if df is None or len(df.columns) < actual_column_count:
-                    df = pd.read_excel(schema_file_path, engine='openpyxl', usecols=None)
-                    
+                wb.close()
+                
+                # Step 2: Read with pandas using the column names we found
+                if column_names:
+                    # Try reading with header=0 first
+                    try:
+                        df = pd.read_excel(schema_file_path, engine='openpyxl', header=0)
+                        # If we got fewer columns, pad with empty columns
+                        if len(df.columns) < max_col:
+                            # Add missing columns
+                            for i in range(len(df.columns), max_col):
+                                df[f'Column_{i+1}'] = None
+                            # Rename all columns
+                            df.columns = column_names[:len(df.columns)]
+                    except:
+                        # Fallback: read without header
+                        df = pd.read_excel(schema_file_path, engine='openpyxl', header=None)
+                        # Use first row if it looks like headers
+                        if len(df) > 0:
+                            first_row = df.iloc[0]
+                            if first_row.notna().sum() > max_col * 0.3:
+                                df.columns = [str(x).strip() if pd.notna(x) else f'Column_{i+1}' for i, x in enumerate(first_row)]
+                                df = df.iloc[1:].reset_index(drop=True)
+                            else:
+                                df.columns = column_names[:len(df.columns)]
+                else:
+                    # No column names found, read with numeric indices
+                    df = pd.read_excel(schema_file_path, engine='openpyxl', header=None)
+                    df.columns = [f'Column_{i+1}' for i in range(len(df.columns))]
+                    # Pad to max_col if needed
+                    if len(df.columns) < max_col:
+                        for i in range(len(df.columns), max_col):
+                            df[f'Column_{i+1}'] = None
+                
             except Exception as e1:
                 try:
-                    # Fallback: try reading with default settings
+                    # Fallback: try reading with pandas default
                     df = pd.read_excel(schema_file_path, engine='openpyxl')
                     actual_column_count = len(df.columns)
+                    # Try to get more columns
+                    try:
+                        df_test = pd.read_excel(schema_file_path, header=None, engine='openpyxl', nrows=1)
+                        actual_column_count = max(actual_column_count, len(df_test.columns))
+                    except:
+                        pass
                 except Exception as e2:
                     return {'error': f'Failed to read schema file: {str(e1)} / {str(e2)}'}
             
             if df is None or df.empty:
                 return {'error': 'Schema file is empty or could not be read.'}
             
-            # CRITICAL: Force read ALL columns by reading raw first row using openpyxl
-            try:
-                import openpyxl
-                wb = openpyxl.load_workbook(schema_file_path, read_only=True, data_only=True)
-                ws = wb.active
-                # Get actual maximum column from Excel file
-                max_col = ws.max_column
-                actual_column_count = max(actual_column_count, max_col)
-                
-                # Get column names from first row
-                column_names = []
-                for col_idx in range(1, max_col + 1):
-                    cell_value = ws.cell(row=1, column=col_idx).value
-                    if cell_value:
-                        column_names.append(str(cell_value))
-                    else:
-                        column_names.append(f'Column_{col_idx}')
-                
-                wb.close()
-                
-                # If we got column names, use them
-                if len(column_names) > len(df.columns):
-                    # Re-read with all columns
-                    try:
-                        df = pd.read_excel(schema_file_path, engine='openpyxl', header=0)
-                        # Ensure we have all columns by reading with usecols
-                        if len(df.columns) < max_col:
-                            # Read with explicit column range
-                            df = pd.read_excel(schema_file_path, engine='openpyxl', header=0, usecols=range(max_col))
-                            # Rename columns if we have names
-                            if len(column_names) == len(df.columns):
-                                df.columns = column_names[:len(df.columns)]
-                    except:
-                        # Fallback: read without header and use column names
-                        try:
-                            df = pd.read_excel(schema_file_path, engine='openpyxl', header=None)
-                            # Use first row as header if it has data
-                            if len(df) > 0 and df.iloc[0].notna().sum() > max_col * 0.3:
-                                df.columns = df.iloc[0]
-                                df = df.iloc[1:].reset_index(drop=True)
-                            else:
-                                df.columns = column_names[:len(df.columns)]
-                        except:
-                            pass
-            except Exception as e:
-                # If openpyxl fails, try to get column count from raw read
-                try:
-                    df_test = pd.read_excel(schema_file_path, header=None, engine='openpyxl', nrows=1)
-                    actual_column_count = max(actual_column_count, len(df_test.columns))
-                except:
-                    pass
+            # Ensure we have all columns
+            if len(df.columns) < actual_column_count:
+                # Add missing columns
+                for i in range(len(df.columns), actual_column_count):
+                    col_name = column_names[i] if i < len(column_names) else f'Column_{i+1}'
+                    df[col_name] = None
             
             # Analyze schema structure
             analysis = {
@@ -328,55 +315,38 @@ class SmartSchemaAnalyzer:
         return score / max_score if max_score > 0 else 0.0
     
     def _analyze_columns(self, df):
-        """Analyze all columns in the dataframe"""
+        """Analyze all columns in the dataframe - CRITICAL: Analyze ALL columns"""
         column_analysis = []
         
-        # Get all columns from the dataframe - ensure we get ALL columns
+        # Get all columns from the dataframe
         all_columns = list(df.columns)
         
-        # CRITICAL: If we have schema_data, use it to get actual column count
-        if hasattr(self, 'schema_data') and self.schema_data is not None:
-            # Try to get actual column names from the raw data
-            try:
-                # Get column names from first row if available
-                if len(self.schema_data) > 0:
-                    first_row = self.schema_data.iloc[0]
-                    # If first row has column names, use them
-                    if first_row.notna().sum() > len(all_columns) * 0.5:
-                        # First row might be headers
-                        pass
-            except:
-                pass
-        
-        # Analyze each column - iterate through ALL columns in dataframe
+        # Analyze each column - iterate through ALL columns
         for col_idx, col in enumerate(all_columns):
             try:
                 # Get column name
                 if isinstance(col, (int, float)):
-                    col_name = f'Column_{int(col)}'
+                    col_name = f'Column_{int(col)+1}'
                 else:
                     col_name = str(col)
                 
-                # Get column data - handle both named and indexed columns
+                # Get column data
                 try:
                     if col in df.columns:
                         col_data = df[col]
                     elif col_idx < len(df.columns):
                         col_data = df.iloc[:, col_idx]
                     else:
-                        # Column doesn't exist - skip
-                        continue
+                        # Column doesn't exist - create empty series
+                        col_data = pd.Series([None] * len(df), name=col_name)
                 except:
-                    # Try by index
-                    try:
-                        col_data = df.iloc[:, col_idx]
-                    except:
-                        continue
+                    # Create empty series if column doesn't exist
+                    col_data = pd.Series([None] * len(df), name=col_name)
                 
-                # Skip if column is completely empty (all NaN)
+                # Analyze even if column is empty
                 if col_data.isna().all():
-                    # Still analyze it but mark as empty
-                    col_data = pd.Series([None] * len(df))
+                    # Column is empty but still analyze it
+                    pass
                 
                 col_info = {
                     'column_name': col_name,

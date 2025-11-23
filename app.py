@@ -4271,6 +4271,25 @@ def show_data_quality_dashboard():
         st.subheader("⚙️ Data Processing")
         st.markdown("Process your data file according to schema requirements")
         
+        # Show workflow status
+        workflow_status = st.container()
+        with workflow_status:
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                schema_done = 'schema_analysis' in st.session_state
+                st.markdown(f"**Schema Analysis:** {'✅ Done' if schema_done else '❌ Pending'}")
+            with col2:
+                data_done = 'data_processing_result' in st.session_state
+                st.markdown(f"**Data Processing:** {'✅ Done' if data_done else '❌ Pending'}")
+            with col3:
+                compliance_done = 'compliance_results' in st.session_state
+                st.markdown(f"**NDMO Compliance:** {'✅ Done' if compliance_done else '❌ Pending'}")
+            with col4:
+                reports_done = st.session_state.get('dq_report_generated', False) or st.session_state.get('dq_assessment_generated', False)
+                st.markdown(f"**Reports:** {'✅ Generated' if reports_done else '❌ Pending'}")
+        
+        st.markdown("---")
+        
         uploaded_data = st.file_uploader(
             "Upload Data File (Excel)",
             type=['xlsx', 'xls'],
@@ -4281,187 +4300,293 @@ def show_data_quality_dashboard():
             if 'schema_analysis' not in st.session_state:
                 st.warning("⚠️ Please analyze schema first in the 'Schema Analysis' tab")
             else:
-                if st.button("⚙️ Process Data", use_container_width=True):
-                    progress_bar = st.progress(0)
-                    status_text = st.empty()
-                    
+                if st.button("⚙️ Process Data", use_container_width=True, key="process_data_btn"):
                     try:
-                        # Save uploaded file temporarily
-                        import tempfile
-                        with tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx') as tmp_file:
-                            tmp_file.write(uploaded_data.getvalue())
-                            tmp_path = tmp_file.name
-                        
-                        status_text.info("🔄 Processing data...")
-                        progress_bar.progress(20)
-                        
-                        result = st.session_state.data_processor.process_data(
-                            tmp_path,
-                            st.session_state.schema_analysis
-                        )
-                        
-                        if result.get('success'):
-                            progress_bar.progress(100)
-                            status_text.success("✅ Data processing completed!")
-                            progress_bar.empty()
+                        with st.spinner("🔄 Processing data..."):
+                            # Save uploaded file temporarily
+                            import tempfile
+                            with tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx') as tmp_file:
+                                tmp_file.write(uploaded_data.getvalue())
+                                tmp_path = tmp_file.name
                             
-                            # Store results
-                            st.session_state.data_processing_result = result
+                            result = st.session_state.data_processor.process_data(
+                                tmp_path,
+                                st.session_state.schema_analysis
+                            )
                             
-                            # Display quality metrics
-                            st.markdown("### Quality Metrics")
-                            metrics = result.get('quality_metrics', {})
-                            
-                            col1, col2, col3, col4, col5 = st.columns(5)
-                            with col1:
-                                st.metric("Completeness", f"{metrics.get('completeness', 0)*100:.1f}%")
-                            with col2:
-                                st.metric("Accuracy", f"{metrics.get('accuracy', 0)*100:.1f}%")
-                            with col3:
-                                st.metric("Consistency", f"{metrics.get('consistency', 0)*100:.1f}%")
-                            with col4:
-                                st.metric("Uniqueness", f"{metrics.get('uniqueness', 0)*100:.1f}%")
-                            with col5:
-                                st.metric("Overall Score", f"{metrics.get('overall_score', 0)*100:.1f}%")
-                            
-                            # Display processed data preview
-                            st.markdown("### Processed Data Preview")
-                            processed_df = result.get('processed_data')
-                            if processed_df is not None:
-                                st.dataframe(processed_df.head(10), use_container_width=True)
+                            if result.get('success'):
+                                # Store results
+                                st.session_state.data_processing_result = result
                                 
-                                # Download processed data
-                                st.markdown("### Download Processed Data")
-                                import io
-                                output = io.BytesIO()
-                                processed_df.to_excel(output, index=False, engine='openpyxl')
-                                output.seek(0)
-                                st.download_button(
-                                    "📥 Download Processed Data (Excel)",
-                                    output.getvalue(),
-                                    file_name=f"processed_data_{datetime.now().strftime('%Y%m%d')}.xlsx",
-                                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                                    key="download_processed_data"
-                                )
-                        else:
-                            progress_bar.empty()
-                            status_text.error(f"❌ {result.get('error', 'Processing failed')}")
+                                st.success("✅ Data processing completed!")
+                                st.rerun()
+                            else:
+                                st.error(f"❌ {result.get('error', 'Processing failed')}")
                     
                     except Exception as e:
-                        progress_bar.empty()
-                        status_text.error(f"❌ Error: {str(e)}")
+                        st.error(f"❌ Error: {str(e)}")
                         import traceback
                         with st.expander("Error Details"):
                             st.code(traceback.format_exc())
+        
+        # Show results if available
+        if 'data_processing_result' in st.session_state:
+            result = st.session_state.data_processing_result
+            st.markdown("### 📊 Quality Metrics")
+            metrics = result.get('quality_metrics', {})
+            
+            col1, col2, col3, col4, col5 = st.columns(5)
+            with col1:
+                st.metric("Completeness", f"{metrics.get('completeness', 0)*100:.1f}%")
+            with col2:
+                st.metric("Accuracy", f"{metrics.get('accuracy', 0)*100:.1f}%")
+            with col3:
+                st.metric("Consistency", f"{metrics.get('consistency', 0)*100:.1f}%")
+            with col4:
+                st.metric("Uniqueness", f"{metrics.get('uniqueness', 0)*100:.1f}%")
+            with col5:
+                st.metric("Overall Score", f"{metrics.get('overall_score', 0)*100:.1f}%")
+            
+            # Display processed data preview
+            st.markdown("### 📋 Processed Data Preview")
+            processed_df = result.get('processed_data')
+            if processed_df is not None and isinstance(processed_df, pd.DataFrame):
+                st.dataframe(processed_df.head(10), use_container_width=True)
+                
+                # Download processed data
+                st.markdown("### 📥 Download Processed Data")
+                import io
+                output = io.BytesIO()
+                processed_df.to_excel(output, index=False, engine='openpyxl')
+                output.seek(0)
+                st.download_button(
+                    "📥 Download Processed Data (Excel)",
+                    output.getvalue(),
+                    file_name=f"processed_data_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    key="download_processed_data"
+                )
     
     with dq_tab3:
         st.subheader("🛡️ NDMO Compliance Assessment")
         st.markdown("Assess NDMO compliance based on schema analysis and data quality")
         
-        if 'schema_analysis' in st.session_state and 'data_processing_result' in st.session_state:
-            if st.button("🛡️ Assess NDMO Compliance", use_container_width=True):
-                progress_bar = st.progress(0)
-                status_text = st.empty()
-                
+        # Show prerequisites
+        schema_ready = 'schema_analysis' in st.session_state
+        data_ready = 'data_processing_result' in st.session_state
+        
+        if not schema_ready:
+            st.warning("⚠️ Please complete Schema Analysis first")
+        elif not data_ready:
+            st.warning("⚠️ Please complete Data Processing first")
+        else:
+            if st.button("🛡️ Assess NDMO Compliance", use_container_width=True, key="assess_compliance_btn"):
                 try:
-                    status_text.info("🔄 Calculating compliance scores...")
-                    progress_bar.progress(30)
-                    
-                    schema_analysis = st.session_state.schema_analysis
-                    data_quality = st.session_state.data_processing_result.get('quality_metrics', {})
-                    
-                    compliance_results = st.session_state.ndmo_standards.calculate_compliance_score(
-                        schema_analysis,
-                        data_quality
-                    )
-                    
-                    progress_bar.progress(100)
-                    status_text.success("✅ Compliance assessment completed!")
-                    progress_bar.empty()
-                    
-                    # Store results
-                    st.session_state.compliance_results = compliance_results
-                    
-                    # Display overall compliance
-                    st.markdown("### Overall Compliance")
-                    overall_score = compliance_results.get('overall_score', 0)
-                    status = compliance_results.get('status', 'Unknown')
-                    
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        st.metric("Compliance Score", f"{overall_score*100:.1f}%")
-                    with col2:
-                        status_color = {
-                            'Compliant': '🟢',
-                            'Partially Compliant': '🟡',
-                            'Non-Compliant': '🔴'
-                        }
-                        st.metric("Status", f"{status_color.get(status, '⚪')} {status}")
-                    
-                    # Category scores
-                    st.markdown("### Compliance by Category")
-                    category_scores = compliance_results.get('category_scores', {})
-                    if category_scores:
-                        cat_df = pd.DataFrame(list(category_scores.items()), columns=['Category', 'Score'])
-                        cat_df['Score'] = cat_df['Score'] * 100
-                        st.bar_chart(cat_df.set_index('Category'))
-                    
-                    # Recommendations
-                    recommendations = st.session_state.ndmo_standards.get_recommendations(compliance_results)
-                    if recommendations:
-                        st.markdown("### 💡 Recommendations")
-                        for rec in recommendations[:10]:  # Show top 10
-                            priority_icon = "🔴" if rec.get('priority') == 'High' else "🟡"
-                            st.info(f"{priority_icon} **{rec.get('standard_name', '')}** ({rec.get('standard_id', '')}): {rec.get('recommendation', '')}")
+                    with st.spinner("🔄 Calculating compliance scores..."):
+                        schema_analysis = st.session_state.schema_analysis
+                        data_quality = st.session_state.data_processing_result.get('quality_metrics', {})
+                        
+                        compliance_results = st.session_state.ndmo_standards.calculate_compliance_score(
+                            schema_analysis,
+                            data_quality
+                        )
+                        
+                        # Store results
+                        st.session_state.compliance_results = compliance_results
+                        
+                        st.success("✅ Compliance assessment completed!")
+                        st.rerun()
                 
                 except Exception as e:
-                    progress_bar.empty()
-                    status_text.error(f"❌ Error: {str(e)}")
+                    st.error(f"❌ Error: {str(e)}")
                     import traceback
                     with st.expander("Error Details"):
                         st.code(traceback.format_exc())
-        else:
-            st.info("ℹ️ Please complete Schema Analysis and Data Processing first")
+        
+        # Show results if available
+        if 'compliance_results' in st.session_state:
+            compliance_results = st.session_state.compliance_results
+            
+            # Display overall compliance
+            st.markdown("### 📊 Overall Compliance")
+            overall_score = compliance_results.get('overall_score', 0)
+            status = compliance_results.get('status', 'Unknown')
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                st.metric("Compliance Score", f"{overall_score*100:.1f}%")
+            with col2:
+                status_color = {
+                    'Compliant': '🟢',
+                    'Partially Compliant': '🟡',
+                    'Non-Compliant': '🔴'
+                }
+                st.metric("Status", f"{status_color.get(status, '⚪')} {status}")
+            
+            # Category scores
+            st.markdown("### 📈 Compliance by Category")
+            category_scores = compliance_results.get('category_scores', {})
+            if category_scores:
+                cat_df = pd.DataFrame(list(category_scores.items()), columns=['Category', 'Score'])
+                cat_df['Score'] = cat_df['Score'] * 100
+                st.bar_chart(cat_df.set_index('Category'))
+            
+            # Recommendations
+            try:
+                recommendations = st.session_state.ndmo_standards.get_recommendations(compliance_results)
+                if recommendations:
+                    st.markdown("### 💡 Recommendations")
+                    for rec in recommendations[:10]:  # Show top 10
+                        priority_icon = "🔴" if rec.get('priority') == 'High' else "🟡"
+                        st.info(f"{priority_icon} **{rec.get('standard_name', '')}** ({rec.get('standard_id', '')}): {rec.get('recommendation', '')}")
+            except:
+                pass
     
     with dq_tab4:
         st.subheader("📊 Quality Reports")
         st.markdown("View comprehensive quality reports and export results")
         
+        # Generate comprehensive reports
+        st.markdown("### 📄 Generate Professional Reports")
+        
         if 'schema_analysis' in st.session_state:
-            st.markdown("### Schema Analysis Report")
+            analysis = st.session_state.schema_analysis
+            
+            col_btn1, col_btn2 = st.columns(2)
+            
+            with col_btn1:
+                if st.button("📄 Generate Technical Report", use_container_width=True, key="generate_tech_report_tab4"):
+                    try:
+                        with st.spinner("🔄 Generating professional technical report..."):
+                            from data_quality_report import create_data_quality_report
+                            
+                            logo_path = "logo@3x.png"
+                            if not os.path.exists(logo_path):
+                                logo_path = None
+                            
+                            report_filename = create_data_quality_report(
+                                analysis,
+                                analysis.get('file_name', 'schema_file.xlsx'),
+                                logo_path=logo_path
+                            )
+                            
+                            st.session_state.dq_report_filename = report_filename
+                            st.session_state.dq_report_generated = True
+                            
+                            st.success("✅ Technical report generated successfully!")
+                            st.rerun()
+                    
+                    except Exception as e:
+                        st.error(f"❌ Error: {str(e)}")
+                        import traceback
+                        with st.expander("Error Details"):
+                            st.code(traceback.format_exc())
+            
+            with col_btn2:
+                if st.button("📊 Generate Assessment Report", use_container_width=True, key="generate_assess_report_tab4"):
+                    try:
+                        with st.spinner("🔄 Generating professional assessment report..."):
+                            from data_quality_report import create_schema_assessment_report
+                            
+                            logo_path = "logo@3x.png"
+                            if not os.path.exists(logo_path):
+                                logo_path = None
+                            
+                            assessment_filename = create_schema_assessment_report(
+                                analysis,
+                                analysis.get('file_name', 'schema_file.xlsx'),
+                                logo_path=logo_path
+                            )
+                            
+                            st.session_state.dq_assessment_filename = assessment_filename
+                            st.session_state.dq_assessment_generated = True
+                            
+                            st.success("✅ Assessment report generated successfully!")
+                            st.rerun()
+                    
+                    except Exception as e:
+                        st.error(f"❌ Error: {str(e)}")
+                        import traceback
+                        with st.expander("Error Details"):
+                            st.code(traceback.format_exc())
+            
+            # Show download buttons if reports were generated
+            if st.session_state.get('dq_report_generated', False) and st.session_state.get('dq_report_filename'):
+                report_filename = st.session_state.dq_report_filename
+                if os.path.exists(report_filename):
+                    with open(report_filename, 'rb') as f:
+                        st.download_button(
+                            "📥 Download Technical Report",
+                            f.read(),
+                            file_name=os.path.basename(report_filename),
+                            mime="application/pdf",
+                            use_container_width=True,
+                            key="download_tech_report_tab4"
+                        )
+            
+            if st.session_state.get('dq_assessment_generated', False) and st.session_state.get('dq_assessment_filename'):
+                assessment_filename = st.session_state.dq_assessment_filename
+                if os.path.exists(assessment_filename):
+                    with open(assessment_filename, 'rb') as f:
+                        st.download_button(
+                            "📥 Download Assessment Report",
+                            f.read(),
+                            file_name=os.path.basename(assessment_filename),
+                            mime="application/pdf",
+                            use_container_width=True,
+                            key="download_assess_report_tab4"
+                        )
+        
+        st.markdown("---")
+        
+        # Export JSON reports
+        if 'schema_analysis' in st.session_state:
+            st.markdown("### 📋 Schema Analysis Report")
             with st.expander("View Schema Analysis Details"):
                 st.json(st.session_state.schema_analysis)
             
             # Export schema analysis
-            if st.button("📥 Export Schema Analysis (JSON)"):
-                st.download_button(
-                    "Download",
-                    json.dumps(st.session_state.schema_analysis, indent=2),
-                    file_name=f"schema_analysis_{datetime.now().strftime('%Y%m%d')}.json",
-                    mime="application/json"
-                )
+            schema_json = json.dumps(st.session_state.schema_analysis, indent=2, default=str)
+            st.download_button(
+                "📥 Export Schema Analysis (JSON)",
+                schema_json,
+                file_name=f"schema_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                mime="application/json",
+                key="export_schema_json"
+            )
         
         if 'data_processing_result' in st.session_state:
-            st.markdown("### Data Processing Report")
+            st.markdown("### ⚙️ Data Processing Report")
             with st.expander("View Processing Results"):
                 result = st.session_state.data_processing_result.copy()
                 if 'processed_data' in result:
                     result['processed_data'] = "DataFrame (see preview above)"
                 st.json(result)
+            
+            # Export processing results
+            processing_json = json.dumps(result, indent=2, default=str)
+            st.download_button(
+                "📥 Export Processing Results (JSON)",
+                processing_json,
+                file_name=f"processing_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                mime="application/json",
+                key="export_processing_json"
+            )
         
         if 'compliance_results' in st.session_state:
-            st.markdown("### NDMO Compliance Report")
+            st.markdown("### 🛡️ NDMO Compliance Report")
             with st.expander("View Compliance Results"):
                 st.json(st.session_state.compliance_results)
             
             # Export compliance report
-            if st.button("📥 Export Compliance Report (JSON)"):
-                st.download_button(
-                    "Download",
-                    json.dumps(st.session_state.compliance_results, indent=2),
-                    file_name=f"compliance_report_{datetime.now().strftime('%Y%m%d')}.json",
-                    mime="application/json"
-                )
+            compliance_json = json.dumps(st.session_state.compliance_results, indent=2, default=str)
+            st.download_button(
+                "📥 Export Compliance Report (JSON)",
+                compliance_json,
+                file_name=f"compliance_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                mime="application/json",
+                key="export_compliance_json"
+            )
 
 if __name__ == "__main__":
     main()
