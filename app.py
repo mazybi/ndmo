@@ -1875,6 +1875,15 @@ def show_templates_forms():
                         if not agreement_id or not data_provider or not data_recipient or not purpose:
                             st.error("Please fill in all required fields (marked with *)")
                         else:
+                            # Show loading overlay
+                            loading_html = """
+                            <div class="loading-overlay">
+                                <div class="loading-spinner-large"></div>
+                                <div class="loading-text">Saving data share agreement and generating PDF...</div>
+                            </div>
+                            """
+                            st.markdown(loading_html, unsafe_allow_html=True)
+                            
                             form_data = {
                                 'agreement_id': agreement_id,
                                 'agreement_date': agreement_date.strftime("%Y-%m-%d"),
