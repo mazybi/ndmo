@@ -1541,13 +1541,13 @@ def show_templates_forms():
                 [f"{c['id']} - {c['title']}" for c in all_controls],
                 key="fill_compliance_control"
             )
-        
-        if selected_control:
-            control_id = selected_control.split(" - ")[0]
-            control = next((c for c in all_controls if c['id'] == control_id), None)
             
-            if control:
-                # Try to load saved form
+            if selected_control:
+                control_id = selected_control.split(" - ")[0]
+                control = next((c for c in all_controls if c['id'] == control_id), None)
+                
+                if control:
+                    # Try to load saved form
                 from fillable_forms import load_form_data
                 saved_data = load_form_data("compliance_report", control_id, "")
                 
@@ -1807,12 +1807,12 @@ def show_templates_forms():
                 [f"{c['id']} - {c['title']}" for c in all_controls],
                 key="fill_audit_control"
             )
-        
-        if selected_control:
-            control_id = selected_control.split(" - ")[0]
-            control = next((c for c in all_controls if c['id'] == control_id), None)
             
-            if control:
+            if selected_control:
+                control_id = selected_control.split(" - ")[0]
+                control = next((c for c in all_controls if c['id'] == control_id), None)
+                
+                if control:
                 # Try to load saved form
                 from fillable_forms import load_form_data
                 saved_data = load_form_data("audit_checklist", control_id, "")
