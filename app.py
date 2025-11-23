@@ -1330,18 +1330,17 @@ def show_templates_forms():
                         if not spec_id or not evidence_description or not uploaded_by:
                             st.error("Please fill in all required fields (marked with *)")
                         else:
-                            # Show loading overlay
-                            loading_html = """
-                            <div class="loading-overlay">
-                                <div class="loading-spinner-large"></div>
-                                <div class="loading-text">Saving form and generating PDF...</div>
-                            </div>
-                            """
-                            st.markdown(loading_html, unsafe_allow_html=True)
+                            # Show loading with progress
+                            progress_bar = st.progress(0)
+                            status_text = st.empty()
                             
-                            from fillable_forms import save_form_data, generate_pdf_from_form
-                            
-                            form_data = {
+                            try:
+                                status_text.info("💾 Saving form data...")
+                                progress_bar.progress(20)
+                                
+                                from fillable_forms import save_form_data, generate_pdf_from_form
+                                
+                                form_data = {
                                 'control_id': control_id,
                                 'control_name': control['title'],
                                 'spec_id': spec_id,
@@ -1365,16 +1364,29 @@ def show_templates_forms():
                                 'approved_date': approved_date.strftime("%Y-%m-%d") if approved_date else ''
                             }
                             
-                            # Save form data
-                            json_file = save_form_data("evidence", control_id, spec_id, form_data)
-                            
-                            # Generate PDF
-                            pdf_file = generate_pdf_from_form("evidence", form_data, control_id, control['title'], spec_id)
-                            
-                            st.session_state[f'evidence_json_{control_id}_{spec_id}'] = json_file
-                            st.session_state[f'evidence_pdf_{control_id}_{spec_id}'] = pdf_file
-                            
-                            st.success("✅ Form saved successfully!")
+                                # Save form data
+                                status_text.info("💾 Saving form data...")
+                                progress_bar.progress(40)
+                                json_file = save_form_data("evidence", control_id, spec_id, form_data)
+                                
+                                # Generate PDF
+                                status_text.info("📄 Generating PDF...")
+                                progress_bar.progress(70)
+                                pdf_file = generate_pdf_from_form("evidence", form_data, control_id, control['title'], spec_id)
+                                
+                                progress_bar.progress(100)
+                                status_text.success("✅ Form saved successfully! Scroll down to download.")
+                                
+                                st.session_state[f'evidence_json_{control_id}_{spec_id}'] = json_file
+                                st.session_state[f'evidence_pdf_{control_id}_{spec_id}'] = pdf_file
+                                
+                                progress_bar.empty()
+                            except Exception as e:
+                                progress_bar.empty()
+                                status_text.error(f"❌ Error: {str(e)}")
+                                import traceback
+                                with st.expander("Error Details"):
+                                    st.code(traceback.format_exc())
                 
                 # Download buttons outside form
                 if f'evidence_json_{control_id}_{spec_id}' in st.session_state:
@@ -1496,18 +1508,17 @@ def show_templates_forms():
                         if not entity_name or not prepared_by:
                             st.error("Please fill in all required fields (marked with *)")
                         else:
-                            # Show loading overlay
-                            loading_html = """
-                            <div class="loading-overlay">
-                                <div class="loading-spinner-large"></div>
-                                <div class="loading-text">Saving compliance report and generating PDF...</div>
-                            </div>
-                            """
-                            st.markdown(loading_html, unsafe_allow_html=True)
+                            # Show loading with progress
+                            progress_bar = st.progress(0)
+                            status_text = st.empty()
                             
-                            from fillable_forms import save_form_data, generate_pdf_from_form
-                            
-                            form_data = {
+                            try:
+                                status_text.info("💾 Saving compliance report...")
+                                progress_bar.progress(20)
+                                
+                                from fillable_forms import save_form_data, generate_pdf_from_form
+                                
+                                form_data = {
                                 'control_id': control_id,
                                 'control_name': control['title'],
                                 'domain': domain,
@@ -1675,18 +1686,17 @@ def show_templates_forms():
                         if not auditor_name or not entity_name:
                             st.error("Please fill in all required fields (marked with *)")
                         else:
-                            # Show loading overlay
-                            loading_html = """
-                            <div class="loading-overlay">
-                                <div class="loading-spinner-large"></div>
-                                <div class="loading-text">Saving audit checklist and generating PDF...</div>
-                            </div>
-                            """
-                            st.markdown(loading_html, unsafe_allow_html=True)
+                            # Show loading with progress
+                            progress_bar = st.progress(0)
+                            status_text = st.empty()
                             
-                            from fillable_forms import save_form_data, generate_pdf_from_form
-                            
-                            form_data = {
+                            try:
+                                status_text.info("💾 Saving audit checklist...")
+                                progress_bar.progress(20)
+                                
+                                from fillable_forms import save_form_data, generate_pdf_from_form
+                                
+                                form_data = {
                                 'control_id': control_id,
                                 'control_name': control['title'],
                                 'domain': control.get('domain', control.get('category', 'Unknown')),
@@ -1703,18 +1713,31 @@ def show_templates_forms():
                                 'approved_by': approved_by,
                                 'approved_date': approved_date.strftime("%Y-%m-%d")
                             }
-                            form_data.update(checklist_results)
-                            
-                            # Save form data
-                            json_file = save_form_data("audit_checklist", control_id, "", form_data)
-                            
-                            # Generate PDF
-                            pdf_file = generate_pdf_from_form("audit_checklist", form_data, control_id, control['title'])
-                            
-                            st.session_state[f'audit_checklist_json_{control_id}'] = json_file
-                            st.session_state[f'audit_checklist_pdf_{control_id}'] = pdf_file
-                            
-                            st.success("✅ Audit checklist saved successfully!")
+                                form_data.update(checklist_results)
+                                
+                                # Save form data
+                                status_text.info("💾 Saving form data...")
+                                progress_bar.progress(40)
+                                json_file = save_form_data("audit_checklist", control_id, "", form_data)
+                                
+                                # Generate PDF
+                                status_text.info("📄 Generating PDF...")
+                                progress_bar.progress(70)
+                                pdf_file = generate_pdf_from_form("audit_checklist", form_data, control_id, control['title'])
+                                
+                                progress_bar.progress(100)
+                                status_text.success("✅ Audit checklist saved successfully! Scroll down to download.")
+                                
+                                st.session_state[f'audit_checklist_json_{control_id}'] = json_file
+                                st.session_state[f'audit_checklist_pdf_{control_id}'] = pdf_file
+                                
+                                progress_bar.empty()
+                            except Exception as e:
+                                progress_bar.empty()
+                                status_text.error(f"❌ Error: {str(e)}")
+                                import traceback
+                                with st.expander("Error Details"):
+                                    st.code(traceback.format_exc())
                 
                 # Download buttons outside form
                 if f'audit_checklist_json_{control_id}' in st.session_state:
@@ -1875,16 +1898,15 @@ def show_templates_forms():
                         if not agreement_id or not data_provider or not data_recipient or not purpose:
                             st.error("Please fill in all required fields (marked with *)")
                         else:
-                            # Show loading overlay
-                            loading_html = """
-                            <div class="loading-overlay">
-                                <div class="loading-spinner-large"></div>
-                                <div class="loading-text">Saving data share agreement and generating PDF...</div>
-                            </div>
-                            """
-                            st.markdown(loading_html, unsafe_allow_html=True)
+                            # Show loading with progress
+                            progress_bar = st.progress(0)
+                            status_text = st.empty()
                             
-                            form_data = {
+                            try:
+                                status_text.info("💾 Saving data share agreement...")
+                                progress_bar.progress(10)
+                                
+                                form_data = {
                                 'agreement_id': agreement_id,
                                 'agreement_date': agreement_date.strftime("%Y-%m-%d"),
                                 'data_provider': data_provider,
@@ -1903,22 +1925,18 @@ def show_templates_forms():
                                 'data_protection': data_protection,
                                 'pia_status': pia_status
                             }
-                            
-                            progress_bar = st.progress(0)
-                            status_text = st.empty()
-                            
-                            try:
+                                
                                 status_text.info("💾 Saving form data...")
-                                progress_bar.progress(20)
+                                progress_bar.progress(30)
                                 
                                 json_file = save_data_share_form("data_share_agreement", form_data)
                                 
                                 status_text.info("📄 Generating PDF...")
-                                progress_bar.progress(50)
+                                progress_bar.progress(60)
                                 
                                 pdf_file = generate_pdf_from_data_share_form("data_share_agreement", form_data)
                                 
-                                progress_bar.progress(80)
+                                progress_bar.progress(90)
                                 status_text.info("✅ Finalizing...")
                                 
                                 st.session_state['data_share_agreement_json'] = json_file
@@ -1927,6 +1945,12 @@ def show_templates_forms():
                                 progress_bar.progress(100)
                                 status_text.success("✅ Form saved successfully! Scroll down to download.")
                                 progress_bar.empty()
+                            except Exception as e:
+                                progress_bar.empty()
+                                status_text.error(f"❌ Error: {str(e)}")
+                                import traceback
+                                with st.expander("Error Details"):
+                                    st.code(traceback.format_exc())
                             except Exception as e:
                                 progress_bar.empty()
                                 status_text.error(f"❌ Error: {str(e)}")
@@ -2391,16 +2415,15 @@ def show_templates_forms():
                     if not use_case_id or not use_case_name or not description or not business_objective:
                         st.error("Please fill in all required fields (marked with *)")
                     else:
-                        # Show loading overlay
-                        loading_html = """
-                        <div class="loading-overlay">
-                            <div class="loading-spinner-large"></div>
-                            <div class="loading-text">Saving Use Case Brief and generating PDF...</div>
-                        </div>
-                        """
-                        st.markdown(loading_html, unsafe_allow_html=True)
+                        # Show loading with progress
+                        progress_bar = st.progress(0)
+                        status_text = st.empty()
                         
-                        # Save uploaded image
+                        try:
+                            status_text.info("💾 Saving Use Case Brief...")
+                            progress_bar.progress(10)
+                            
+                            # Save uploaded image
                         image_path = saved_image_path
                         if product_image:
                             try:
