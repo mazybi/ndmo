@@ -425,3 +425,241 @@ def monitor_data_quality(df, schema_analysis):
 """
     return script
 
+def create_schema_assessment_report(analysis_results, schema_file_name, logo_path="logo@3x.png"):
+    """Create professional schema assessment report with NDMO compliance"""
+    
+    os.makedirs("reports", exist_ok=True)
+    
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"reports/Schema_Assessment_Report_{timestamp}.pdf"
+    
+    doc = SimpleDocTemplate(
+        filename,
+        pagesize=A4,
+        rightMargin=45,
+        leftMargin=45,
+        topMargin=75,
+        bottomMargin=50
+    )
+    
+    story = []
+    styles = getSampleStyleSheet()
+    
+    # Unified styles
+    title_style = ParagraphStyle(
+        'TitleStyle',
+        parent=styles['Heading1'],
+        fontSize=18,
+        textColor=colors.HexColor('#1f77b4'),
+        spaceAfter=20,
+        alignment=TA_CENTER,
+        fontName='Helvetica-Bold'
+    )
+    
+    heading_style = ParagraphStyle(
+        'HeadingStyle',
+        parent=styles['Heading2'],
+        fontSize=13,
+        textColor=colors.HexColor('#2c3e50'),
+        spaceAfter=10,
+        spaceBefore=15,
+        fontName='Helvetica-Bold',
+        backColor=colors.HexColor('#ecf0f1'),
+        borderPadding=8
+    )
+    
+    field_label_style = ParagraphStyle(
+        'FieldLabelStyle',
+        parent=styles['Normal'],
+        fontSize=11,
+        textColor=colors.black,
+        fontName='Helvetica-Bold',
+        leading=14
+    )
+    
+    normal_style = ParagraphStyle(
+        'NormalStyle',
+        parent=styles['Normal'],
+        fontSize=10,
+        textColor=colors.black,
+        alignment=TA_LEFT,
+        leading=14,
+        wordWrap='CJK'
+    )
+    
+    # Header functions
+    def on_first_page(canvas_obj, doc):
+        from unified_templates import add_unified_header_footer
+        add_unified_header_footer(canvas_obj, doc, logo_path, "RESTRICTED - INTERNAL")
+    
+    def on_later_pages(canvas_obj, doc):
+        from unified_templates import add_unified_header_footer
+        add_unified_header_footer(canvas_obj, doc, logo_path, "RESTRICTED - INTERNAL")
+    
+    # Classification banner
+    classification = "RESTRICTED - INTERNAL"
+    classification_style = ParagraphStyle(
+        'ClassificationStyle',
+        parent=styles['Normal'],
+        fontSize=11,
+        textColor=colors.white,
+        alignment=TA_CENTER,
+        leading=14
+    )
+    classification_table = Table(
+        [[Paragraph(f"<b>CLASSIFICATION: {classification}</b>", classification_style)]],
+        colWidths=[7*inch],
+        style=TableStyle([
+            ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#e74c3c')),
+            ('TEXTCOLOR', (0, 0), (-1, -1), colors.white),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 11),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('TOPPADDING', (0, 0), (-1, -1), 8),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ])
+    )
+    story.append(classification_table)
+    story.append(Spacer(1, 0.2*inch))
+    
+    # Title
+    story.append(Paragraph("Schema Assessment Report", title_style))
+    story.append(Paragraph("NDMO Compliance Assessment & Recommendations", ParagraphStyle(
+        'Subtitle',
+        parent=styles['Normal'],
+        fontSize=12,
+        textColor=colors.HexColor('#7f8c8d'),
+        alignment=TA_CENTER,
+        spaceAfter=20
+    )))
+    story.append(Spacer(1, 0.15*inch))
+    
+    # Assessment Summary
+    story.append(Paragraph("Assessment Summary", heading_style))
+    
+    total_cols = len(analysis_results.get('column_analysis', []))
+    compliant_cols = sum(1 for col in analysis_results.get('ndmo_compliance', {}).values() if col.get('score', 0) >= 0.7)
+    compliance_percentage = (compliant_cols / total_cols * 100) if total_cols > 0 else 0
+    
+    summary_data = [
+        [Paragraph('<b>Schema File:</b>', field_label_style), Paragraph(schema_file_name, normal_style), Paragraph('<b>Assessment Date:</b>', field_label_style), Paragraph(datetime.now().strftime("%Y-%m-%d"), normal_style)],
+        [Paragraph('<b>Total Columns:</b>', field_label_style), Paragraph(str(total_cols), normal_style), Paragraph('<b>Compliant Columns:</b>', field_label_style), Paragraph(f"{compliant_cols} ({compliance_percentage:.1f}%)", normal_style)],
+        [Paragraph('<b>Primary Key:</b>', field_label_style), Paragraph("✅ Present" if analysis_results.get('has_primary_key') else "❌ Missing", normal_style), Paragraph('<b>Audit Trail:</b>', field_label_style), Paragraph("✅ Present" if analysis_results.get('has_audit_trail') else "❌ Missing", normal_style)],
+        [Paragraph('<b>Issues Found:</b>', field_label_style), Paragraph(str(len(analysis_results.get('issues', []))), normal_style), Paragraph('<b>Recommendations:</b>', field_label_style), Paragraph(str(len(analysis_results.get('recommendations', []))), normal_style)]
+    ]
+    
+    summary_table = Table(summary_data, colWidths=[1.9*inch, 2.3*inch, 1.9*inch, 2.3*inch])
+    summary_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f8f9fa')),
+        ('BACKGROUND', (2, 0), (2, -1), colors.HexColor('#f8f9fa')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTSIZE', (0, 0), (-1, -1), 11),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
+        ('TOPPADDING', (0, 0), (-1, -1), 10),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#dee2e6')),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 10),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 10)
+    ]))
+    story.append(summary_table)
+    story.append(Spacer(1, 0.2*inch))
+    
+    # Compliance Score
+    story.append(Paragraph("Overall Compliance Score", heading_style))
+    
+    overall_score = (compliance_percentage / 100) if total_cols > 0 else 0
+    score_color = colors.HexColor('#28a745') if overall_score >= 0.7 else colors.HexColor('#ffc107') if overall_score >= 0.5 else colors.HexColor('#dc3545')
+    
+    score_text = f"<b>Overall NDMO Compliance: {overall_score*100:.1f}%</b>"
+    score_para = Paragraph(score_text, ParagraphStyle(
+        'ScoreStyle',
+        parent=styles['Normal'],
+        fontSize=16,
+        textColor=score_color,
+        alignment=TA_CENTER,
+        spaceAfter=10
+    ))
+    story.append(score_para)
+    story.append(Spacer(1, 0.2*inch))
+    
+    # Column Assessment Details
+    story.append(Paragraph("Column-by-Column Assessment", heading_style))
+    
+    column_analysis = analysis_results.get('column_analysis', [])
+    ndmo_compliance = analysis_results.get('ndmo_compliance', {})
+    
+    if column_analysis:
+        # Create detailed assessment table
+        assessment_data = [[
+            Paragraph('<b>Column</b>', field_label_style),
+            Paragraph('<b>Type</b>', field_label_style),
+            Paragraph('<b>Completeness</b>', field_label_style),
+            Paragraph('<b>Uniqueness</b>', field_label_style),
+            Paragraph('<b>NDMO Score</b>', field_label_style),
+            Paragraph('<b>Status</b>', field_label_style)
+        ]]
+        
+        for col_info in column_analysis:
+            col_name = col_info['column_name']
+            compliance_info = ndmo_compliance.get(col_name, {})
+            score = compliance_info.get('score', 0)
+            
+            status = "✅ Compliant" if score >= 0.7 else "⚠️ Partial" if score >= 0.5 else "❌ Non-Compliant"
+            status_color = colors.HexColor('#28a745') if score >= 0.7 else colors.HexColor('#ffc107') if score >= 0.5 else colors.HexColor('#dc3545')
+            
+            assessment_data.append([
+                Paragraph(str(col_name)[:25], normal_style),
+                Paragraph(str(col_info.get('detected_type', 'Unknown')), normal_style),
+                Paragraph(f"{col_info.get('completeness', 0):.1f}%", normal_style),
+                Paragraph(f"{col_info.get('uniqueness', 0):.1f}%", normal_style),
+                Paragraph(f"{score*100:.1f}%", normal_style),
+                Paragraph(status, ParagraphStyle('StatusStyle', parent=normal_style, textColor=status_color))
+            ])
+        
+        assessment_table = Table(assessment_data, colWidths=[1.5*inch, 1*inch, 1*inch, 1*inch, 1*inch, 1.5*inch])
+        assessment_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#34495e')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTSIZE', (0, 1), (-1, -1), 9),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+            ('TOPPADDING', (0, 0), (-1, -1), 8),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#dee2e6')),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('LEFTPADDING', (0, 0), (-1, -1), 8),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 8),
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f8f9fa')])
+        ]))
+        story.append(assessment_table)
+        story.append(Spacer(1, 0.2*inch))
+    
+    # Issues and Recommendations
+    if analysis_results.get('issues'):
+        story.append(Paragraph("Critical Issues", heading_style))
+        for idx, issue in enumerate(analysis_results['issues'], 1):
+            issue_text = f"<b>{idx}. {issue.get('issue', 'Unknown Issue')}</b><br/>"
+            issue_text += f"Severity: {issue.get('severity', 'Unknown')} | "
+            issue_text += f"Impact: {issue.get('impact', 'N/A')} | "
+            issue_text += f"Standard: {issue.get('standard', 'N/A')}"
+            story.append(Paragraph(issue_text, normal_style))
+            story.append(Spacer(1, 0.1*inch))
+    
+    if analysis_results.get('recommendations'):
+        story.append(Paragraph("Recommendations", heading_style))
+        for idx, rec in enumerate(analysis_results['recommendations'], 1):
+            rec_text = f"<b>{idx}. {rec.get('type', 'Recommendation')}:</b> {rec.get('message', 'N/A')}<br/>"
+            rec_text += f"NDMO Standard: {rec.get('standard', 'N/A')}"
+            story.append(Paragraph(rec_text, normal_style))
+            story.append(Spacer(1, 0.1*inch))
+    
+    story.append(Spacer(1, 0.2*inch))
+    
+    # Build PDF
+    doc.build(story, onFirstPage=on_first_page, onLaterPages=on_later_pages)
+    return filename
+
