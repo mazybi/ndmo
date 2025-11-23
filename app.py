@@ -620,17 +620,26 @@ def show_welcome_page():
     with st.spinner("Loading system..."):
         time.sleep(0.3)
     
-    # Header with Logo and Title
-    col_logo1, col_logo2, col_logo3 = st.columns([1, 2, 1])
-    with col_logo2:
-        # Logo
+    # Header with Logo and Title - Professional Layout
+    st.markdown("""
+    <div style="text-align: center; padding: 2rem 0; margin-bottom: 2rem;">
+    """, unsafe_allow_html=True)
+    
+    # Logo and Title in a row
+    col_logo, col_title = st.columns([1, 3])
+    
+    with col_logo:
+        # Logo - smaller and centered
         try:
-            st.image("logo@3x.png", width=200, use_container_width=False)
+            st.image("logo@3x.png", width=120, use_container_width=False)
         except:
-            st.markdown("<h1 style='font-size: 5rem; color: #1f77b4; text-align: center;'>📊</h1>", unsafe_allow_html=True)
-        
-        st.markdown("<h1 style='text-align: center; font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #1f77b4 0%, #667eea 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;'>NDMO/NDI Compliance System</h1>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; font-size: 1.1rem; color: #6c757d; margin-bottom: 3rem;'>Professional Data Governance Management Platform</p>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size: 3rem; color: #1f77b4;'>📊</div>", unsafe_allow_html=True)
+    
+    with col_title:
+        st.markdown("<h1 style='text-align: left; font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, #1f77b4 0%, #667eea 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; padding-top: 1rem;'>NDMO/NDI Compliance System</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: left; font-size: 0.95rem; color: #6c757d; margin: 0.5rem 0 0 0;'>Professional Data Governance Management Platform</p>", unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
     
@@ -675,9 +684,7 @@ def show_welcome_page():
     </style>
     """, unsafe_allow_html=True)
     
-    # Tools in 3 columns
-    col1, col2, col3 = st.columns(3)
-    
+    # Tools in 3 columns - 7 tools (3 rows)
     tools = [
         {
             'icon': '🎯',
@@ -708,41 +715,46 @@ def show_welcome_page():
             'icon': '📥',
             'title': 'Data Import',
             'description': 'Seamless data import from Excel files with automatic mapping and validation'
+        },
+        {
+            'icon': '🛡️',
+            'title': 'Data Quality',
+            'description': 'Schema analysis, data processing, and NDMO compliance assessment with professional reporting'
         }
     ]
     
-    with col1:
-        for i in range(0, len(tools), 3):
-            tool = tools[i]
-            st.markdown(f"""
-            <div class="tool-card-st">
-                <span class="tool-icon-st">{tool['icon']}</span>
-                <h3 class="tool-title-st">{tool['title']}</h3>
-                <p class="tool-description-st">{tool['description']}</p>
-            </div>
-            """, unsafe_allow_html=True)
+    # Display tools in 3 columns
+    col1, col2, col3 = st.columns(3)
     
-    with col2:
-        for i in range(1, len(tools), 3):
-            tool = tools[i]
-            st.markdown(f"""
-            <div class="tool-card-st">
-                <span class="tool-icon-st">{tool['icon']}</span>
-                <h3 class="tool-title-st">{tool['title']}</h3>
-                <p class="tool-description-st">{tool['description']}</p>
-            </div>
-            """, unsafe_allow_html=True)
-    
-    with col3:
-        for i in range(2, len(tools), 3):
-            tool = tools[i]
-            st.markdown(f"""
-            <div class="tool-card-st">
-                <span class="tool-icon-st">{tool['icon']}</span>
-                <h3 class="tool-title-st">{tool['title']}</h3>
-                <p class="tool-description-st">{tool['description']}</p>
-            </div>
-            """, unsafe_allow_html=True)
+    # Distribute tools across columns
+    for idx, tool in enumerate(tools):
+        if idx % 3 == 0:
+            with col1:
+                st.markdown(f"""
+                <div class="tool-card-st">
+                    <span class="tool-icon-st">{tool['icon']}</span>
+                    <h3 class="tool-title-st">{tool['title']}</h3>
+                    <p class="tool-description-st">{tool['description']}</p>
+                </div>
+                """, unsafe_allow_html=True)
+        elif idx % 3 == 1:
+            with col2:
+                st.markdown(f"""
+                <div class="tool-card-st">
+                    <span class="tool-icon-st">{tool['icon']}</span>
+                    <h3 class="tool-title-st">{tool['title']}</h3>
+                    <p class="tool-description-st">{tool['description']}</p>
+                </div>
+                """, unsafe_allow_html=True)
+        else:
+            with col3:
+                st.markdown(f"""
+                <div class="tool-card-st">
+                    <span class="tool-icon-st">{tool['icon']}</span>
+                    <h3 class="tool-title-st">{tool['title']}</h3>
+                    <p class="tool-description-st">{tool['description']}</p>
+                </div>
+                """, unsafe_allow_html=True)
     
     st.markdown("<br><br>", unsafe_allow_html=True)
     
