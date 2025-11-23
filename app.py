@@ -1548,8 +1548,8 @@ def show_templates_forms():
                 
                 if control:
                     # Try to load saved form
-                from fillable_forms import load_form_data
-                saved_data = load_form_data("compliance_report", control_id, "")
+                    from fillable_forms import load_form_data
+                    saved_data = load_form_data("compliance_report", control_id, "")
                 
                 with st.form("compliance_report_form", clear_on_submit=False):
                     st.markdown(f"### {control_id} - {control['title']}")
@@ -1813,9 +1813,9 @@ def show_templates_forms():
                 control = next((c for c in all_controls if c['id'] == control_id), None)
                 
                 if control:
-                # Try to load saved form
-                from fillable_forms import load_form_data
-                saved_data = load_form_data("audit_checklist", control_id, "")
+                    # Try to load saved form
+                    from fillable_forms import load_form_data
+                    saved_data = load_form_data("audit_checklist", control_id, "")
                 
                 with st.form("audit_checklist_form", clear_on_submit=False):
                     st.markdown(f"### {control_id} - {control['title']}")
