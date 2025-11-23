@@ -218,39 +218,46 @@ class SmartSchemaAnalyzer:
         """Analyze all columns in the dataframe"""
         column_analysis = []
         
-        for col in df.columns:
-            col_info = {
-                'column_name': col,
-                'data_type': str(df[col].dtype),
-                'non_null_count': df[col].notna().sum(),
-                'null_count': df[col].isna().sum(),
-                'unique_count': df[col].nunique(),
-                'total_count': len(df),
-                'completeness': (df[col].notna().sum() / len(df)) * 100 if len(df) > 0 else 0,
-                'uniqueness': (df[col].nunique() / len(df)) * 100 if len(df) > 0 else 0
-            }
-            
-            # Detect type from column name
-            col_info['detected_type'] = self._detect_data_type_from_name(col.lower())
-            
-            # Check for primary key
-            col_info['is_primary_key'] = any(kw in col.lower() for kw in ['id', 'key', 'pk', 'primary'])
-            
-            # Check for audit fields
-            col_info['is_audit_field'] = any(kw in col.lower() for kw in ['created', 'updated', 'modified', 'deleted', 'timestamp', 'date', 'user', 'audit'])
-            
-            # NDMO standards applicable
-            col_info['ndmo_standards'] = []
-            if col_info['is_primary_key']:
-                col_info['ndmo_standards'].append('DG001')
-            if col_info['is_audit_field']:
-                col_info['ndmo_standards'].append('DS004')
-            if col_info['completeness'] < 100:
-                col_info['ndmo_standards'].append('DQ001')
-            if col_info['uniqueness'] < 100:
-                col_info['ndmo_standards'].append('DQ004')
-            
-            column_analysis.append(col_info)
+        # Get all columns from the dataframe
+        all_columns = list(df.columns)
+        
+        for col in all_columns:
+            try:
+                col_info = {
+                    'column_name': str(col),
+                    'data_type': str(df[col].dtype),
+                    'non_null_count': int(df[col].notna().sum()),
+                    'null_count': int(df[col].isna().sum()),
+                    'unique_count': int(df[col].nunique()),
+                    'total_count': len(df),
+                    'completeness': (df[col].notna().sum() / len(df)) * 100 if len(df) > 0 else 0,
+                    'uniqueness': (df[col].nunique() / len(df)) * 100 if len(df) > 0 else 0
+                }
+                
+                # Detect type from column name
+                col_info['detected_type'] = self._detect_data_type_from_name(str(col).lower())
+                
+                # Check for primary key
+                col_info['is_primary_key'] = any(kw in str(col).lower() for kw in ['id', 'key', 'pk', 'primary', '_id'])
+                
+                # Check for audit fields
+                col_info['is_audit_field'] = any(kw in str(col).lower() for kw in ['created', 'updated', 'modified', 'deleted', 'timestamp', 'date', 'user', 'audit', 'created_by', 'updated_by'])
+                
+                # NDMO standards applicable
+                col_info['ndmo_standards'] = []
+                if col_info['is_primary_key']:
+                    col_info['ndmo_standards'].append('DG001')
+                if col_info['is_audit_field']:
+                    col_info['ndmo_standards'].append('DS004')
+                if col_info['completeness'] < 100:
+                    col_info['ndmo_standards'].append('DQ001')
+                if col_info['uniqueness'] < 100 and not col_info['is_primary_key']:
+                    col_info['ndmo_standards'].append('DQ004')
+                
+                column_analysis.append(col_info)
+            except Exception as e:
+                # Skip columns that cause errors
+                continue
         
         return column_analysis
     

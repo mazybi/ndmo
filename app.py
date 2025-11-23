@@ -3951,6 +3951,53 @@ def show_data_quality_dashboard():
                             st.markdown("### 💡 General Recommendations")
                             for rec in analysis['recommendations']:
                                 st.info(f"**{rec.get('type', 'Info')}**: {rec.get('message', '')}")
+                        
+                        # Generate Professional Technical Report
+                        st.markdown("---")
+                        st.markdown("### 📄 Generate Technical Report")
+                        st.markdown("Generate a comprehensive professional technical report with NDMO compliance analysis, SQL scripts, and implementation guide.")
+                        
+                        if st.button("📄 Generate Professional Technical Report", use_container_width=True, key="generate_dq_report"):
+                            report_progress = st.progress(0)
+                            report_status = st.empty()
+                            
+                            try:
+                                report_status.info("🔄 Generating professional technical report...")
+                                report_progress.progress(30)
+                                
+                                from data_quality_report import create_data_quality_report
+                                
+                                report_progress.progress(60)
+                                report_filename = create_data_quality_report(
+                                    analysis,
+                                    analysis.get('file_name', 'schema_file.xlsx')
+                                )
+                                
+                                report_progress.progress(100)
+                                report_status.success("✅ Technical report generated successfully!")
+                                report_progress.empty()
+                                
+                                # Store report filename
+                                st.session_state.dq_report_filename = report_filename
+                                
+                                # Download button
+                                if os.path.exists(report_filename):
+                                    with open(report_filename, 'rb') as f:
+                                        st.download_button(
+                                            "📥 Download Technical Report",
+                                            f.read(),
+                                            file_name=os.path.basename(report_filename),
+                                            mime="application/pdf",
+                                            use_container_width=True,
+                                            key="download_dq_report"
+                                        )
+                            
+                            except Exception as e:
+                                report_progress.empty()
+                                report_status.error(f"❌ Error generating report: {str(e)}")
+                                import traceback
+                                with st.expander("Error Details"):
+                                    st.code(traceback.format_exc())
                 
                 except Exception as e:
                     progress_bar.empty()
