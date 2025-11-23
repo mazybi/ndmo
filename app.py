@@ -3826,7 +3826,10 @@ def show_data_quality_dashboard():
                         
                         col1, col2, col3, col4 = st.columns(4)
                         with col1:
-                            st.metric("Total Columns", analysis.get('total_columns', analysis.get('total_fields', 0)))
+                            # Count actual columns from column_analysis (more accurate)
+                            actual_cols = len(analysis.get('column_analysis', []))
+                            total_cols_display = actual_cols if actual_cols > 0 else analysis.get('total_columns', analysis.get('total_fields', 0))
+                            st.metric("Total Columns", total_cols_display)
                         with col2:
                             st.metric("Has Primary Key", "✅ Yes" if analysis.get('has_primary_key') else "❌ No")
                         with col3:
