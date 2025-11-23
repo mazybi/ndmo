@@ -620,90 +620,139 @@ def show_welcome_page():
     with st.spinner("Loading system..."):
         time.sleep(0.3)
     
-    # Landing Page Container
-    landing_html = """
-    <div class="landing-container">
-        <div class="landing-header">
-    """
-    
-    # Logo
-    try:
-        import base64
-        with open("logo@3x.png", "rb") as f:
-            logo_data = base64.b64encode(f.read()).decode()
-            landing_html += f'<img src="data:image/png;base64,{logo_data}" class="landing-logo" alt="NDMO/NDI Logo">'
-    except:
-        landing_html += '<div style="font-size: 5rem; color: #1f77b4; margin: 0 auto 1.5rem; animation: logoFadeInScale 1s ease-out;">📊</div>'
-    
-    landing_html += """
-            <h1 class="landing-title">NDMO/NDI Compliance System</h1>
-            <p class="landing-subtitle">Professional Data Governance Management Platform</p>
-        </div>
+    # Header with Logo and Title
+    col_logo1, col_logo2, col_logo3 = st.columns([1, 2, 1])
+    with col_logo2:
+        # Logo
+        try:
+            st.image("logo@3x.png", width=200, use_container_width=False)
+        except:
+            st.markdown("<h1 style='font-size: 5rem; color: #1f77b4; text-align: center;'>📊</h1>", unsafe_allow_html=True)
         
-        <div class="tool-grid">
-            <div class="tool-card" onclick="window.location.href='?page=dashboard'">
-                <span class="tool-icon">🎯</span>
-                <h3 class="tool-title">Control Management</h3>
-                <p class="tool-description">Comprehensive management of controls and specifications with priority-based classification</p>
-            </div>
-            
-            <div class="tool-card" onclick="window.location.href='?page=dashboard'">
-                <span class="tool-icon">📊</span>
-                <h3 class="tool-title">Interactive Dashboard</h3>
-                <p class="tool-description">Real-time statistics and interactive charts for compliance measurement and progress tracking</p>
-            </div>
-            
-            <div class="tool-card" onclick="window.location.href='?page=templates'">
-                <span class="tool-icon">📋</span>
-                <h3 class="tool-title">Professional Templates</h3>
-                <p class="tool-description">Fillable professional forms with unified design, logo, and classification for all compliance documents</p>
-            </div>
-            
-            <div class="tool-card" onclick="window.location.href='?page=measurement'">
-                <span class="tool-icon">📈</span>
-                <h3 class="tool-title">Compliance Scoring</h3>
-                <p class="tool-description">Automated calculation of compliance scores with real-time progress tracking and reporting</p>
-            </div>
-            
-            <div class="tool-card" onclick="window.location.href='?page=documents'">
-                <span class="tool-icon">🔍</span>
-                <h3 class="tool-title">Evidence Management</h3>
-                <p class="tool-description">Upload and track required evidence for each specification with automated validation</p>
-            </div>
-            
-            <div class="tool-card" onclick="window.location.href='?page=import'">
-                <span class="tool-icon">📥</span>
-                <h3 class="tool-title">Data Import</h3>
-                <p class="tool-description">Seamless data import from Excel files with automatic mapping and validation</p>
-            </div>
-        </div>
-        
-        <div class="enter-button-container">
-            <button class="enter-button" onclick="window.location.href='?enter=true'">
-                <span class="enter-button-icon">🚀</span>
-                <span>Enter System</span>
-            </button>
-        </div>
-    </div>
-    """
+        st.markdown("<h1 style='text-align: center; font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, #1f77b4 0%, #667eea 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem;'>NDMO/NDI Compliance System</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; font-size: 1.1rem; color: #6c757d; margin-bottom: 3rem;'>Professional Data Governance Management Platform</p>", unsafe_allow_html=True)
     
-    st.markdown(landing_html, unsafe_allow_html=True)
-    
-    # Enter button using Streamlit (fallback)
     st.markdown("<br>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        if st.button("🚀 Enter System", use_container_width=True, type="primary", key="enter_system_btn"):
-            # Show loading overlay
-            loading_html = """
-            <div class="loading-overlay">
-                <div class="loading-spinner-large"></div>
-                <div class="loading-text">Loading Dashboard...</div>
+    
+    # Tools Grid - Using Streamlit columns
+    st.markdown("""
+    <style>
+    .tool-card-st {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border: 2px solid #e9ecef;
+        border-radius: 1.25rem;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.4s ease;
+        height: 100%;
+        margin-bottom: 1.5rem;
+    }
+    .tool-card-st:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(31, 119, 180, 0.2);
+        border-color: #1f77b4;
+    }
+    .tool-icon-st {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+    .tool-title-st {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, #1f77b4 0%, #667eea 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .tool-description-st {
+        font-size: 0.95rem;
+        color: #6c757d;
+        line-height: 1.6;
+        margin: 0;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    # Tools in 3 columns
+    col1, col2, col3 = st.columns(3)
+    
+    tools = [
+        {
+            'icon': '🎯',
+            'title': 'Control Management',
+            'description': 'Comprehensive management of controls and specifications with priority-based classification'
+        },
+        {
+            'icon': '📊',
+            'title': 'Interactive Dashboard',
+            'description': 'Real-time statistics and interactive charts for compliance measurement and progress tracking'
+        },
+        {
+            'icon': '📋',
+            'title': 'Professional Templates',
+            'description': 'Fillable professional forms with unified design, logo, and classification for all compliance documents'
+        },
+        {
+            'icon': '📈',
+            'title': 'Compliance Scoring',
+            'description': 'Automated calculation of compliance scores with real-time progress tracking and reporting'
+        },
+        {
+            'icon': '🔍',
+            'title': 'Evidence Management',
+            'description': 'Upload and track required evidence for each specification with automated validation'
+        },
+        {
+            'icon': '📥',
+            'title': 'Data Import',
+            'description': 'Seamless data import from Excel files with automatic mapping and validation'
+        }
+    ]
+    
+    with col1:
+        for i in range(0, len(tools), 3):
+            tool = tools[i]
+            st.markdown(f"""
+            <div class="tool-card-st">
+                <span class="tool-icon-st">{tool['icon']}</span>
+                <h3 class="tool-title-st">{tool['title']}</h3>
+                <p class="tool-description-st">{tool['description']}</p>
             </div>
-            """
-            st.markdown(loading_html, unsafe_allow_html=True)
-            
-            time.sleep(0.5)  # Simulate loading
+            """, unsafe_allow_html=True)
+    
+    with col2:
+        for i in range(1, len(tools), 3):
+            tool = tools[i]
+            st.markdown(f"""
+            <div class="tool-card-st">
+                <span class="tool-icon-st">{tool['icon']}</span>
+                <h3 class="tool-title-st">{tool['title']}</h3>
+                <p class="tool-description-st">{tool['description']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    with col3:
+        for i in range(2, len(tools), 3):
+            tool = tools[i]
+            st.markdown(f"""
+            <div class="tool-card-st">
+                <span class="tool-icon-st">{tool['icon']}</span>
+                <h3 class="tool-title-st">{tool['title']}</h3>
+                <p class="tool-description-st">{tool['description']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    
+    # Enter System Button
+    col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
+    with col_btn2:
+        if st.button("🚀 Enter System", use_container_width=True, type="primary", key="enter_system_btn"):
+            # Show loading
+            with st.spinner("Loading Dashboard..."):
+                time.sleep(0.5)
             
             st.session_state.authenticated = True
             st.rerun()
@@ -4082,47 +4131,108 @@ def show_data_quality_dashboard():
                         st.markdown("### 📄 Generate Technical Report")
                         st.markdown("Generate a comprehensive professional technical report with NDMO compliance analysis, SQL scripts, and implementation guide.")
                         
-                        if st.button("📄 Generate Professional Technical Report", use_container_width=True, key="generate_dq_report"):
-                            report_progress = st.progress(0)
-                            report_status = st.empty()
-                            
-                            try:
-                                report_status.info("🔄 Generating professional technical report...")
-                                report_progress.progress(30)
+                        # Two buttons: Technical Report and Assessment Report
+                        col_btn1, col_btn2 = st.columns(2)
+                        
+                        with col_btn1:
+                            if st.button("📄 Generate Technical Report", use_container_width=True, key="generate_dq_report"):
+                                report_progress = st.progress(0)
+                                report_status = st.empty()
                                 
-                                from data_quality_report import create_data_quality_report
+                                try:
+                                    report_status.info("🔄 Generating professional technical report...")
+                                    report_progress.progress(30)
+                                    
+                                    from data_quality_report import create_data_quality_report
+                                    
+                                    report_progress.progress(60)
+                                    
+                                    # Get logo path
+                                    logo_path = "logo@3x.png"
+                                    if not os.path.exists(logo_path):
+                                        logo_path = None
+                                    
+                                    report_filename = create_data_quality_report(
+                                        analysis,
+                                        analysis.get('file_name', 'schema_file.xlsx'),
+                                        logo_path=logo_path
+                                    )
+                                    
+                                    report_progress.progress(100)
+                                    report_status.success("✅ Technical report generated successfully!")
+                                    report_progress.empty()
+                                    
+                                    # Store report filename
+                                    st.session_state.dq_report_filename = report_filename
+                                    
+                                    # Download button
+                                    if os.path.exists(report_filename):
+                                        with open(report_filename, 'rb') as f:
+                                            st.download_button(
+                                                "📥 Download Technical Report",
+                                                f.read(),
+                                                file_name=os.path.basename(report_filename),
+                                                mime="application/pdf",
+                                                use_container_width=True,
+                                                key="download_dq_report"
+                                            )
                                 
-                                report_progress.progress(60)
-                                report_filename = create_data_quality_report(
-                                    analysis,
-                                    analysis.get('file_name', 'schema_file.xlsx')
-                                )
+                                except Exception as e:
+                                    report_progress.empty()
+                                    report_status.error(f"❌ Error generating report: {str(e)}")
+                                    import traceback
+                                    with st.expander("Error Details"):
+                                        st.code(traceback.format_exc())
+                        
+                        with col_btn2:
+                            if st.button("📊 Generate Assessment Report", use_container_width=True, key="generate_assessment_report"):
+                                assessment_progress = st.progress(0)
+                                assessment_status = st.empty()
                                 
-                                report_progress.progress(100)
-                                report_status.success("✅ Technical report generated successfully!")
-                                report_progress.empty()
+                                try:
+                                    assessment_status.info("🔄 Generating professional assessment report...")
+                                    assessment_progress.progress(30)
+                                    
+                                    from data_quality_report import create_schema_assessment_report
+                                    
+                                    assessment_progress.progress(60)
+                                    
+                                    # Get logo path
+                                    logo_path = "logo@3x.png"
+                                    if not os.path.exists(logo_path):
+                                        logo_path = None
+                                    
+                                    assessment_filename = create_schema_assessment_report(
+                                        analysis,
+                                        analysis.get('file_name', 'schema_file.xlsx'),
+                                        logo_path=logo_path
+                                    )
+                                    
+                                    assessment_progress.progress(100)
+                                    assessment_status.success("✅ Assessment report generated successfully!")
+                                    assessment_progress.empty()
+                                    
+                                    # Store report filename
+                                    st.session_state.dq_assessment_filename = assessment_filename
+                                    
+                                    # Download button
+                                    if os.path.exists(assessment_filename):
+                                        with open(assessment_filename, 'rb') as f:
+                                            st.download_button(
+                                                "📥 Download Assessment Report",
+                                                f.read(),
+                                                file_name=os.path.basename(assessment_filename),
+                                                mime="application/pdf",
+                                                use_container_width=True,
+                                                key="download_assessment_report"
+                                            )
                                 
-                                # Store report filename
-                                st.session_state.dq_report_filename = report_filename
-                                
-                                # Download button
-                                if os.path.exists(report_filename):
-                                    with open(report_filename, 'rb') as f:
-                                        st.download_button(
-                                            "📥 Download Technical Report",
-                                            f.read(),
-                                            file_name=os.path.basename(report_filename),
-                                            mime="application/pdf",
-                                            use_container_width=True,
-                                            key="download_dq_report"
-                                        )
-                            
-                            except Exception as e:
-                                report_progress.empty()
-                                report_status.error(f"❌ Error generating report: {str(e)}")
-                                import traceback
-                                with st.expander("Error Details"):
-                                    st.code(traceback.format_exc())
+                                except Exception as e:
+                                    assessment_progress.empty()
+                                    assessment_status.error(f"❌ Error generating assessment: {str(e)}")
+                                    import traceback
+                                    with st.expander("Error Details"):
+                                        st.code(traceback.format_exc())
                 
                 except Exception as e:
                     progress_bar.empty()

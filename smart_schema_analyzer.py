@@ -21,18 +21,45 @@ class SmartSchemaAnalyzer:
             if not os.path.exists(schema_file_path):
                 return {'error': f'Schema file not found: {schema_file_path}'}
             
-            # Try to read as Excel
+            # Try to read as Excel - try multiple methods to get all columns
+            df = None
             try:
-                df = pd.read_excel(schema_file_path)
+                # First try: read with default header
+                df = pd.read_excel(schema_file_path, engine='openpyxl')
+            except Exception as e1:
+                try:
+                    # Second try: read without header to get all columns
+                    df_temp = pd.read_excel(schema_file_path, header=None, engine='openpyxl', nrows=5)
+                    # Use first row as column names if it looks like headers
+                    if len(df_temp) > 0:
+                        first_row = df_temp.iloc[0]
+                        # Check if first row looks like column names
+                        if first_row.notna().sum() > len(df_temp.columns) * 0.3:
+                            df = pd.read_excel(schema_file_path, header=0, engine='openpyxl')
+                        else:
+                            # Use numeric column names
+                            df = pd.read_excel(schema_file_path, header=None, engine='openpyxl')
+                            df.columns = [f'Column_{i}' for i in range(len(df.columns))]
+                except Exception as e2:
+                    return {'error': f'Failed to read schema file: {str(e1)} / {str(e2)}'}
+            
+            if df is None or df.empty:
+                return {'error': 'Schema file is empty or could not be read.'}
+            
+            # Ensure we have all columns - sometimes pandas hides empty columns
+            # Read raw to get actual column count
+            try:
+                df_raw = pd.read_excel(schema_file_path, header=None, engine='openpyxl', nrows=1)
+                actual_column_count = len(df_raw.columns)
             except:
-                return {'error': 'Failed to read schema file. Please ensure it is a valid Excel file.'}
+                actual_column_count = len(df.columns)
             
             # Analyze schema structure
             analysis = {
                 'timestamp': datetime.now().isoformat(),
                 'file_name': os.path.basename(schema_file_path),
                 'total_fields': len(df),
-                'total_columns': len(df.columns),
+                'total_columns': max(len(df.columns), actual_column_count),
                 'columns': list(df.columns),
                 'fields': [],
                 'has_primary_key': False,
@@ -66,8 +93,11 @@ class SmartSchemaAnalyzer:
                 data_type = field_info.get('detected_type', 'Unknown')
                 analysis['data_types'][data_type] = analysis['data_types'].get(data_type, 0) + 1
             
-            # Analyze each column for NDMO compliance
+            # Analyze each column for NDMO compliance - THIS IS THE KEY PART
             analysis['column_analysis'] = self._analyze_columns(df)
+            
+            # Update total_columns based on actual analysis
+            analysis['total_columns'] = len(analysis['column_analysis'])
             
             # Calculate NDMO compliance per column
             analysis['ndmo_compliance'] = self._calculate_ndmo_compliance_per_column(analysis)
@@ -84,7 +114,8 @@ class SmartSchemaAnalyzer:
             return analysis
             
         except Exception as e:
-            return {'error': f'Error analyzing schema: {str(e)}'}
+            import traceback
+            return {'error': f'Error analyzing schema: {str(e)}\n{traceback.format_exc()}'}
     
     def _analyze_field(self, row, columns):
         """Analyze individual field"""
@@ -218,30 +249,55 @@ class SmartSchemaAnalyzer:
         """Analyze all columns in the dataframe"""
         column_analysis = []
         
-        # Get all columns from the dataframe
+        # Get all columns from the dataframe - ensure we get ALL columns
         all_columns = list(df.columns)
         
-        for col in all_columns:
+        # If we have numeric column names (0, 1, 2...), it means columns weren't read properly
+        # Try to get actual column names from Excel
+        if len(all_columns) < 10 and all(isinstance(col, (int, float)) for col in all_columns[:5]):
+            # Try reading again with header=None to get all columns
             try:
+                df_temp = pd.read_excel(self.schema_data if hasattr(self, 'schema_data') else None, header=None, nrows=1)
+                if df_temp is not None and len(df_temp.columns) > len(all_columns):
+                    # Use numeric indices as column names
+                    all_columns = [f'Column_{i}' for i in range(len(df_temp.columns))]
+            except:
+                pass
+        
+        # Analyze each column
+        for col_idx, col in enumerate(all_columns):
+            try:
+                # Handle numeric column indices
+                if isinstance(col, (int, float)):
+                    col_name = f'Column_{int(col)}'
+                    col_data = df.iloc[:, col_idx] if col_idx < len(df.columns) else pd.Series()
+                else:
+                    col_name = str(col)
+                    col_data = df[col] if col in df.columns else pd.Series()
+                
+                # Skip if column is completely empty
+                if len(col_data) == 0:
+                    continue
+                
                 col_info = {
-                    'column_name': str(col),
-                    'data_type': str(df[col].dtype),
-                    'non_null_count': int(df[col].notna().sum()),
-                    'null_count': int(df[col].isna().sum()),
-                    'unique_count': int(df[col].nunique()),
+                    'column_name': col_name,
+                    'data_type': str(col_data.dtype) if len(col_data) > 0 else 'Unknown',
+                    'non_null_count': int(col_data.notna().sum()) if len(col_data) > 0 else 0,
+                    'null_count': int(col_data.isna().sum()) if len(col_data) > 0 else 0,
+                    'unique_count': int(col_data.nunique()) if len(col_data) > 0 else 0,
                     'total_count': len(df),
-                    'completeness': (df[col].notna().sum() / len(df)) * 100 if len(df) > 0 else 0,
-                    'uniqueness': (df[col].nunique() / len(df)) * 100 if len(df) > 0 else 0
+                    'completeness': (col_data.notna().sum() / len(df)) * 100 if len(df) > 0 and len(col_data) > 0 else 0,
+                    'uniqueness': (col_data.nunique() / len(df)) * 100 if len(df) > 0 and len(col_data) > 0 else 0
                 }
                 
                 # Detect type from column name
-                col_info['detected_type'] = self._detect_data_type_from_name(str(col).lower())
+                col_info['detected_type'] = self._detect_data_type_from_name(col_name.lower())
                 
                 # Check for primary key
-                col_info['is_primary_key'] = any(kw in str(col).lower() for kw in ['id', 'key', 'pk', 'primary', '_id'])
+                col_info['is_primary_key'] = any(kw in col_name.lower() for kw in ['id', 'key', 'pk', 'primary', '_id'])
                 
                 # Check for audit fields
-                col_info['is_audit_field'] = any(kw in str(col).lower() for kw in ['created', 'updated', 'modified', 'deleted', 'timestamp', 'date', 'user', 'audit', 'created_by', 'updated_by'])
+                col_info['is_audit_field'] = any(kw in col_name.lower() for kw in ['created', 'updated', 'modified', 'deleted', 'timestamp', 'date', 'user', 'audit', 'created_by', 'updated_by'])
                 
                 # NDMO standards applicable
                 col_info['ndmo_standards'] = []
@@ -256,7 +312,8 @@ class SmartSchemaAnalyzer:
                 
                 column_analysis.append(col_info)
             except Exception as e:
-                # Skip columns that cause errors
+                # Log error but continue with other columns
+                print(f"Error analyzing column {col}: {str(e)}")
                 continue
         
         return column_analysis
