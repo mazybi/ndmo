@@ -2231,15 +2231,6 @@ def show_templates_forms():
                 if template_key not in st.session_state:
                     generate_button = st.button("📥 Generate & Download Data Sharing Report Template", use_container_width=True, key="generate_report_btn")
                     if generate_button:
-                        # Show loading overlay
-                        loading_html = """
-                        <div class="loading-overlay">
-                            <div class="loading-spinner-large"></div>
-                            <div class="loading-text">Generating Data Sharing Report template...</div>
-                        </div>
-                        """
-                        st.markdown(loading_html, unsafe_allow_html=True)
-                        
                         progress_bar = st.progress(0)
                         status_text = st.empty()
                         try:
