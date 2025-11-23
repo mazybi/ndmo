@@ -4163,40 +4163,26 @@ def show_data_quality_dashboard():
                         with col_btn1:
                             if st.button("📄 Generate Technical Report", use_container_width=True, key="generate_dq_report"):
                                 try:
-                                    report_status = st.empty()
-                                    report_status.info("🔄 Generating professional technical report...")
-                                    
-                                    from data_quality_report import create_data_quality_report
-                                    
-                                    # Get logo path
-                                    logo_path = "logo@3x.png"
-                                    if not os.path.exists(logo_path):
-                                        logo_path = None
-                                    
-                                    report_filename = create_data_quality_report(
-                                        analysis,
-                                        analysis.get('file_name', 'schema_file.xlsx'),
-                                        logo_path=logo_path
-                                    )
-                                    
-                                    # Store report filename in session state
-                                    st.session_state.dq_report_filename = report_filename
-                                    st.session_state.dq_report_generated = True
-                                    
-                                    report_status.success("✅ Technical report generated successfully!")
-                                    
-                                    # Show download button immediately
-                                    if os.path.exists(report_filename):
-                                        with open(report_filename, 'rb') as f:
-                                            report_data = f.read()
-                                            st.download_button(
-                                                "📥 Download Technical Report",
-                                                report_data,
-                                                file_name=os.path.basename(report_filename),
-                                                mime="application/pdf",
-                                                use_container_width=True,
-                                                key="download_dq_report"
-                                            )
+                                    with st.spinner("🔄 Generating professional technical report..."):
+                                        from data_quality_report import create_data_quality_report
+                                        
+                                        # Get logo path
+                                        logo_path = "logo@3x.png"
+                                        if not os.path.exists(logo_path):
+                                            logo_path = None
+                                        
+                                        report_filename = create_data_quality_report(
+                                            analysis,
+                                            analysis.get('file_name', 'schema_file.xlsx'),
+                                            logo_path=logo_path
+                                        )
+                                        
+                                        # Store report filename in session state
+                                        st.session_state.dq_report_filename = report_filename
+                                        st.session_state.dq_report_generated = True
+                                        
+                                        st.success("✅ Technical report generated successfully!")
+                                        st.rerun()
                                 
                                 except Exception as e:
                                     st.error(f"❌ Error generating report: {str(e)}")
@@ -4204,57 +4190,46 @@ def show_data_quality_dashboard():
                                     with st.expander("Error Details"):
                                         st.code(traceback.format_exc())
                             
-                            # Show download button if report was previously generated
+                            # Show download button if report was generated
                             if st.session_state.get('dq_report_generated', False) and st.session_state.get('dq_report_filename'):
                                 report_filename = st.session_state.dq_report_filename
                                 if os.path.exists(report_filename):
                                     with open(report_filename, 'rb') as f:
+                                        report_data = f.read()
                                         st.download_button(
                                             "📥 Download Technical Report",
-                                            f.read(),
+                                            report_data,
                                             file_name=os.path.basename(report_filename),
                                             mime="application/pdf",
                                             use_container_width=True,
-                                            key="download_dq_report_prev"
+                                            key="download_dq_report"
                                         )
+                                else:
+                                    st.warning(f"⚠️ Report file not found: {report_filename}")
                         
                         with col_btn2:
                             if st.button("📊 Generate Assessment Report", use_container_width=True, key="generate_assessment_report"):
                                 try:
-                                    assessment_status = st.empty()
-                                    assessment_status.info("🔄 Generating professional assessment report...")
-                                    
-                                    from data_quality_report import create_schema_assessment_report
-                                    
-                                    # Get logo path
-                                    logo_path = "logo@3x.png"
-                                    if not os.path.exists(logo_path):
-                                        logo_path = None
-                                    
-                                    assessment_filename = create_schema_assessment_report(
-                                        analysis,
-                                        analysis.get('file_name', 'schema_file.xlsx'),
-                                        logo_path=logo_path
-                                    )
-                                    
-                                    # Store report filename in session state
-                                    st.session_state.dq_assessment_filename = assessment_filename
-                                    st.session_state.dq_assessment_generated = True
-                                    
-                                    assessment_status.success("✅ Assessment report generated successfully!")
-                                    
-                                    # Show download button immediately
-                                    if os.path.exists(assessment_filename):
-                                        with open(assessment_filename, 'rb') as f:
-                                            assessment_data = f.read()
-                                            st.download_button(
-                                                "📥 Download Assessment Report",
-                                                assessment_data,
-                                                file_name=os.path.basename(assessment_filename),
-                                                mime="application/pdf",
-                                                use_container_width=True,
-                                                key="download_assessment_report"
-                                            )
+                                    with st.spinner("🔄 Generating professional assessment report..."):
+                                        from data_quality_report import create_schema_assessment_report
+                                        
+                                        # Get logo path
+                                        logo_path = "logo@3x.png"
+                                        if not os.path.exists(logo_path):
+                                            logo_path = None
+                                        
+                                        assessment_filename = create_schema_assessment_report(
+                                            analysis,
+                                            analysis.get('file_name', 'schema_file.xlsx'),
+                                            logo_path=logo_path
+                                        )
+                                        
+                                        # Store report filename in session state
+                                        st.session_state.dq_assessment_filename = assessment_filename
+                                        st.session_state.dq_assessment_generated = True
+                                        
+                                        st.success("✅ Assessment report generated successfully!")
+                                        st.rerun()
                                 
                                 except Exception as e:
                                     st.error(f"❌ Error generating assessment: {str(e)}")
@@ -4262,19 +4237,22 @@ def show_data_quality_dashboard():
                                     with st.expander("Error Details"):
                                         st.code(traceback.format_exc())
                             
-                            # Show download button if assessment was previously generated
+                            # Show download button if assessment was generated
                             if st.session_state.get('dq_assessment_generated', False) and st.session_state.get('dq_assessment_filename'):
                                 assessment_filename = st.session_state.dq_assessment_filename
                                 if os.path.exists(assessment_filename):
                                     with open(assessment_filename, 'rb') as f:
+                                        assessment_data = f.read()
                                         st.download_button(
                                             "📥 Download Assessment Report",
-                                            f.read(),
+                                            assessment_data,
                                             file_name=os.path.basename(assessment_filename),
                                             mime="application/pdf",
                                             use_container_width=True,
-                                            key="download_assessment_report_prev"
+                                            key="download_assessment_report"
                                         )
+                                else:
+                                    st.warning(f"⚠️ Assessment file not found: {assessment_filename}")
                 
                 except Exception as e:
                     progress_bar.empty()
