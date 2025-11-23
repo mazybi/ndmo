@@ -152,7 +152,171 @@ st.markdown("""
         100% { transform: rotate(360deg); }
     }
     
-    /* Feature cards */
+    /* Modern Landing Page Styles */
+    .landing-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .landing-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        animation: fadeInDown 0.8s ease;
+    }
+    
+    .landing-logo {
+        max-width: 200px;
+        height: auto;
+        margin: 0 auto 1.5rem;
+        display: block;
+        border-radius: 1rem;
+        box-shadow: 0 8px 25px rgba(31, 119, 180, 0.2);
+        animation: logoFadeInScale 1s ease-out;
+    }
+    
+    .landing-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #1f77b4 0%, #667eea 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+    
+    .landing-subtitle {
+        font-size: 1.1rem;
+        color: #6c757d;
+        margin-bottom: 3rem;
+    }
+    
+    /* Modern Tool Cards */
+    .tool-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+    
+    .tool-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border: 2px solid #e9ecef;
+        border-radius: 1.25rem;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease backwards;
+    }
+    
+    .tool-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(31, 119, 180, 0.1), transparent);
+        transition: left 0.5s;
+    }
+    
+    .tool-card:hover::before {
+        left: 100%;
+    }
+    
+    .tool-card:nth-child(1) { animation-delay: 0.1s; }
+    .tool-card:nth-child(2) { animation-delay: 0.2s; }
+    .tool-card:nth-child(3) { animation-delay: 0.3s; }
+    .tool-card:nth-child(4) { animation-delay: 0.4s; }
+    .tool-card:nth-child(5) { animation-delay: 0.5s; }
+    .tool-card:nth-child(6) { animation-delay: 0.6s; }
+    
+    .tool-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(31, 119, 180, 0.2);
+        border-color: #1f77b4;
+    }
+    
+    .tool-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+    
+    .tool-card:hover .tool-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+    
+    .tool-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, #1f77b4 0%, #667eea 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .tool-description {
+        font-size: 0.95rem;
+        color: #6c757d;
+        line-height: 1.6;
+        margin: 0;
+    }
+    
+    .enter-button-container {
+        text-align: center;
+        margin-top: 3rem;
+        animation: fadeInUp 1s ease;
+    }
+    
+    .enter-button {
+        background: linear-gradient(135deg, #1f77b4 0%, #667eea 100%);
+        color: white;
+        border: none;
+        padding: 1.25rem 3rem;
+        border-radius: 1rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(31, 119, 180, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+    }
+    
+    .enter-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(31, 119, 180, 0.4);
+    }
+    
+    .enter-button-icon {
+        font-size: 1.5rem;
+        animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+    
+    /* Feature cards (kept for backward compatibility) */
     .feature-card {
         background: white;
         padding: 2rem;
@@ -449,128 +613,87 @@ if 'user_name' not in st.session_state:
     st.session_state.user_name = ""
 
 def show_welcome_page():
-    """Show professional welcome page with animated logo and dynamic description"""
+    """Show modern, elegant landing page with tools only"""
     import time
     
     # Show loading initially
     with st.spinner("Loading system..."):
-        time.sleep(0.5)
+        time.sleep(0.3)
     
-    # Logo with animated entrance
-    logo_html = """
-    <div class="logo-container">
-        <img src="data:image/png;base64,{}" class="logo-img" alt="NDMO/NDI Logo">
-    </div>
+    # Landing Page Container
+    landing_html = """
+    <div class="landing-container">
+        <div class="landing-header">
     """
     
-    # Try to load logo
+    # Logo
     try:
         import base64
         with open("logo@3x.png", "rb") as f:
             logo_data = base64.b64encode(f.read()).decode()
-            logo_html = logo_html.format(logo_data)
+            landing_html += f'<img src="data:image/png;base64,{logo_data}" class="landing-logo" alt="NDMO/NDI Logo">'
     except:
-        logo_html = '<div class="logo-container"><h1 style="font-size: 4rem; color: #1f77b4; animation: logoSlideIn 1.5s ease-out;">📊</h1></div>'
+        landing_html += '<div style="font-size: 5rem; color: #1f77b4; margin: 0 auto 1.5rem; animation: logoFadeInScale 1s ease-out;">📊</div>'
     
-    st.markdown(logo_html, unsafe_allow_html=True)
-    
-    # Welcome container with dynamic text
-    stats = get_statistics()
-    total_controls = stats.get('total_controls', 0)
-    total_specs = stats.get('total_specifications', 0)
-    
-    welcome_html = f"""
-    <div class="welcome-container">
-        <div class="welcome-title">Welcome to Compliance System</div>
-        <div class="welcome-subtitle">NDMO/NDI Data Governance Compliance Management Platform</div>
-        <div class="welcome-description">
-            <p>A comprehensive and integrated system for measuring and managing compliance with NDMO and NDI data governance standards in Saudi Arabia.</p>
-            <p>The system provides advanced tools for managing {total_controls} controls, {total_specs} specifications, evidence, and reports in a professional and organized manner.</p>
-            <p>Streamline your compliance journey with automated scoring, professional templates, and real-time tracking.</p>
+    landing_html += """
+            <h1 class="landing-title">NDMO/NDI Compliance System</h1>
+            <p class="landing-subtitle">Professional Data Governance Management Platform</p>
+        </div>
+        
+        <div class="tool-grid">
+            <div class="tool-card" onclick="window.location.href='?page=dashboard'">
+                <span class="tool-icon">🎯</span>
+                <h3 class="tool-title">Control Management</h3>
+                <p class="tool-description">Comprehensive management of controls and specifications with priority-based classification</p>
+            </div>
+            
+            <div class="tool-card" onclick="window.location.href='?page=dashboard'">
+                <span class="tool-icon">📊</span>
+                <h3 class="tool-title">Interactive Dashboard</h3>
+                <p class="tool-description">Real-time statistics and interactive charts for compliance measurement and progress tracking</p>
+            </div>
+            
+            <div class="tool-card" onclick="window.location.href='?page=templates'">
+                <span class="tool-icon">📋</span>
+                <h3 class="tool-title">Professional Templates</h3>
+                <p class="tool-description">Fillable professional forms with unified design, logo, and classification for all compliance documents</p>
+            </div>
+            
+            <div class="tool-card" onclick="window.location.href='?page=measurement'">
+                <span class="tool-icon">📈</span>
+                <h3 class="tool-title">Compliance Scoring</h3>
+                <p class="tool-description">Automated calculation of compliance scores with real-time progress tracking and reporting</p>
+            </div>
+            
+            <div class="tool-card" onclick="window.location.href='?page=documents'">
+                <span class="tool-icon">🔍</span>
+                <h3 class="tool-title">Evidence Management</h3>
+                <p class="tool-description">Upload and track required evidence for each specification with automated validation</p>
+            </div>
+            
+            <div class="tool-card" onclick="window.location.href='?page=import'">
+                <span class="tool-icon">📥</span>
+                <h3 class="tool-title">Data Import</h3>
+                <p class="tool-description">Seamless data import from Excel files with automatic mapping and validation</p>
+            </div>
+        </div>
+        
+        <div class="enter-button-container">
+            <button class="enter-button" onclick="window.location.href='?enter=true'">
+                <span class="enter-button-icon">🚀</span>
+                <span>Enter System</span>
+            </button>
         </div>
     </div>
     """
-    st.markdown(welcome_html, unsafe_allow_html=True)
     
-    # Features
-    st.markdown("## Key Features")
-    col1, col2, col3 = st.columns(3)
+    st.markdown(landing_html, unsafe_allow_html=True)
     
-    with col1:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🎯</div>
-            <h3>Control Management</h3>
-            <p>Comprehensive management of {total_controls} controls and {total_specs} specifications with priority-based classification</p>
-        </div>
-        """.format(total_controls=total_controls, total_specs=total_specs), unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <h3>Interactive Dashboard</h3>
-            <p>Real-time statistics and interactive charts for compliance measurement and progress tracking</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">📋</div>
-            <h3>Professional Templates</h3>
-            <p>Fillable professional forms with unified design, logo, and classification for all compliance documents</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    col4, col5, col6 = st.columns(3)
-    
-    with col4:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">📈</div>
-            <h3>Compliance Scoring</h3>
-            <p>Automated calculation of compliance scores with real-time progress tracking and reporting</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col5:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🔍</div>
-            <h3>Evidence Management</h3>
-            <p>Upload and track required evidence for each specification with automated validation</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col6:
-        st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">📥</div>
-            <h3>Data Import</h3>
-            <p>Seamless data import from Excel files with automatic mapping and validation</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Statistics
-    st.markdown("---")
-    st.markdown("## System Statistics")
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.metric("Total Controls", stats.get('total_controls', 0))
-    with col2:
-        st.metric("Total Specifications", stats.get('total_specifications', 0))
-    with col3:
-        st.metric("Evidence Items", stats.get('total_evidence_items', 0))
-    with col4:
-        st.metric("Domains", stats.get('domains_count', len(DOMAINS)))
-    
-    # Enter button
-    st.markdown("---")
+    # Enter button using Streamlit (fallback)
+    st.markdown("<br>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("🚀 Enter System", use_container_width=True, type="primary"):
+        if st.button("🚀 Enter System", use_container_width=True, type="primary", key="enter_system_btn"):
             # Show loading overlay
             loading_html = """
             <div class="loading-overlay">
@@ -580,7 +703,6 @@ def show_welcome_page():
             """
             st.markdown(loading_html, unsafe_allow_html=True)
             
-            import time
             time.sleep(0.5)  # Simulate loading
             
             st.session_state.authenticated = True
