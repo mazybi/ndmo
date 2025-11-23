@@ -2547,15 +2547,6 @@ def show_templates_forms():
             if template_key not in st.session_state:
                 generate_button = st.button("📥 Generate & Download Use Case Brief Template", use_container_width=True, key="generate_use_case_btn")
                 if generate_button:
-                    # Show loading overlay
-                    loading_html = """
-                    <div class="loading-overlay">
-                        <div class="loading-spinner-large"></div>
-                        <div class="loading-text">Generating Use Case Brief template...</div>
-                    </div>
-                    """
-                    st.markdown(loading_html, unsafe_allow_html=True)
-                    
                     progress_bar = st.progress(0)
                     status_text = st.empty()
                     try:
@@ -2581,6 +2572,7 @@ def show_templates_forms():
                         progress_bar.progress(100)
                         status_text.success("✅ Template generated successfully! Download button appears below.")
                         progress_bar.empty()
+                        st.rerun()  # Refresh to show download button
                     except Exception as e:
                         progress_bar.empty()
                         status_text.error(f"❌ Error: {str(e)}")
@@ -2940,15 +2932,6 @@ def show_templates_forms():
                 if template_key not in st.session_state:
                     generate_button = st.button("📥 Generate & Download Gap Analysis Report Template", use_container_width=True, key="generate_gap_btn")
                     if generate_button:
-                        # Show loading overlay
-                        loading_html = """
-                        <div class="loading-overlay">
-                            <div class="loading-spinner-large"></div>
-                            <div class="loading-text">Generating Gap Analysis Report template...</div>
-                        </div>
-                        """
-                        st.markdown(loading_html, unsafe_allow_html=True)
-                        
                         progress_bar = st.progress(0)
                         status_text = st.empty()
                         try:
@@ -3019,15 +3002,6 @@ def show_templates_forms():
                 if template_key not in st.session_state:
                     generate_button = st.button("📥 Generate & Download Risk Assessment Report Template", use_container_width=True, key="generate_risk_btn")
                     if generate_button:
-                        # Show loading overlay
-                        loading_html = """
-                        <div class="loading-overlay">
-                            <div class="loading-spinner-large"></div>
-                            <div class="loading-text">Generating Risk Assessment Report template...</div>
-                        </div>
-                        """
-                        st.markdown(loading_html, unsafe_allow_html=True)
-                        
                         progress_bar = st.progress(0)
                         status_text = st.empty()
                         try:
