@@ -737,7 +737,7 @@ def main():
     st.markdown("---")
     
     # Navigation with tabs
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
         "🏠 Dashboard",
         "🎯 Controls",
         "📊 Specifications",
@@ -745,6 +745,7 @@ def main():
         "📈 Measurement",
         "📥 Import",
         "📚 Documents",
+        "🛡️ Data Quality",
         "⚙️ Settings"
     ])
     
@@ -783,6 +784,9 @@ def main():
         show_documents_evidence()
     
     with tab8:
+        show_data_quality_dashboard()
+    
+    with tab9:
         st.header("⚙️ Settings")
         st.subheader("System Settings")
         
@@ -3748,6 +3752,308 @@ def show_compliance_measurement():
                 file_name=f"compliance_{control_id}_{datetime.now().strftime('%Y%m%d')}.json",
                 mime="application/json"
             )
+
+def show_data_quality_dashboard():
+    """Data Quality Dashboard - SANS Data Quality System"""
+    st.header("🛡️ SANS Data Quality System")
+    st.info("Professional NDMO Compliance Dashboard with Advanced Pipeline Processing")
+    
+    # Import data quality modules
+    try:
+        from ndmo_quality_standards import NDMOQualityStandards
+        from smart_schema_analyzer import SmartSchemaAnalyzer
+        from smart_data_processor import SmartDataProcessor
+    except ImportError as e:
+        st.error(f"Error importing data quality modules: {str(e)}")
+        return
+    
+    # Initialize components
+    if 'ndmo_standards' not in st.session_state:
+        st.session_state.ndmo_standards = NDMOQualityStandards()
+    if 'schema_analyzer' not in st.session_state:
+        st.session_state.schema_analyzer = SmartSchemaAnalyzer()
+    if 'data_processor' not in st.session_state:
+        st.session_state.data_processor = SmartDataProcessor()
+    
+    # Main tabs for Data Quality
+    dq_tab1, dq_tab2, dq_tab3, dq_tab4 = st.tabs([
+        "📋 Schema Analysis",
+        "⚙️ Data Processing",
+        "🛡️ NDMO Compliance",
+        "📊 Quality Reports"
+    ])
+    
+    with dq_tab1:
+        st.subheader("📋 Schema Analysis")
+        st.markdown("Upload and analyze your schema file to check NDMO compliance")
+        
+        uploaded_schema = st.file_uploader(
+            "Upload Schema File (Excel)",
+            type=['xlsx', 'xls'],
+            key="schema_upload"
+        )
+        
+        if uploaded_schema:
+            # Save uploaded file temporarily
+            import tempfile
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx') as tmp_file:
+                tmp_file.write(uploaded_schema.getvalue())
+                tmp_path = tmp_file.name
+            
+            if st.button("🔍 Analyze Schema", use_container_width=True):
+                progress_bar = st.progress(0)
+                status_text = st.empty()
+                
+                try:
+                    status_text.info("🔄 Analyzing schema structure...")
+                    progress_bar.progress(20)
+                    
+                    analysis = st.session_state.schema_analyzer.analyze_schema(tmp_path)
+                    
+                    if 'error' in analysis:
+                        progress_bar.empty()
+                        status_text.error(f"❌ {analysis['error']}")
+                    else:
+                        progress_bar.progress(100)
+                        status_text.success("✅ Schema analysis completed!")
+                        progress_bar.empty()
+                        
+                        # Store results
+                        st.session_state.schema_analysis = analysis
+                        
+                        # Display results
+                        st.markdown("### Analysis Results")
+                        
+                        col1, col2, col3 = st.columns(3)
+                        with col1:
+                            st.metric("Total Fields", analysis.get('total_fields', 0))
+                        with col2:
+                            st.metric("Has Primary Key", "✅ Yes" if analysis.get('has_primary_key') else "❌ No")
+                        with col3:
+                            st.metric("Has Audit Trail", "✅ Yes" if analysis.get('has_audit_trail') else "❌ No")
+                        
+                        # Data Types
+                        st.markdown("### Data Types Distribution")
+                        if analysis.get('data_types'):
+                            data_types_df = pd.DataFrame(list(analysis['data_types'].items()), columns=['Data Type', 'Count'])
+                            st.bar_chart(data_types_df.set_index('Data Type'))
+                        
+                        # Issues
+                        if analysis.get('issues'):
+                            st.markdown("### ⚠️ Issues Found")
+                            for issue in analysis['issues']:
+                                st.warning(f"**{issue.get('severity', 'Unknown')}**: {issue.get('issue', '')} - {issue.get('impact', '')}")
+                        
+                        # Recommendations
+                        if analysis.get('recommendations'):
+                            st.markdown("### 💡 Recommendations")
+                            for rec in analysis['recommendations']:
+                                st.info(f"**{rec.get('type', 'Info')}**: {rec.get('message', '')}")
+                
+                except Exception as e:
+                    progress_bar.empty()
+                    status_text.error(f"❌ Error: {str(e)}")
+                    import traceback
+                    with st.expander("Error Details"):
+                        st.code(traceback.format_exc())
+                finally:
+                    # Clean up temp file
+                    try:
+                        os.unlink(tmp_path)
+                    except:
+                        pass
+    
+    with dq_tab2:
+        st.subheader("⚙️ Data Processing")
+        st.markdown("Process your data file according to schema requirements")
+        
+        uploaded_data = st.file_uploader(
+            "Upload Data File (Excel)",
+            type=['xlsx', 'xls'],
+            key="data_upload"
+        )
+        
+        if uploaded_data:
+            if 'schema_analysis' not in st.session_state:
+                st.warning("⚠️ Please analyze schema first in the 'Schema Analysis' tab")
+            else:
+                if st.button("⚙️ Process Data", use_container_width=True):
+                    progress_bar = st.progress(0)
+                    status_text = st.empty()
+                    
+                    try:
+                        # Save uploaded file temporarily
+                        import tempfile
+                        with tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx') as tmp_file:
+                            tmp_file.write(uploaded_data.getvalue())
+                            tmp_path = tmp_file.name
+                        
+                        status_text.info("🔄 Processing data...")
+                        progress_bar.progress(20)
+                        
+                        result = st.session_state.data_processor.process_data(
+                            tmp_path,
+                            st.session_state.schema_analysis
+                        )
+                        
+                        if result.get('success'):
+                            progress_bar.progress(100)
+                            status_text.success("✅ Data processing completed!")
+                            progress_bar.empty()
+                            
+                            # Store results
+                            st.session_state.data_processing_result = result
+                            
+                            # Display quality metrics
+                            st.markdown("### Quality Metrics")
+                            metrics = result.get('quality_metrics', {})
+                            
+                            col1, col2, col3, col4, col5 = st.columns(5)
+                            with col1:
+                                st.metric("Completeness", f"{metrics.get('completeness', 0)*100:.1f}%")
+                            with col2:
+                                st.metric("Accuracy", f"{metrics.get('accuracy', 0)*100:.1f}%")
+                            with col3:
+                                st.metric("Consistency", f"{metrics.get('consistency', 0)*100:.1f}%")
+                            with col4:
+                                st.metric("Uniqueness", f"{metrics.get('uniqueness', 0)*100:.1f}%")
+                            with col5:
+                                st.metric("Overall Score", f"{metrics.get('overall_score', 0)*100:.1f}%")
+                            
+                            # Display processed data preview
+                            st.markdown("### Processed Data Preview")
+                            processed_df = result.get('processed_data')
+                            if processed_df is not None:
+                                st.dataframe(processed_df.head(10), use_container_width=True)
+                                
+                                # Download processed data
+                                st.markdown("### Download Processed Data")
+                                output = processed_df.to_excel(index=False)
+                                st.download_button(
+                                    "📥 Download Processed Data (Excel)",
+                                    output,
+                                    file_name=f"processed_data_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                )
+                        else:
+                            progress_bar.empty()
+                            status_text.error(f"❌ {result.get('error', 'Processing failed')}")
+                    
+                    except Exception as e:
+                        progress_bar.empty()
+                        status_text.error(f"❌ Error: {str(e)}")
+                        import traceback
+                        with st.expander("Error Details"):
+                            st.code(traceback.format_exc())
+    
+    with dq_tab3:
+        st.subheader("🛡️ NDMO Compliance Assessment")
+        st.markdown("Assess NDMO compliance based on schema analysis and data quality")
+        
+        if 'schema_analysis' in st.session_state and 'data_processing_result' in st.session_state:
+            if st.button("🛡️ Assess NDMO Compliance", use_container_width=True):
+                progress_bar = st.progress(0)
+                status_text = st.empty()
+                
+                try:
+                    status_text.info("🔄 Calculating compliance scores...")
+                    progress_bar.progress(30)
+                    
+                    schema_analysis = st.session_state.schema_analysis
+                    data_quality = st.session_state.data_processing_result.get('quality_metrics', {})
+                    
+                    compliance_results = st.session_state.ndmo_standards.calculate_compliance_score(
+                        schema_analysis,
+                        data_quality
+                    )
+                    
+                    progress_bar.progress(100)
+                    status_text.success("✅ Compliance assessment completed!")
+                    progress_bar.empty()
+                    
+                    # Store results
+                    st.session_state.compliance_results = compliance_results
+                    
+                    # Display overall compliance
+                    st.markdown("### Overall Compliance")
+                    overall_score = compliance_results.get('overall_score', 0)
+                    status = compliance_results.get('status', 'Unknown')
+                    
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.metric("Compliance Score", f"{overall_score*100:.1f}%")
+                    with col2:
+                        status_color = {
+                            'Compliant': '🟢',
+                            'Partially Compliant': '🟡',
+                            'Non-Compliant': '🔴'
+                        }
+                        st.metric("Status", f"{status_color.get(status, '⚪')} {status}")
+                    
+                    # Category scores
+                    st.markdown("### Compliance by Category")
+                    category_scores = compliance_results.get('category_scores', {})
+                    if category_scores:
+                        cat_df = pd.DataFrame(list(category_scores.items()), columns=['Category', 'Score'])
+                        cat_df['Score'] = cat_df['Score'] * 100
+                        st.bar_chart(cat_df.set_index('Category'))
+                    
+                    # Recommendations
+                    recommendations = st.session_state.ndmo_standards.get_recommendations(compliance_results)
+                    if recommendations:
+                        st.markdown("### 💡 Recommendations")
+                        for rec in recommendations[:10]:  # Show top 10
+                            priority_icon = "🔴" if rec.get('priority') == 'High' else "🟡"
+                            st.info(f"{priority_icon} **{rec.get('standard_name', '')}** ({rec.get('standard_id', '')}): {rec.get('recommendation', '')}")
+                
+                except Exception as e:
+                    progress_bar.empty()
+                    status_text.error(f"❌ Error: {str(e)}")
+                    import traceback
+                    with st.expander("Error Details"):
+                        st.code(traceback.format_exc())
+        else:
+            st.info("ℹ️ Please complete Schema Analysis and Data Processing first")
+    
+    with dq_tab4:
+        st.subheader("📊 Quality Reports")
+        st.markdown("View comprehensive quality reports and export results")
+        
+        if 'schema_analysis' in st.session_state:
+            st.markdown("### Schema Analysis Report")
+            with st.expander("View Schema Analysis Details"):
+                st.json(st.session_state.schema_analysis)
+            
+            # Export schema analysis
+            if st.button("📥 Export Schema Analysis (JSON)"):
+                st.download_button(
+                    "Download",
+                    json.dumps(st.session_state.schema_analysis, indent=2),
+                    file_name=f"schema_analysis_{datetime.now().strftime('%Y%m%d')}.json",
+                    mime="application/json"
+                )
+        
+        if 'data_processing_result' in st.session_state:
+            st.markdown("### Data Processing Report")
+            with st.expander("View Processing Results"):
+                result = st.session_state.data_processing_result.copy()
+                if 'processed_data' in result:
+                    result['processed_data'] = "DataFrame (see preview above)"
+                st.json(result)
+        
+        if 'compliance_results' in st.session_state:
+            st.markdown("### NDMO Compliance Report")
+            with st.expander("View Compliance Results"):
+                st.json(st.session_state.compliance_results)
+            
+            # Export compliance report
+            if st.button("📥 Export Compliance Report (JSON)"):
+                st.download_button(
+                    "Download",
+                    json.dumps(st.session_state.compliance_results, indent=2),
+                    file_name=f"compliance_report_{datetime.now().strftime('%Y%m%d')}.json",
+                    mime="application/json"
+                )
 
 if __name__ == "__main__":
     main()
