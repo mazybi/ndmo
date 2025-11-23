@@ -46,37 +46,77 @@ class SmartSchemaAnalyzer:
                 
                 wb.close()
                 
-                # Step 2: Read with pandas using the column names we found
-                if column_names:
-                    # Try reading with header=0 first
+                # Step 2: Read with pandas using explicit column range to get ALL columns
+                try:
+                    # CRITICAL: Read with usecols to force reading ALL columns
+                    df = pd.read_excel(
+                        schema_file_path, 
+                        engine='openpyxl', 
+                        header=0,
+                        usecols=range(max_col)  # Force read all columns
+                    )
+                    
+                    # Ensure we have exactly max_col columns
+                    if len(df.columns) < max_col:
+                        # Add missing columns
+                        for i in range(len(df.columns), max_col):
+                            col_name = column_names[i] if i < len(column_names) else f'Column_{i+1}'
+                            df[col_name] = None
+                    
+                    # Rename columns to match what we found
+                    if len(column_names) == len(df.columns):
+                        df.columns = column_names
+                    elif len(column_names) > 0:
+                        # Use column names we found, pad if needed
+                        new_columns = []
+                        for i in range(max_col):
+                            if i < len(column_names):
+                                new_columns.append(column_names[i])
+                            elif i < len(df.columns):
+                                new_columns.append(df.columns[i])
+                            else:
+                                new_columns.append(f'Column_{i+1}')
+                        df.columns = new_columns[:len(df.columns)]
+                        
+                except Exception as e_read:
+                    # Fallback: read without header and manually set columns
                     try:
-                        df = pd.read_excel(schema_file_path, engine='openpyxl', header=0)
-                        # If we got fewer columns, pad with empty columns
-                        if len(df.columns) < max_col:
-                            # Add missing columns
-                            for i in range(len(df.columns), max_col):
-                                df[f'Column_{i+1}'] = None
-                            # Rename all columns
-                            df.columns = column_names[:len(df.columns)]
-                    except:
-                        # Fallback: read without header
                         df = pd.read_excel(schema_file_path, engine='openpyxl', header=None)
-                        # Use first row if it looks like headers
+                        # Check if first row looks like headers
                         if len(df) > 0:
                             first_row = df.iloc[0]
-                            if first_row.notna().sum() > max_col * 0.3:
-                                df.columns = [str(x).strip() if pd.notna(x) else f'Column_{i+1}' for i, x in enumerate(first_row)]
+                            non_null_count = first_row.notna().sum()
+                            
+                            if non_null_count > max_col * 0.3:
+                                # First row is headers
+                                new_columns = []
+                                for i in range(max_col):
+                                    if i < len(first_row):
+                                        val = first_row.iloc[i]
+                                        if pd.notna(val):
+                                            new_columns.append(str(val).strip())
+                                        else:
+                                            new_columns.append(column_names[i] if i < len(column_names) else f'Column_{i+1}')
+                                    else:
+                                        new_columns.append(column_names[i] if i < len(column_names) else f'Column_{i+1}')
+                                
+                                df.columns = new_columns[:len(df.columns)]
                                 df = df.iloc[1:].reset_index(drop=True)
                             else:
-                                df.columns = column_names[:len(df.columns)]
-                else:
-                    # No column names found, read with numeric indices
-                    df = pd.read_excel(schema_file_path, engine='openpyxl', header=None)
-                    df.columns = [f'Column_{i+1}' for i in range(len(df.columns))]
-                    # Pad to max_col if needed
-                    if len(df.columns) < max_col:
-                        for i in range(len(df.columns), max_col):
-                            df[f'Column_{i+1}'] = None
+                                # No clear headers, use column names we found
+                                new_columns = column_names[:max_col] if len(column_names) >= max_col else column_names + [f'Column_{i+1}' for i in range(len(column_names), max_col)]
+                                df.columns = new_columns[:len(df.columns)]
+                            
+                            # Ensure we have max_col columns
+                            if len(df.columns) < max_col:
+                                for i in range(len(df.columns), max_col):
+                                    col_name = column_names[i] if i < len(column_names) else f'Column_{i+1}'
+                                    df[col_name] = None
+                        else:
+                            # Empty file, create columns
+                            df = pd.DataFrame(columns=column_names[:max_col] if len(column_names) >= max_col else column_names + [f'Column_{i+1}' for i in range(len(column_names), max_col)])
+                    except Exception as e2:
+                        raise Exception(f"Failed to read Excel: {str(e_read)} / {str(e2)}")
                 
             except Exception as e1:
                 try:
@@ -328,9 +368,9 @@ class SmartSchemaAnalyzer:
                 if isinstance(col, (int, float)):
                     col_name = f'Column_{int(col)+1}'
                 else:
-                    col_name = str(col)
+                    col_name = str(col).strip() if col else f'Column_{col_idx+1}'
                 
-                # Get column data
+                # Get column data - ensure we get the data
                 try:
                     if col in df.columns:
                         col_data = df[col]
@@ -338,15 +378,80 @@ class SmartSchemaAnalyzer:
                         col_data = df.iloc[:, col_idx]
                     else:
                         # Column doesn't exist - create empty series
-                        col_data = pd.Series([None] * len(df), name=col_name)
-                except:
+                        col_data = pd.Series([None] * len(df), name=col_name, dtype=object)
+                except Exception as e_col:
                     # Create empty series if column doesn't exist
-                    col_data = pd.Series([None] * len(df), name=col_name)
+                    col_data = pd.Series([None] * len(df), name=col_name, dtype=object)
                 
-                # Analyze even if column is empty
-                if col_data.isna().all():
-                    # Column is empty but still analyze it
-                    pass
+                # Analyze even if column is empty - we still want to record it
+                # Calculate basic stats
+                total_count = len(col_data) if len(col_data) > 0 else len(df)
+                non_null_count = int(col_data.notna().sum()) if len(col_data) > 0 else 0
+                null_count = int(col_data.isna().sum()) if len(col_data) > 0 else total_count
+                unique_count = int(col_data.nunique()) if non_null_count > 0 else 0
+                
+                # Calculate completeness
+                completeness = (non_null_count / total_count * 100) if total_count > 0 else 0.0
+                
+                # Calculate uniqueness
+                uniqueness = (unique_count / non_null_count * 100) if non_null_count > 0 else 0.0
+                
+                # Detect data type
+                detected_type = 'Unknown'
+                if non_null_count > 0:
+                    try:
+                        sample_values = col_data.dropna().head(10)
+                        detected_type = self._detect_data_type_from_name(col_name.lower())
+                        # Try to detect from actual values
+                        if len(sample_values) > 0:
+                            first_val = sample_values.iloc[0] if hasattr(sample_values, 'iloc') else sample_values[0]
+                            if pd.api.types.is_numeric_dtype(col_data):
+                                detected_type = 'Numeric'
+                            elif pd.api.types.is_datetime64_any_dtype(col_data):
+                                detected_type = 'DateTime'
+                            elif isinstance(first_val, str) and '@' in str(first_val):
+                                detected_type = 'Email'
+                            elif isinstance(first_val, str) and any(c.isdigit() for c in str(first_val)) and len(str(first_val)) >= 10:
+                                detected_type = 'Phone'
+                    except:
+                        detected_type = self._detect_data_type_from_name(col_name.lower())
+                else:
+                    # Empty column - detect from name
+                    detected_type = self._detect_data_type_from_name(col_name.lower())
+                
+                # Build column info
+                col_info = {
+                    'column_name': col_name,
+                    'data_type': str(col_data.dtype) if len(col_data) > 0 else 'Unknown',
+                    'non_null_count': non_null_count,
+                    'null_count': null_count,
+                    'unique_count': unique_count,
+                    'total_count': total_count,
+                    'completeness': completeness,
+                    'uniqueness': uniqueness,
+                    'detected_type': detected_type,
+                    'is_primary_key': False,
+                    'is_audit_field': False,
+                    'ndmo_standards': []
+                }
+                
+                # Check for primary key
+                col_info['is_primary_key'] = any(kw in col_name.lower() for kw in ['id', 'key', 'pk', 'primary', '_id', 'serial'])
+                
+                # Check for audit fields
+                col_info['is_audit_field'] = any(kw in col_name.lower() for kw in ['created', 'updated', 'modified', 'deleted', 'timestamp', 'date', 'user', 'audit', 'created_by', 'updated_by', 'modified_by'])
+                
+                # NDMO standards applicable
+                if col_info['is_primary_key']:
+                    col_info['ndmo_standards'].append('DG001')
+                if col_info['is_audit_field']:
+                    col_info['ndmo_standards'].append('DS004')
+                if col_info['completeness'] < 100:
+                    col_info['ndmo_standards'].append('DQ001')
+                if col_info['uniqueness'] < 100 and not col_info['is_primary_key']:
+                    col_info['ndmo_standards'].append('DQ004')
+                
+                column_analysis.append(col_info)
                 
                 col_info = {
                     'column_name': col_name,

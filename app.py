@@ -4163,26 +4163,40 @@ def show_data_quality_dashboard():
                         with col_btn1:
                             if st.button("📄 Generate Technical Report", use_container_width=True, key="generate_dq_report"):
                                 try:
-                                    with st.spinner("🔄 Generating professional technical report..."):
-                                        from data_quality_report import create_data_quality_report
-                                        
-                                        # Get logo path
-                                        logo_path = "logo@3x.png"
-                                        if not os.path.exists(logo_path):
-                                            logo_path = None
-                                        
-                                        report_filename = create_data_quality_report(
-                                            analysis,
-                                            analysis.get('file_name', 'schema_file.xlsx'),
-                                            logo_path=logo_path
-                                        )
-                                        
-                                        # Store report filename in session state
-                                        st.session_state.dq_report_filename = report_filename
-                                        st.session_state.dq_report_generated = True
-                                        
-                                        st.success("✅ Technical report generated successfully!")
-                                        st.rerun()
+                                    # Show loading
+                                    loading_placeholder = st.empty()
+                                    loading_placeholder.info("🔄 Generating professional technical report...")
+                                    
+                                    from data_quality_report import create_data_quality_report
+                                    
+                                    # Get logo path
+                                    logo_path = "logo@3x.png"
+                                    if not os.path.exists(logo_path):
+                                        logo_path = None
+                                    
+                                    # Ensure analysis has required fields
+                                    if 'column_analysis' not in analysis:
+                                        analysis['column_analysis'] = []
+                                    if 'ndmo_compliance' not in analysis:
+                                        analysis['ndmo_compliance'] = {}
+                                    if 'total_columns' not in analysis:
+                                        analysis['total_columns'] = len(analysis.get('columns', []))
+                                    
+                                    report_filename = create_data_quality_report(
+                                        analysis,
+                                        analysis.get('file_name', 'schema_file.xlsx'),
+                                        logo_path=logo_path
+                                    )
+                                    
+                                    # Store report filename in session state
+                                    st.session_state.dq_report_filename = report_filename
+                                    st.session_state.dq_report_generated = True
+                                    
+                                    loading_placeholder.empty()
+                                    st.success("✅ Technical report generated successfully!")
+                                    
+                                    # Force rerun to show download button
+                                    st.rerun()
                                 
                                 except Exception as e:
                                     st.error(f"❌ Error generating report: {str(e)}")
