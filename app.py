@@ -2437,17 +2437,17 @@ def show_templates_forms():
                             
                             # Save uploaded image
                             image_path = saved_image_path
-                        if product_image:
-                            try:
-                                os.makedirs("uploaded_images", exist_ok=True)
-                                image_path = f"uploaded_images/product_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{product_image.name}"
-                                with open(image_path, "wb") as f:
-                                    f.write(product_image.getbuffer())
-                            except Exception as e:
-                                st.warning(f"Could not save image: {str(e)}")
-                                image_path = None
-                        
-                        form_data = {
+                            if product_image:
+                                try:
+                                    os.makedirs("uploaded_images", exist_ok=True)
+                                    image_path = f"uploaded_images/product_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{product_image.name}"
+                                    with open(image_path, "wb") as f:
+                                        f.write(product_image.getbuffer())
+                                except Exception as e:
+                                    st.warning(f"Could not save image: {str(e)}")
+                                    image_path = None
+                            
+                            form_data = {
                             'use_case_id': use_case_id,
                             'use_case_name': use_case_name,
                             'date': date.strftime("%Y-%m-%d"),
