@@ -63,25 +63,56 @@ class SmartSchemaAnalyzer:
             if df is None or df.empty:
                 return {'error': 'Schema file is empty or could not be read.'}
             
-            # CRITICAL: Force read ALL columns by reading raw first row
+            # CRITICAL: Force read ALL columns by reading raw first row using openpyxl
             try:
                 import openpyxl
-                wb = openpyxl.load_workbook(schema_file_path, read_only=True)
+                wb = openpyxl.load_workbook(schema_file_path, read_only=True, data_only=True)
                 ws = wb.active
                 # Get actual maximum column from Excel file
                 max_col = ws.max_column
                 actual_column_count = max(actual_column_count, max_col)
+                
+                # Get column names from first row
+                column_names = []
+                for col_idx in range(1, max_col + 1):
+                    cell_value = ws.cell(row=1, column=col_idx).value
+                    if cell_value:
+                        column_names.append(str(cell_value))
+                    else:
+                        column_names.append(f'Column_{col_idx}')
+                
                 wb.close()
-            except:
-                pass
-            
-            # If we have fewer columns than expected, try to read again with explicit column range
-            if len(df.columns) < actual_column_count:
+                
+                # If we got column names, use them
+                if len(column_names) > len(df.columns):
+                    # Re-read with all columns
+                    try:
+                        df = pd.read_excel(schema_file_path, engine='openpyxl', header=0)
+                        # Ensure we have all columns by reading with usecols
+                        if len(df.columns) < max_col:
+                            # Read with explicit column range
+                            df = pd.read_excel(schema_file_path, engine='openpyxl', header=0, usecols=range(max_col))
+                            # Rename columns if we have names
+                            if len(column_names) == len(df.columns):
+                                df.columns = column_names[:len(df.columns)]
+                    except:
+                        # Fallback: read without header and use column names
+                        try:
+                            df = pd.read_excel(schema_file_path, engine='openpyxl', header=None)
+                            # Use first row as header if it has data
+                            if len(df) > 0 and df.iloc[0].notna().sum() > max_col * 0.3:
+                                df.columns = df.iloc[0]
+                                df = df.iloc[1:].reset_index(drop=True)
+                            else:
+                                df.columns = column_names[:len(df.columns)]
+                        except:
+                            pass
+            except Exception as e:
+                # If openpyxl fails, try to get column count from raw read
                 try:
-                    # Read with explicit usecols to get all columns
-                    df = pd.read_excel(schema_file_path, engine='openpyxl', usecols=range(actual_column_count))
+                    df_test = pd.read_excel(schema_file_path, header=None, engine='openpyxl', nrows=1)
+                    actual_column_count = max(actual_column_count, len(df_test.columns))
                 except:
-                    # If that fails, at least we have what we got
                     pass
             
             # Analyze schema structure
@@ -126,8 +157,29 @@ class SmartSchemaAnalyzer:
             # Analyze each column for NDMO compliance - THIS IS THE KEY PART
             analysis['column_analysis'] = self._analyze_columns(df)
             
+            # CRITICAL: Ensure we analyze ALL columns from Excel file
+            # If we have fewer analyzed columns than actual, analyze remaining columns
+            if len(analysis['column_analysis']) < actual_column_count:
+                # Analyze remaining columns that might have been missed
+                for col_idx in range(len(df.columns), actual_column_count):
+                    col_info = {
+                        'column_name': f'Column_{col_idx + 1}',
+                        'data_type': 'Unknown',
+                        'non_null_count': 0,
+                        'null_count': len(df) if len(df) > 0 else 0,
+                        'unique_count': 0,
+                        'total_count': len(df),
+                        'completeness': 0.0,
+                        'uniqueness': 0.0,
+                        'detected_type': 'Unknown',
+                        'is_primary_key': False,
+                        'is_audit_field': False,
+                        'ndmo_standards': []
+                    }
+                    analysis['column_analysis'].append(col_info)
+            
             # Update total_columns based on actual analysis
-            analysis['total_columns'] = len(analysis['column_analysis'])
+            analysis['total_columns'] = max(len(analysis['column_analysis']), actual_column_count)
             
             # Calculate NDMO compliance per column
             analysis['ndmo_compliance'] = self._calculate_ndmo_compliance_per_column(analysis)
