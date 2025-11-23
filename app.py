@@ -1542,18 +1542,30 @@ def show_templates_forms():
                                 'approved_by': approved_by,
                                 'approved_date': approved_date.strftime("%Y-%m-%d")
                             }
-                            
-                            # Save form data
-                            json_file = save_form_data("compliance_report", control_id, "", form_data)
-                            
-                            # Generate PDF
-                            pdf_file = generate_pdf_from_form("compliance_report", form_data, control_id, control['title'])
-                            
-                            # Store file paths in session state
-                            st.session_state[f'compliance_report_json_{control_id}'] = json_file
-                            st.session_state[f'compliance_report_pdf_{control_id}'] = pdf_file
-                            
-                            st.success("✅ Compliance report saved successfully!")
+                                
+                                # Save form data
+                                status_text.info("💾 Saving form data...")
+                                progress_bar.progress(40)
+                                json_file = save_form_data("compliance_report", control_id, "", form_data)
+                                
+                                # Generate PDF
+                                status_text.info("📄 Generating PDF...")
+                                progress_bar.progress(70)
+                                pdf_file = generate_pdf_from_form("compliance_report", form_data, control_id, control['title'], "")
+                                
+                                progress_bar.progress(100)
+                                status_text.success("✅ Compliance report saved successfully! Scroll down to download.")
+                                
+                                st.session_state[f'compliance_report_json_{control_id}'] = json_file
+                                st.session_state[f'compliance_report_pdf_{control_id}'] = pdf_file
+                                
+                                progress_bar.empty()
+                            except Exception as e:
+                                progress_bar.empty()
+                                status_text.error(f"❌ Error: {str(e)}")
+                                import traceback
+                                with st.expander("Error Details"):
+                                    st.code(traceback.format_exc())
                 
                 # Download buttons outside form
                 if f'compliance_report_json_{control_id}' in st.session_state:
@@ -2424,7 +2436,7 @@ def show_templates_forms():
                             progress_bar.progress(10)
                             
                             # Save uploaded image
-                        image_path = saved_image_path
+                            image_path = saved_image_path
                         if product_image:
                             try:
                                 os.makedirs("uploaded_images", exist_ok=True)
