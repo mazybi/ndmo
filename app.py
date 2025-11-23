@@ -1207,7 +1207,7 @@ def show_templates_forms():
         
         if evidence_action == "Fill Form Directly":
             st.subheader("Fill Evidence Collection Form")
-        st.info("Fill out the evidence collection form directly in the tool")
+            st.info("Fill out the evidence collection form directly in the tool")
         
         all_controls = get_all_controls()
         
@@ -1416,16 +1416,131 @@ def show_templates_forms():
                             st.session_state.compliance_data[control_id]['status'] = compliance_status
                             st.session_state.compliance_data[control_id]['score'] = compliance_score
                             st.session_state.compliance_data[control_id]['last_updated'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        else:  # Download Professional Template
+            st.markdown("### Download Professional Evidence Template")
+            st.info("Download a professional evidence template with logo and classification")
+            
+            all_controls = get_all_controls()
+            
+            selected_control = st.selectbox(
+                "Select Control",
+                [f"{c['id']} - {c['title']}" for c in all_controls],
+                key="download_evidence_template_control"
+            )
+            
+            if selected_control:
+                control_id = selected_control.split(" - ")[0]
+                control = next((c for c in all_controls if c['id'] == control_id), None)
+                
+                if control:
+                    from sans_data_loader import get_all_specifications
+                    all_specs = get_all_specifications()
+                    specifications = [s for s in all_specs if s.get('control_id') == control_id]
+                    
+                    if specifications:
+                        selected_spec = st.selectbox(
+                            "Select Specification",
+                            [f"{s.get('spec_id', '')} - {s.get('specification_text', '')[:60]}..." for s in specifications],
+                            key="evidence_template_spec_select"
+                        )
+                        
+                        if selected_spec:
+                            spec_id = selected_spec.split(" - ")[0]
+                            spec = next((s for s in specifications if s.get('spec_id') == spec_id), None)
+                            
+                            if spec:
+                                if st.button("📥 Generate & Download Professional Evidence Template", use_container_width=True):
+                                    progress_bar = st.progress(0)
+                                    status_text = st.empty()
+                                    
+                                    try:
+                                        status_text.info("🔄 Starting PDF generation...")
+                                        progress_bar.progress(10)
+                                        
+                                        from professional_templates import create_professional_evidence_template
+                                        from sans_data_loader import get_evidence_by_spec
+                                        
+                                        status_text.info("📄 Loading evidence requirements...")
+                                        progress_bar.progress(30)
+                                        
+                                        evidence_reqs = get_evidence_by_spec(spec_id)
+                                        
+                                        status_text.info("📄 Creating template...")
+                                        progress_bar.progress(60)
+                                        
+                                        filename = create_professional_evidence_template(
+                                            control_id,
+                                            control['title'],
+                                            spec_id,
+                                            spec.get('specification_text', ''),
+                                            spec.get('description', ''),
+                                            spec.get('priority', 'P1'),
+                                            control.get('domain', control.get('category', 'Unknown')),
+                                            evidence_reqs if evidence_reqs else None
+                                        )
+                                        
+                                        progress_bar.progress(90)
+                                        status_text.info("💾 Finalizing...")
+                                        
+                                        template_key = f'evidence_template_{control_id}_{spec_id}'
+                                        st.session_state[template_key] = filename
+                                        
+                                        progress_bar.progress(100)
+                                        status_text.success("✅ Professional template generated! Download button appears below.")
+                                        progress_bar.empty()
+                                        st.rerun()
+                                    except Exception as e:
+                                        progress_bar.empty()
+                                        status_text.error(f"❌ Error: {str(e)}")
+                                        import traceback
+                                        with st.expander("Error Details"):
+                                            st.code(traceback.format_exc())
+                                
+                                # Show download button if template exists
+                                template_key = f'evidence_template_{control_id}_{spec_id}'
+                                if template_key in st.session_state:
+                                    try:
+                                        with open(st.session_state[template_key], 'rb') as f:
+                                            st.markdown("---")
+                                            st.markdown("### 📥 Download Template")
+                                            st.download_button(
+                                                "📥 Download Evidence Template (PDF)",
+                                                f.read(),
+                                                file_name=f"Evidence_{spec_id.replace('.', '_')}_{datetime.now().strftime('%Y%m%d')}.pdf",
+                                                mime="application/pdf",
+                                                use_container_width=True,
+                                                key=f"download_evidence_template_{control_id}_{spec_id}"
+                                            )
+                                    except Exception as e:
+                                        st.error(f"Error loading template: {str(e)}")
+                    else:
+                        st.warning("No specifications found for this control")
     
-        st.info("Fill out the compliance report directly in the tool")
+    # ============================================
+    # COMPLIANCE REPORTS SECTION
+    # ============================================
+    elif template_category == "📊 Compliance Reports":
+        st.subheader("📊 Compliance Reports")
+        st.info("Fill out compliance reports directly or download professional templates")
         
-        all_controls = get_all_controls()
-        
-        selected_control = st.selectbox(
-            "Select Control",
-            [f"{c['id']} - {c['title']}" for c in all_controls],
-            key="fill_compliance_control"
+        compliance_action = st.radio(
+            "Choose Action",
+            ["Fill Form Directly", "Download Professional Template"],
+            horizontal=True,
+            key="compliance_action"
         )
+        
+        if compliance_action == "Fill Form Directly":
+            st.subheader("Fill Compliance Report")
+            st.info("Fill out the compliance report directly in the tool")
+            
+            all_controls = get_all_controls()
+            
+            selected_control = st.selectbox(
+                "Select Control",
+                [f"{c['id']} - {c['title']}" for c in all_controls],
+                key="fill_compliance_control"
+            )
         
         if selected_control:
             control_id = selected_control.split(" - ")[0]
@@ -1588,16 +1703,110 @@ def show_templates_forms():
                                 mime="application/pdf",
                                 key=f"download_pdf_compliance_{control_id}"
                             )
+        else:  # Download Professional Template
+            st.markdown("### Download Professional Compliance Report")
+            st.info("Download a professional compliance report with logo and classification")
+            
+            all_controls = get_all_controls()
+            
+            selected_control = st.selectbox(
+                "Select Control",
+                [f"{c['id']} - {c['title']}" for c in all_controls],
+                key="download_compliance_template_control"
+            )
+            
+            if selected_control:
+                control_id = selected_control.split(" - ")[0]
+                control = next((c for c in all_controls if c['id'] == control_id), None)
+                
+                if control:
+                    if st.button("📥 Generate & Download Professional Compliance Report", use_container_width=True):
+                        progress_bar = st.progress(0)
+                        status_text = st.empty()
+                        
+                        try:
+                            status_text.info("🔄 Starting PDF generation...")
+                            progress_bar.progress(10)
+                            
+                            from professional_templates import create_professional_compliance_report
+                            
+                            status_text.info("📄 Loading specifications...")
+                            progress_bar.progress(30)
+                            
+                            from sans_data_loader import get_all_specifications
+                            all_specs = get_all_specifications()
+                            specifications = [s for s in all_specs if s.get('control_id') == control_id]
+                            
+                            status_text.info("📄 Creating template...")
+                            progress_bar.progress(60)
+                            
+                            filename = create_professional_compliance_report(
+                                control_id,
+                                control['title'],
+                                control.get('domain', control.get('category', 'Unknown')),
+                                specifications
+                            )
+                            
+                            progress_bar.progress(90)
+                            status_text.info("💾 Finalizing...")
+                            
+                            template_key = f'compliance_report_template_{control_id}'
+                            st.session_state[template_key] = filename
+                            
+                            progress_bar.progress(100)
+                            status_text.success("✅ Professional report generated! Download button appears below.")
+                            progress_bar.empty()
+                            st.rerun()
+                        except Exception as e:
+                            progress_bar.empty()
+                            status_text.error(f"❌ Error: {str(e)}")
+                            import traceback
+                            with st.expander("Error Details"):
+                                st.code(traceback.format_exc())
+                    
+                    # Show download button if template exists
+                    template_key = f'compliance_report_template_{control_id}'
+                    if template_key in st.session_state:
+                        try:
+                            with open(st.session_state[template_key], 'rb') as f:
+                                st.markdown("---")
+                                st.markdown("### 📥 Download Template")
+                                st.download_button(
+                                    "📥 Download Compliance Report (PDF)",
+                                    f.read(),
+                                    file_name=f"Compliance_Report_{control_id.replace('.', '_')}_{datetime.now().strftime('%Y%m%d')}.pdf",
+                                    mime="application/pdf",
+                                    use_container_width=True,
+                                    key=f"download_compliance_template_{control_id}"
+                                )
+                        except Exception as e:
+                            st.error(f"Error loading template: {str(e)}")
     
-        st.info("Fill out the audit checklist directly in the tool")
+    # ============================================
+    # AUDIT CHECKLISTS SECTION
+    # ============================================
+    elif template_category == "✅ Audit Checklists":
+        st.subheader("✅ Audit Checklists")
+        st.info("Fill out audit checklists directly or download professional templates")
         
-        all_controls = get_all_controls()
-        
-        selected_control = st.selectbox(
-            "Select Control",
-            [f"{c['id']} - {c['title']}" for c in all_controls],
-            key="fill_audit_control"
+        audit_action = st.radio(
+            "Choose Action",
+            ["Fill Form Directly", "Download Professional Template"],
+            horizontal=True,
+            key="audit_action"
         )
+        
+        if audit_action == "Fill Form Directly":
+            st.subheader("Fill Audit Checklist")
+            st.info("Fill out the audit checklist directly in the tool")
+            
+            all_controls = get_all_controls()
+            
+            selected_control = st.selectbox(
+                "Select Control",
+                [f"{c['id']} - {c['title']}" for c in all_controls],
+                key="fill_audit_control"
+            )
         
         if selected_control:
             control_id = selected_control.split(" - ")[0]
@@ -1790,21 +1999,24 @@ def show_templates_forms():
                 
                 if control:
                     if st.button("📥 Generate & Download Professional Audit Checklist", use_container_width=True):
-                        # Show loading overlay
-                        loading_html = """
-                        <div class="loading-overlay">
-                            <div class="loading-spinner-large"></div>
-                            <div class="loading-text">Generating audit checklist...</div>
-                        </div>
-                        """
-                        st.markdown(loading_html, unsafe_allow_html=True)
+                        progress_bar = st.progress(0)
+                        status_text = st.empty()
                         
                         try:
+                            status_text.info("🔄 Starting PDF generation...")
+                            progress_bar.progress(10)
+                            
                             from professional_templates import create_professional_audit_checklist
+                            
+                            status_text.info("📄 Loading specifications...")
+                            progress_bar.progress(30)
                             
                             from sans_data_loader import get_all_specifications
                             all_specs = get_all_specifications()
                             specifications = [s for s in all_specs if s.get('control_id') == control_id]
+                            
+                            status_text.info("📄 Creating template...")
+                            progress_bar.progress(60)
                             
                             filename = create_professional_audit_checklist(
                                 control_id,
@@ -1813,17 +2025,22 @@ def show_templates_forms():
                                 specifications
                             )
                             
-                            with open(filename, 'rb') as f:
-                                st.download_button(
-                                    "📥 Download Audit Checklist (PDF)",
-                                    f.read(),
-                                    file_name=f"Audit_Checklist_{control_id.replace('.', '_')}_{datetime.now().strftime('%Y%m%d')}.pdf",
-                                    mime="application/pdf",
-                                    use_container_width=True
-                                )
-                            st.success("✅ Professional checklist generated!")
+                            progress_bar.progress(90)
+                            status_text.info("💾 Finalizing...")
+                            
+                            template_key = f'audit_checklist_template_{control_id}'
+                            st.session_state[template_key] = filename
+                            
+                            progress_bar.progress(100)
+                            status_text.success("✅ Professional checklist generated! Download button appears below.")
+                            progress_bar.empty()
+                            st.rerun()
                         except Exception as e:
-                            st.error(f"Error: {str(e)}")
+                            progress_bar.empty()
+                            status_text.error(f"❌ Error: {str(e)}")
+                            import traceback
+                            with st.expander("Error Details"):
+                                st.code(traceback.format_exc())
     
     # ============================================
     # DATA SHARE TEMPLATES SECTION
@@ -2948,6 +3165,7 @@ def show_templates_forms():
                             progress_bar.progress(100)
                             status_text.success("✅ Template generated successfully! Download button appears below.")
                             progress_bar.empty()
+                            st.rerun()  # Refresh to show download button
                         except Exception as e:
                             progress_bar.empty()
                             status_text.error(f"❌ Error: {str(e)}")
@@ -3018,6 +3236,7 @@ def show_templates_forms():
                             progress_bar.progress(100)
                             status_text.success("✅ Template generated successfully! Download button appears below.")
                             progress_bar.empty()
+                            st.rerun()  # Refresh to show download button
                         except Exception as e:
                             progress_bar.empty()
                             status_text.error(f"❌ Error: {str(e)}")
