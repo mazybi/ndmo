@@ -458,7 +458,7 @@ def create_professional_compliance_report(control_id, control_name, domain, spec
     
     story = []
     
-    # Styles
+    # Styles - MUST be defined before use
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle(
         'TitleStyle',
@@ -482,7 +482,7 @@ def create_professional_compliance_report(control_id, control_name, domain, spec
         borderPadding=8
     )
     
-    # Field label style for table labels
+    # Field label style for table labels - MUST be defined before use in report_data
     field_label_style = ParagraphStyle(
         'FieldLabelStyle',
         parent=styles['Normal'],
