@@ -2473,6 +2473,7 @@ def show_templates_forms():
                             progress_bar.progress(100)
                             status_text.success("✅ Template generated successfully! Download button appears below.")
                             progress_bar.empty()
+                            st.rerun()  # Refresh to show download button
                         except Exception as e:
                             progress_bar.empty()
                             status_text.error(f"❌ Error: {str(e)}")
