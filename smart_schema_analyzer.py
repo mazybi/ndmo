@@ -452,39 +452,6 @@ class SmartSchemaAnalyzer:
                     col_info['ndmo_standards'].append('DQ004')
                 
                 column_analysis.append(col_info)
-                
-                col_info = {
-                    'column_name': col_name,
-                    'data_type': str(col_data.dtype) if len(col_data) > 0 else 'Unknown',
-                    'non_null_count': int(col_data.notna().sum()) if len(col_data) > 0 else 0,
-                    'null_count': int(col_data.isna().sum()) if len(col_data) > 0 else 0,
-                    'unique_count': int(col_data.nunique()) if len(col_data) > 0 else 0,
-                    'total_count': len(df),
-                    'completeness': (col_data.notna().sum() / len(df)) * 100 if len(df) > 0 and len(col_data) > 0 else 0,
-                    'uniqueness': (col_data.nunique() / len(df)) * 100 if len(df) > 0 and len(col_data) > 0 else 0
-                }
-                
-                # Detect type from column name
-                col_info['detected_type'] = self._detect_data_type_from_name(col_name.lower())
-                
-                # Check for primary key
-                col_info['is_primary_key'] = any(kw in col_name.lower() for kw in ['id', 'key', 'pk', 'primary', '_id'])
-                
-                # Check for audit fields
-                col_info['is_audit_field'] = any(kw in col_name.lower() for kw in ['created', 'updated', 'modified', 'deleted', 'timestamp', 'date', 'user', 'audit', 'created_by', 'updated_by'])
-                
-                # NDMO standards applicable
-                col_info['ndmo_standards'] = []
-                if col_info['is_primary_key']:
-                    col_info['ndmo_standards'].append('DG001')
-                if col_info['is_audit_field']:
-                    col_info['ndmo_standards'].append('DS004')
-                if col_info['completeness'] < 100:
-                    col_info['ndmo_standards'].append('DQ001')
-                if col_info['uniqueness'] < 100 and not col_info['is_primary_key']:
-                    col_info['ndmo_standards'].append('DQ004')
-                
-                column_analysis.append(col_info)
             except Exception as e:
                 # Log error but continue with other columns
                 print(f"Error analyzing column {col}: {str(e)}")

@@ -16,7 +16,10 @@ import json
 def create_data_quality_report(analysis_results, schema_file_name, logo_path="logo@3x.png"):
     """Create professional data quality technical report"""
     
-    os.makedirs("reports", exist_ok=True)
+    try:
+        os.makedirs("reports", exist_ok=True)
+    except Exception as e:
+        print(f"Warning: Could not create reports directory: {e}")
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"reports/Data_Quality_Report_{timestamp}.pdf"
@@ -428,7 +431,10 @@ def monitor_data_quality(df, schema_analysis):
 def create_schema_assessment_report(analysis_results, schema_file_name, logo_path="logo@3x.png"):
     """Create professional schema assessment report with NDMO compliance"""
     
-    os.makedirs("reports", exist_ok=True)
+    try:
+        os.makedirs("reports", exist_ok=True)
+    except Exception as e:
+        print(f"Warning: Could not create reports directory: {e}")
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"reports/Schema_Assessment_Report_{timestamp}.pdf"

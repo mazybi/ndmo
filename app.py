@@ -4181,6 +4181,8 @@ def show_data_quality_dashboard():
                                         analysis['ndmo_compliance'] = {}
                                     if 'total_columns' not in analysis:
                                         analysis['total_columns'] = len(analysis.get('columns', []))
+                                    if 'total_fields' not in analysis:
+                                        analysis['total_fields'] = len(analysis.get('fields', []))
                                     
                                     report_filename = create_data_quality_report(
                                         analysis,
@@ -4208,8 +4210,9 @@ def show_data_quality_dashboard():
                             if st.session_state.get('dq_report_generated', False) and st.session_state.get('dq_report_filename'):
                                 report_filename = st.session_state.dq_report_filename
                                 if os.path.exists(report_filename):
-                                    with open(report_filename, 'rb') as f:
-                                        report_data = f.read()
+                                    try:
+                                        with open(report_filename, 'rb') as f:
+                                            report_data = f.read()
                                         st.download_button(
                                             "📥 Download Technical Report",
                                             report_data,
@@ -4218,6 +4221,8 @@ def show_data_quality_dashboard():
                                             use_container_width=True,
                                             key="download_dq_report"
                                         )
+                                    except Exception as e:
+                                        st.error(f"❌ Error reading report file: {str(e)}")
                                 else:
                                     st.warning(f"⚠️ Report file not found: {report_filename}")
                         
@@ -4231,6 +4236,14 @@ def show_data_quality_dashboard():
                                         logo_path = "logo@3x.png"
                                         if not os.path.exists(logo_path):
                                             logo_path = None
+                                        
+                                        # Ensure analysis has required fields
+                                        if 'column_analysis' not in analysis:
+                                            analysis['column_analysis'] = []
+                                        if 'ndmo_compliance' not in analysis:
+                                            analysis['ndmo_compliance'] = {}
+                                        if 'total_columns' not in analysis:
+                                            analysis['total_columns'] = len(analysis.get('columns', []))
                                         
                                         assessment_filename = create_schema_assessment_report(
                                             analysis,
@@ -4255,8 +4268,9 @@ def show_data_quality_dashboard():
                             if st.session_state.get('dq_assessment_generated', False) and st.session_state.get('dq_assessment_filename'):
                                 assessment_filename = st.session_state.dq_assessment_filename
                                 if os.path.exists(assessment_filename):
-                                    with open(assessment_filename, 'rb') as f:
-                                        assessment_data = f.read()
+                                    try:
+                                        with open(assessment_filename, 'rb') as f:
+                                            assessment_data = f.read()
                                         st.download_button(
                                             "📥 Download Assessment Report",
                                             assessment_data,
@@ -4265,6 +4279,8 @@ def show_data_quality_dashboard():
                                             use_container_width=True,
                                             key="download_assessment_report"
                                         )
+                                    except Exception as e:
+                                        st.error(f"❌ Error reading assessment file: {str(e)}")
                                 else:
                                     st.warning(f"⚠️ Assessment file not found: {assessment_filename}")
                 
@@ -4323,19 +4339,28 @@ def show_data_quality_dashboard():
                                 tmp_file.write(uploaded_data.getvalue())
                                 tmp_path = tmp_file.name
                             
-                            result = st.session_state.data_processor.process_data(
-                                tmp_path,
-                                st.session_state.schema_analysis
-                            )
-                            
-                            if result.get('success'):
-                                # Store results
-                                st.session_state.data_processing_result = result
+                            try:
+                                result = st.session_state.data_processor.process_data(
+                                    tmp_path,
+                                    st.session_state.schema_analysis
+                                )
                                 
-                                st.success("✅ Data processing completed!")
-                                st.rerun()
-                            else:
-                                st.error(f"❌ {result.get('error', 'Processing failed')}")
+                                if result and result.get('success'):
+                                    # Store results
+                                    st.session_state.data_processing_result = result
+                                    
+                                    st.success("✅ Data processing completed!")
+                                    st.rerun()
+                                else:
+                                    error_msg = result.get('error', 'Processing failed') if result else 'Processing failed - no result returned'
+                                    st.error(f"❌ {error_msg}")
+                            finally:
+                                # Clean up temp file
+                                try:
+                                    if os.path.exists(tmp_path):
+                                        os.unlink(tmp_path)
+                                except:
+                                    pass
                     
                     except Exception as e:
                         st.error(f"❌ Error: {str(e)}")
@@ -4364,22 +4389,29 @@ def show_data_quality_dashboard():
             # Display processed data preview
             st.markdown("### 📋 Processed Data Preview")
             processed_df = result.get('processed_data')
-            if processed_df is not None and isinstance(processed_df, pd.DataFrame):
+            if processed_df is not None and isinstance(processed_df, pd.DataFrame) and not processed_df.empty:
                 st.dataframe(processed_df.head(10), use_container_width=True)
                 
                 # Download processed data
                 st.markdown("### 📥 Download Processed Data")
-                import io
-                output = io.BytesIO()
-                processed_df.to_excel(output, index=False, engine='openpyxl')
-                output.seek(0)
-                st.download_button(
-                    "📥 Download Processed Data (Excel)",
-                    output.getvalue(),
-                    file_name=f"processed_data_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    key="download_processed_data"
-                )
+                try:
+                    import io
+                    output = io.BytesIO()
+                    processed_df.to_excel(output, index=False, engine='openpyxl')
+                    output.seek(0)
+                    st.download_button(
+                        "📥 Download Processed Data (Excel)",
+                        output.getvalue(),
+                        file_name=f"processed_data_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        key="download_processed_data"
+                    )
+                except Exception as e:
+                    st.error(f"❌ Error preparing download: {str(e)}")
+            elif processed_df is not None:
+                st.warning("⚠️ Processed data is empty or invalid")
+            else:
+                st.info("ℹ️ No processed data available")
     
     with dq_tab3:
         st.subheader("🛡️ NDMO Compliance Assessment")
@@ -4478,6 +4510,16 @@ def show_data_quality_dashboard():
                             if not os.path.exists(logo_path):
                                 logo_path = None
                             
+                            # Ensure analysis has required fields
+                            if 'column_analysis' not in analysis:
+                                analysis['column_analysis'] = []
+                            if 'ndmo_compliance' not in analysis:
+                                analysis['ndmo_compliance'] = {}
+                            if 'total_columns' not in analysis:
+                                analysis['total_columns'] = len(analysis.get('columns', []))
+                            if 'total_fields' not in analysis:
+                                analysis['total_fields'] = len(analysis.get('fields', []))
+                            
                             report_filename = create_data_quality_report(
                                 analysis,
                                 analysis.get('file_name', 'schema_file.xlsx'),
@@ -4506,6 +4548,14 @@ def show_data_quality_dashboard():
                             if not os.path.exists(logo_path):
                                 logo_path = None
                             
+                            # Ensure analysis has required fields
+                            if 'column_analysis' not in analysis:
+                                analysis['column_analysis'] = []
+                            if 'ndmo_compliance' not in analysis:
+                                analysis['ndmo_compliance'] = {}
+                            if 'total_columns' not in analysis:
+                                analysis['total_columns'] = len(analysis.get('columns', []))
+                            
                             assessment_filename = create_schema_assessment_report(
                                 analysis,
                                 analysis.get('file_name', 'schema_file.xlsx'),
@@ -4528,28 +4578,40 @@ def show_data_quality_dashboard():
             if st.session_state.get('dq_report_generated', False) and st.session_state.get('dq_report_filename'):
                 report_filename = st.session_state.dq_report_filename
                 if os.path.exists(report_filename):
-                    with open(report_filename, 'rb') as f:
+                    try:
+                        with open(report_filename, 'rb') as f:
+                            report_data = f.read()
                         st.download_button(
                             "📥 Download Technical Report",
-                            f.read(),
+                            report_data,
                             file_name=os.path.basename(report_filename),
                             mime="application/pdf",
                             use_container_width=True,
                             key="download_tech_report_tab4"
                         )
+                    except Exception as e:
+                        st.error(f"❌ Error reading report file: {str(e)}")
+                else:
+                    st.warning(f"⚠️ Report file not found: {report_filename}")
             
             if st.session_state.get('dq_assessment_generated', False) and st.session_state.get('dq_assessment_filename'):
                 assessment_filename = st.session_state.dq_assessment_filename
                 if os.path.exists(assessment_filename):
-                    with open(assessment_filename, 'rb') as f:
+                    try:
+                        with open(assessment_filename, 'rb') as f:
+                            assessment_data = f.read()
                         st.download_button(
                             "📥 Download Assessment Report",
-                            f.read(),
+                            assessment_data,
                             file_name=os.path.basename(assessment_filename),
                             mime="application/pdf",
                             use_container_width=True,
                             key="download_assess_report_tab4"
                         )
+                    except Exception as e:
+                        st.error(f"❌ Error reading assessment file: {str(e)}")
+                else:
+                    st.warning(f"⚠️ Assessment file not found: {assessment_filename}")
         
         st.markdown("---")
         
