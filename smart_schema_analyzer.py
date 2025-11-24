@@ -21,6 +21,11 @@ class SmartSchemaAnalyzer:
             if not os.path.exists(schema_file_path):
                 return {'error': f'Schema file not found: {schema_file_path}'}
             
+            # Check file size
+            file_size = os.path.getsize(schema_file_path)
+            if file_size == 0:
+                return {'error': 'Schema file is empty'}
+            
             # CRITICAL: Use openpyxl directly to get ALL columns (including empty ones)
             import openpyxl
             df = None
@@ -29,7 +34,15 @@ class SmartSchemaAnalyzer:
             
             try:
                 # Step 1: Read Excel file with openpyxl to get exact column count
-                wb = openpyxl.load_workbook(schema_file_path, read_only=True, data_only=True)
+                # Try to load workbook with error handling
+                try:
+                    wb = openpyxl.load_workbook(schema_file_path, read_only=True, data_only=True)
+                except Exception as wb_error:
+                    # Try without read_only if that fails
+                    try:
+                        wb = openpyxl.load_workbook(schema_file_path, data_only=True)
+                    except Exception as wb_error2:
+                        return {'error': f'Cannot read Excel file. File may be corrupted or in wrong format. Error: {str(wb_error)} / {str(wb_error2)}'}
                 ws = wb.active
                 
                 # Get actual maximum column from Excel file

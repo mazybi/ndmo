@@ -3977,188 +3977,222 @@ def show_data_quality_dashboard():
         )
         
         if uploaded_schema:
-            # Save uploaded file temporarily
-            import tempfile
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx') as tmp_file:
-                tmp_file.write(uploaded_schema.getvalue())
-                tmp_path = tmp_file.name
+            # Display file info
+            file_size = len(uploaded_schema.getvalue())
+            file_size_mb = file_size / (1024 * 1024)
+            st.info(f"📄 File uploaded: **{uploaded_schema.name}** ({file_size_mb:.2f} MB)")
             
-            if st.button("🔍 Analyze Schema", use_container_width=True):
-                progress_bar = st.progress(0)
-                status_text = st.empty()
+            # Validate file size
+            if file_size > 200 * 1024 * 1024:  # 200MB limit
+                st.error("❌ File size exceeds 200MB limit. Please upload a smaller file.")
+            else:
+                # Save uploaded file temporarily
+                import tempfile
+                import os
+                tmp_path = None
                 
                 try:
-                    status_text.info("🔄 Analyzing schema structure...")
-                    progress_bar.progress(20)
+                    # Determine file extension
+                    file_ext = '.xlsx' if uploaded_schema.name.endswith('.xlsx') else '.xls'
                     
-                    analysis = st.session_state.schema_analyzer.analyze_schema(tmp_path)
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=file_ext) as tmp_file:
+                        tmp_file.write(uploaded_schema.getvalue())
+                        tmp_path = tmp_file.name
                     
-                    if 'error' in analysis:
-                        progress_bar.empty()
-                        status_text.error(f"❌ {analysis['error']}")
+                    # Verify file was created
+                    if not os.path.exists(tmp_path):
+                        st.error("❌ Error: Failed to save uploaded file temporarily")
                     else:
-                        progress_bar.progress(100)
-                        status_text.success("✅ Schema analysis completed!")
-                        progress_bar.empty()
+                        st.success(f"✅ File saved successfully ({file_size_mb:.2f} MB)")
+                
+                except Exception as e:
+                    st.error(f"❌ Error saving file: {str(e)}")
+                    import traceback
+                    with st.expander("Error Details"):
+                        st.code(traceback.format_exc())
+                    tmp_path = None
+            
+            if tmp_path and os.path.exists(tmp_path):
+                if st.button("🔍 Analyze Schema", use_container_width=True):
+                    progress_bar = st.progress(0)
+                    status_text = st.empty()
+                    
+                    try:
+                        status_text.info("🔄 Analyzing schema structure...")
+                        progress_bar.progress(20)
                         
-                        # Store results
-                        st.session_state.schema_analysis = analysis
+                        # Verify file exists and is readable
+                        if not os.path.exists(tmp_path):
+                            raise FileNotFoundError(f"Temporary file not found: {tmp_path}")
                         
-                        # Display results
-                        st.markdown("### 📊 Analysis Summary")
+                        analysis = st.session_state.schema_analyzer.analyze_schema(tmp_path)
                         
-                        col1, col2, col3, col4 = st.columns(4)
-                        with col1:
-                            # Count actual columns from column_analysis (more accurate)
-                            actual_cols = len(analysis.get('column_analysis', []))
-                            total_cols_display = max(actual_cols, analysis.get('total_columns', 0))
-                            st.metric("Total Columns", total_cols_display)
+                        if 'error' in analysis:
+                            progress_bar.empty()
+                            status_text.error(f"❌ {analysis['error']}")
+                        else:
+                            progress_bar.progress(100)
+                            status_text.success("✅ Schema analysis completed!")
+                            progress_bar.empty()
                             
-                            # Show column names count
-                            if analysis.get('columns'):
-                                st.caption(f"Column names: {len(analysis.get('columns', []))}")
-                        with col2:
-                            st.metric("Has Primary Key", "✅ Yes" if analysis.get('has_primary_key') else "❌ No")
-                        with col3:
-                            st.metric("Has Audit Trail", "✅ Yes" if analysis.get('has_audit_trail') else "❌ No")
-                        with col4:
-                            total_cols = len(analysis.get('column_analysis', []))
-                            compliant_cols = sum(1 for col in analysis.get('ndmo_compliance', {}).values() if col.get('score', 0) >= 0.7)
-                            st.metric("NDMO Compliant Columns", f"{compliant_cols}/{total_cols}")
-                        
-                        # Data Types Distribution
-                        st.markdown("### 📈 Data Types Distribution")
-                        if analysis.get('data_types'):
-                            data_types_df = pd.DataFrame(list(analysis['data_types'].items()), columns=['Data Type', 'Count'])
-                            st.bar_chart(data_types_df.set_index('Data Type'))
-                        
-                        # Detailed Column Analysis
-                        st.markdown("### 🔍 Detailed Column Analysis")
-                        st.markdown("Comprehensive analysis of each column according to NDMO standards")
-                        
-                        column_analysis = analysis.get('column_analysis', [])
-                        ndmo_compliance = analysis.get('ndmo_compliance', {})
-                        
-                        if column_analysis:
-                            # Show all column names first
-                            st.markdown("#### 📋 All Column Names")
-                            all_column_names = [col_info['column_name'] for col_info in column_analysis]
-                            st.write(f"**Total:** {len(all_column_names)} columns")
-                            st.write(", ".join(all_column_names[:50]))  # Show first 50
-                            if len(all_column_names) > 50:
-                                st.write(f"... and {len(all_column_names) - 50} more columns")
+                            # Store results
+                            st.session_state.schema_analysis = analysis
                             
+                            # Display results
+                            st.markdown("### 📊 Analysis Summary")
+                            
+                            col1, col2, col3, col4 = st.columns(4)
+                            with col1:
+                                # Count actual columns from column_analysis (more accurate)
+                                actual_cols = len(analysis.get('column_analysis', []))
+                                total_cols_display = max(actual_cols, analysis.get('total_columns', 0))
+                                st.metric("Total Columns", total_cols_display)
+                                
+                                # Show column names count
+                                if analysis.get('columns'):
+                                    st.caption(f"Column names: {len(analysis.get('columns', []))}")
+                            with col2:
+                                st.metric("Has Primary Key", "✅ Yes" if analysis.get('has_primary_key') else "❌ No")
+                            with col3:
+                                st.metric("Has Audit Trail", "✅ Yes" if analysis.get('has_audit_trail') else "❌ No")
+                            with col4:
+                                total_cols = len(analysis.get('column_analysis', []))
+                                compliant_cols = sum(1 for col in analysis.get('ndmo_compliance', {}).values() if col.get('score', 0) >= 0.7)
+                                st.metric("NDMO Compliant Columns", f"{compliant_cols}/{total_cols}")
+                            
+                            # Data Types Distribution
+                            st.markdown("### 📈 Data Types Distribution")
+                            if analysis.get('data_types'):
+                                data_types_df = pd.DataFrame(list(analysis['data_types'].items()), columns=['Data Type', 'Count'])
+                                st.bar_chart(data_types_df.set_index('Data Type'))
+                            
+                            # Detailed Column Analysis
+                            st.markdown("### 🔍 Detailed Column Analysis")
+                            st.markdown("Comprehensive analysis of each column according to NDMO standards")
+                            
+                            column_analysis = analysis.get('column_analysis', [])
+                            ndmo_compliance = analysis.get('ndmo_compliance', {})
+                            
+                            if column_analysis:
+                                # Show all column names first
+                                st.markdown("#### 📋 All Column Names")
+                                all_column_names = [col_info['column_name'] for col_info in column_analysis]
+                                st.write(f"**Total:** {len(all_column_names)} columns")
+                                st.write(", ".join(all_column_names[:50]))  # Show first 50
+                                if len(all_column_names) > 50:
+                                    st.write(f"... and {len(all_column_names) - 50} more columns")
+                                
+                                st.markdown("---")
+                                
+                                # Create DataFrame for better display
+                                display_data = []
+                                for col_info in column_analysis:
+                                    col_name = col_info['column_name']
+                                    compliance_info = ndmo_compliance.get(col_name, {})
+                                    
+                                    display_data.append({
+                                        'Column Name': col_name,
+                                        'Data Type': col_info.get('detected_type', 'Unknown'),
+                                        'Completeness %': f"{col_info.get('completeness', 0):.1f}%",
+                                        'Uniqueness %': f"{col_info.get('uniqueness', 0):.1f}%",
+                                        'Non-Null': col_info.get('non_null_count', 0),
+                                        'Null': col_info.get('null_count', 0),
+                                        'Unique Values': col_info.get('unique_count', 0),
+                                        'NDMO Score': f"{compliance_info.get('score', 0)*100:.1f}%",
+                                        'Standards': ', '.join(compliance_info.get('standards', [])) or 'N/A',
+                                        'Primary Key': "✅" if col_info.get('is_primary_key') else "❌",
+                                        'Audit Field': "✅" if col_info.get('is_audit_field') else "❌"
+                                    })
+                                
+                                df_display = pd.DataFrame(display_data)
+                                st.dataframe(df_display, use_container_width=True, height=400)
+                                
+                                # Column-by-column detailed view
+                                st.markdown("### 📋 Column Details")
+                                
+                                selected_column = st.selectbox(
+                                    "Select Column for Detailed Analysis",
+                                    [col['column_name'] for col in column_analysis],
+                                    key="column_detail_select"
+                                )
+                                
+                                if selected_column:
+                                    col_info = next((c for c in column_analysis if c['column_name'] == selected_column), None)
+                                    compliance_info = ndmo_compliance.get(selected_column, {})
+                                    
+                                    if col_info:
+                                        st.markdown(f"#### Column: **{selected_column}**")
+                                        
+                                        col1, col2, col3, col4 = st.columns(4)
+                                        with col1:
+                                            st.metric("Data Type", col_info.get('detected_type', 'Unknown'))
+                                        with col2:
+                                            st.metric("Completeness", f"{col_info.get('completeness', 0):.1f}%")
+                                        with col3:
+                                            st.metric("Uniqueness", f"{col_info.get('uniqueness', 0):.1f}%")
+                                        with col4:
+                                            score = compliance_info.get('score', 0) * 100
+                                            st.metric("NDMO Score", f"{score:.1f}%")
+                                        
+                                        st.markdown("---")
+                                        
+                                        # NDMO Standards Assessment
+                                        st.markdown("#### 🛡️ NDMO Standards Assessment")
+                                        standards_list = compliance_info.get('standards', [])
+                                        
+                                        if standards_list:
+                                            for std_id in standards_list:
+                                                st.success(f"✅ **{std_id}**: Applicable to this column")
+                                        else:
+                                            st.info("No specific NDMO standards identified for this column")
+                                        
+                                        # Column Statistics
+                                        st.markdown("#### 📊 Column Statistics")
+                                        stats_col1, stats_col2 = st.columns(2)
+                                        with stats_col1:
+                                            st.write(f"**Total Rows:** {col_info.get('total_count', 0)}")
+                                            st.write(f"**Non-Null Values:** {col_info.get('non_null_count', 0)}")
+                                            st.write(f"**Null Values:** {col_info.get('null_count', 0)}")
+                                        with stats_col2:
+                                            st.write(f"**Unique Values:** {col_info.get('unique_count', 0)}")
+                                            st.write(f"**Primary Key:** {'Yes' if col_info.get('is_primary_key') else 'No'}")
+                                            st.write(f"**Audit Field:** {'Yes' if col_info.get('is_audit_field') else 'No'}")
+                                        
+                                        # Recommendations for this column
+                                        recommendations = []
+                                        if col_info.get('completeness', 100) < 100:
+                                            recommendations.append("⚠️ **DQ001**: Improve data completeness - some values are missing")
+                                        if col_info.get('uniqueness', 100) < 100 and col_info.get('is_primary_key'):
+                                            recommendations.append("⚠️ **DQ004**: Primary key should have 100% uniqueness")
+                                        if not col_info.get('is_primary_key') and 'id' in selected_column.lower():
+                                            recommendations.append("💡 **DG001**: Consider making this column a primary key")
+                                        if not col_info.get('is_audit_field') and any(kw in selected_column.lower() for kw in ['date', 'time', 'created', 'updated']):
+                                            recommendations.append("💡 **DS004**: This could be an audit trail field")
+                                        
+                                        if recommendations:
+                                            st.markdown("#### 💡 Recommendations")
+                                            for rec in recommendations:
+                                                st.info(rec)
+                        
+                            # Issues
+                            if analysis.get('issues'):
+                                st.markdown("### ⚠️ Issues Found")
+                                for issue in analysis['issues']:
+                                    st.warning(f"**{issue.get('severity', 'Unknown')}**: {issue.get('issue', '')} - {issue.get('impact', '')}")
+                            
+                            # Recommendations
+                            if analysis.get('recommendations'):
+                                st.markdown("### 💡 General Recommendations")
+                                for rec in analysis['recommendations']:
+                                    st.info(f"**{rec.get('type', 'Info')}**: {rec.get('message', '')}")
+                            
+                            # Generate Professional Technical Report
                             st.markdown("---")
+                            st.markdown("### 📄 Generate Technical Report")
+                            st.markdown("Generate a comprehensive professional technical report with NDMO compliance analysis, SQL scripts, and implementation guide.")
                             
-                            # Create DataFrame for better display
-                            display_data = []
-                            for col_info in column_analysis:
-                                col_name = col_info['column_name']
-                                compliance_info = ndmo_compliance.get(col_name, {})
-                                
-                                display_data.append({
-                                    'Column Name': col_name,
-                                    'Data Type': col_info.get('detected_type', 'Unknown'),
-                                    'Completeness %': f"{col_info.get('completeness', 0):.1f}%",
-                                    'Uniqueness %': f"{col_info.get('uniqueness', 0):.1f}%",
-                                    'Non-Null': col_info.get('non_null_count', 0),
-                                    'Null': col_info.get('null_count', 0),
-                                    'Unique Values': col_info.get('unique_count', 0),
-                                    'NDMO Score': f"{compliance_info.get('score', 0)*100:.1f}%",
-                                    'Standards': ', '.join(compliance_info.get('standards', [])) or 'N/A',
-                                    'Primary Key': "✅" if col_info.get('is_primary_key') else "❌",
-                                    'Audit Field': "✅" if col_info.get('is_audit_field') else "❌"
-                                })
-                            
-                            df_display = pd.DataFrame(display_data)
-                            st.dataframe(df_display, use_container_width=True, height=400)
-                            
-                            # Column-by-column detailed view
-                            st.markdown("### 📋 Column Details")
-                            
-                            selected_column = st.selectbox(
-                                "Select Column for Detailed Analysis",
-                                [col['column_name'] for col in column_analysis],
-                                key="column_detail_select"
-                            )
-                            
-                            if selected_column:
-                                col_info = next((c for c in column_analysis if c['column_name'] == selected_column), None)
-                                compliance_info = ndmo_compliance.get(selected_column, {})
-                                
-                                if col_info:
-                                    st.markdown(f"#### Column: **{selected_column}**")
-                                    
-                                    col1, col2, col3, col4 = st.columns(4)
-                                    with col1:
-                                        st.metric("Data Type", col_info.get('detected_type', 'Unknown'))
-                                    with col2:
-                                        st.metric("Completeness", f"{col_info.get('completeness', 0):.1f}%")
-                                    with col3:
-                                        st.metric("Uniqueness", f"{col_info.get('uniqueness', 0):.1f}%")
-                                    with col4:
-                                        score = compliance_info.get('score', 0) * 100
-                                        st.metric("NDMO Score", f"{score:.1f}%")
-                                    
-                                    st.markdown("---")
-                                    
-                                    # NDMO Standards Assessment
-                                    st.markdown("#### 🛡️ NDMO Standards Assessment")
-                                    standards_list = compliance_info.get('standards', [])
-                                    
-                                    if standards_list:
-                                        for std_id in standards_list:
-                                            st.success(f"✅ **{std_id}**: Applicable to this column")
-                                    else:
-                                        st.info("No specific NDMO standards identified for this column")
-                                    
-                                    # Column Statistics
-                                    st.markdown("#### 📊 Column Statistics")
-                                    stats_col1, stats_col2 = st.columns(2)
-                                    with stats_col1:
-                                        st.write(f"**Total Rows:** {col_info.get('total_count', 0)}")
-                                        st.write(f"**Non-Null Values:** {col_info.get('non_null_count', 0)}")
-                                        st.write(f"**Null Values:** {col_info.get('null_count', 0)}")
-                                    with stats_col2:
-                                        st.write(f"**Unique Values:** {col_info.get('unique_count', 0)}")
-                                        st.write(f"**Primary Key:** {'Yes' if col_info.get('is_primary_key') else 'No'}")
-                                        st.write(f"**Audit Field:** {'Yes' if col_info.get('is_audit_field') else 'No'}")
-                                    
-                                    # Recommendations for this column
-                                    recommendations = []
-                                    if col_info.get('completeness', 100) < 100:
-                                        recommendations.append("⚠️ **DQ001**: Improve data completeness - some values are missing")
-                                    if col_info.get('uniqueness', 100) < 100 and col_info.get('is_primary_key'):
-                                        recommendations.append("⚠️ **DQ004**: Primary key should have 100% uniqueness")
-                                    if not col_info.get('is_primary_key') and 'id' in selected_column.lower():
-                                        recommendations.append("💡 **DG001**: Consider making this column a primary key")
-                                    if not col_info.get('is_audit_field') and any(kw in selected_column.lower() for kw in ['date', 'time', 'created', 'updated']):
-                                        recommendations.append("💡 **DS004**: This could be an audit trail field")
-                                    
-                                    if recommendations:
-                                        st.markdown("#### 💡 Recommendations")
-                                        for rec in recommendations:
-                                            st.info(rec)
-                        
-                        # Issues
-                        if analysis.get('issues'):
-                            st.markdown("### ⚠️ Issues Found")
-                            for issue in analysis['issues']:
-                                st.warning(f"**{issue.get('severity', 'Unknown')}**: {issue.get('issue', '')} - {issue.get('impact', '')}")
-                        
-                        # Recommendations
-                        if analysis.get('recommendations'):
-                            st.markdown("### 💡 General Recommendations")
-                            for rec in analysis['recommendations']:
-                                st.info(f"**{rec.get('type', 'Info')}**: {rec.get('message', '')}")
-                        
-                        # Generate Professional Technical Report
-                        st.markdown("---")
-                        st.markdown("### 📄 Generate Technical Report")
-                        st.markdown("Generate a comprehensive professional technical report with NDMO compliance analysis, SQL scripts, and implementation guide.")
-                        
-                        # Two buttons: Technical Report and Assessment Report
-                        col_btn1, col_btn2 = st.columns(2)
+                            # Two buttons: Technical Report and Assessment Report
+                            col_btn1, col_btn2 = st.columns(2)
                         
                         with col_btn1:
                             if st.button("📄 Generate Technical Report", use_container_width=True, key="generate_dq_report"):
@@ -4284,18 +4318,32 @@ def show_data_quality_dashboard():
                                 else:
                                     st.warning(f"⚠️ Assessment file not found: {assessment_filename}")
                 
-                except Exception as e:
-                    progress_bar.empty()
-                    status_text.error(f"❌ Error: {str(e)}")
-                    import traceback
-                    with st.expander("Error Details"):
-                        st.code(traceback.format_exc())
-                finally:
-                    # Clean up temp file
-                    try:
-                        os.unlink(tmp_path)
-                    except:
-                        pass
+                    except Exception as e:
+                        progress_bar.empty()
+                        error_msg = str(e)
+                        status_text.error(f"❌ Error analyzing schema: {error_msg}")
+                        import traceback
+                        error_details = traceback.format_exc()
+                        with st.expander("🔍 Error Details (Click to expand)"):
+                            st.code(error_details)
+                        
+                        # Provide helpful suggestions
+                        st.warning("💡 **Troubleshooting Tips:**")
+                        st.markdown("""
+                        - Make sure the file is a valid Excel file (.xlsx or .xls)
+                        - Check that the file is not corrupted
+                        - Ensure the file is not password protected
+                        - Try opening the file in Excel first to verify it's valid
+                        - If the file is very large, try reducing the number of rows/columns
+                        """)
+                    finally:
+                        # Clean up temp file
+                        if tmp_path and os.path.exists(tmp_path):
+                            try:
+                                os.unlink(tmp_path)
+                            except Exception as cleanup_error:
+                                # Log but don't show cleanup errors to user
+                                pass
     
     with dq_tab2:
         st.subheader("⚙️ Data Processing")
