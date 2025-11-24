@@ -4452,7 +4452,74 @@ def show_data_quality_dashboard():
                             
                             progress_bar.progress(100)
                             status_text.success("✅ Data processing completed!")
+                            
+                            # Automatically run compliance assessment
+                            status_text.info("🔄 Step 2/3: Automatically assessing NDMO compliance...")
+                            progress_bar.progress(100)
+                            
+                            try:
+                                # Verify ndmo_standards exists
+                                if 'ndmo_standards' in st.session_state:
+                                    schema_analysis = st.session_state.schema_analysis
+                                    data_quality = result.get('quality_metrics', {})
+                                    
+                                    compliance_results = st.session_state.ndmo_standards.calculate_compliance_score(
+                                        schema_analysis,
+                                        data_quality
+                                    )
+                                    
+                                    # Store compliance results
+                                    st.session_state.compliance_results = compliance_results
+                                    
+                                    # Automatically generate reports
+                                    status_text.info("🔄 Step 3/3: Automatically generating reports...")
+                                    
+                                    try:
+                                        from data_quality_report import create_data_quality_report, create_schema_assessment_report
+                                        
+                                        # Get logo path
+                                        logo_path = "logo@3x.png"
+                                        if not os.path.exists(logo_path):
+                                            logo_path = None
+                                        
+                                        # Ensure analysis has required fields
+                                        if 'column_analysis' not in schema_analysis:
+                                            schema_analysis['column_analysis'] = []
+                                        if 'ndmo_compliance' not in schema_analysis:
+                                            schema_analysis['ndmo_compliance'] = {}
+                                        if 'total_columns' not in schema_analysis:
+                                            schema_analysis['total_columns'] = len(schema_analysis.get('columns', []))
+                                        if 'total_fields' not in schema_analysis:
+                                            schema_analysis['total_fields'] = len(schema_analysis.get('fields', []))
+                                        
+                                        # Generate Technical Report
+                                        report_filename = create_data_quality_report(
+                                            schema_analysis,
+                                            schema_analysis.get('file_name', 'schema_file.xlsx'),
+                                            logo_path=logo_path
+                                        )
+                                        st.session_state.dq_report_filename = report_filename
+                                        st.session_state.dq_report_generated = True
+                                        
+                                        # Generate Assessment Report
+                                        assessment_filename = create_schema_assessment_report(
+                                            schema_analysis,
+                                            schema_analysis.get('file_name', 'schema_file.xlsx'),
+                                            logo_path=logo_path
+                                        )
+                                        st.session_state.dq_assessment_filename = assessment_filename
+                                        st.session_state.dq_assessment_generated = True
+                                        
+                                    except Exception as report_error:
+                                        # Report generation failed, but continue
+                                        st.warning(f"⚠️ Could not auto-generate reports: {str(report_error)}")
+                                
+                            except Exception as compliance_error:
+                                # Compliance assessment failed, but continue
+                                st.warning(f"⚠️ Could not auto-assess compliance: {str(compliance_error)}")
+                            
                             progress_bar.empty()
+                            status_text.success("✅ Complete workflow finished! All steps completed successfully!")
                             
                             st.balloons()  # Celebration animation
                             st.rerun()
@@ -4657,6 +4724,28 @@ def show_data_quality_dashboard():
     with dq_tab4:
         st.subheader("📊 Quality Reports")
         st.markdown("View comprehensive quality reports and export results")
+        
+        # Show workflow status
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            schema_done = 'schema_analysis' in st.session_state
+            st.markdown(f"**Schema Analysis:** {'✅ Done' if schema_done else '❌ Pending'}")
+        with col2:
+            data_done = 'data_processing_result' in st.session_state
+            st.markdown(f"**Data Processing:** {'✅ Done' if data_done else '❌ Pending'}")
+        with col3:
+            compliance_done = 'compliance_results' in st.session_state
+            st.markdown(f"**NDMO Compliance:** {'✅ Done' if compliance_done else '❌ Pending'}")
+        with col4:
+            reports_done = st.session_state.get('dq_report_generated', False) or st.session_state.get('dq_assessment_generated', False)
+            st.markdown(f"**Reports:** {'✅ Generated' if reports_done else '❌ Pending'}")
+        
+        st.markdown("---")
+        
+        # Show auto-generated reports if available
+        if st.session_state.get('dq_report_generated', False) or st.session_state.get('dq_assessment_generated', False):
+            st.success("✅ Reports have been automatically generated! Scroll down to download them.")
+            st.markdown("---")
         
         # Generate comprehensive reports
         st.markdown("### 📄 Generate Professional Reports")
