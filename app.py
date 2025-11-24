@@ -4073,6 +4073,10 @@ def show_data_quality_dashboard():
                             column_analysis = analysis.get('column_analysis', [])
                             ndmo_compliance = analysis.get('ndmo_compliance', {})
                             
+                            # Always show column analysis section, even if empty
+                            if not column_analysis:
+                                st.info("ℹ️ No column analysis data available. The report will still be generated with available information.")
+                            
                             if column_analysis:
                                 # Show all column names first
                                 st.markdown("#### 📋 All Column Names")
@@ -4173,7 +4177,7 @@ def show_data_quality_dashboard():
                                             st.markdown("#### 💡 Recommendations")
                                             for rec in recommendations:
                                                 st.info(rec)
-                        
+                            
                             # Issues
                             if analysis.get('issues'):
                                 st.markdown("### ⚠️ Issues Found")
@@ -4191,80 +4195,29 @@ def show_data_quality_dashboard():
                             st.markdown("### 📄 Generate Technical Report")
                             st.markdown("Generate a comprehensive professional technical report with NDMO compliance analysis, SQL scripts, and implementation guide.")
                             
+                            # Debug: Show analysis keys
+                            if st.session_state.get('debug_mode', False):
+                                with st.expander("🔍 Debug: Analysis Data"):
+                                    st.write("Analysis keys:", list(analysis.keys()) if analysis else "No analysis data")
+                                    st.write("Has column_analysis:", 'column_analysis' in analysis if analysis else False)
+                                    st.write("Has ndmo_compliance:", 'ndmo_compliance' in analysis if analysis else False)
+                            
                             # Two buttons: Technical Report and Assessment Report
                             col_btn1, col_btn2 = st.columns(2)
-                        
-                        with col_btn1:
-                            if st.button("📄 Generate Technical Report", use_container_width=True, key="generate_dq_report"):
-                                try:
-                                    # Show loading
-                                    loading_placeholder = st.empty()
-                                    loading_placeholder.info("🔄 Generating professional technical report...")
-                                    
-                                    from data_quality_report import create_data_quality_report
-                                    
-                                    # Get logo path
-                                    logo_path = "logo@3x.png"
-                                    if not os.path.exists(logo_path):
-                                        logo_path = None
-                                    
-                                    # Ensure analysis has required fields
-                                    if 'column_analysis' not in analysis:
-                                        analysis['column_analysis'] = []
-                                    if 'ndmo_compliance' not in analysis:
-                                        analysis['ndmo_compliance'] = {}
-                                    if 'total_columns' not in analysis:
-                                        analysis['total_columns'] = len(analysis.get('columns', []))
-                                    if 'total_fields' not in analysis:
-                                        analysis['total_fields'] = len(analysis.get('fields', []))
-                                    
-                                    report_filename = create_data_quality_report(
-                                        analysis,
-                                        analysis.get('file_name', 'schema_file.xlsx'),
-                                        logo_path=logo_path
-                                    )
-                                    
-                                    # Store report filename in session state
-                                    st.session_state.dq_report_filename = report_filename
-                                    st.session_state.dq_report_generated = True
-                                    
-                                    loading_placeholder.empty()
-                                    st.success("✅ Technical report generated successfully!")
-                                    
-                                    # Force rerun to show download button
-                                    st.rerun()
-                                
-                                except Exception as e:
-                                    st.error(f"❌ Error generating report: {str(e)}")
-                                    import traceback
-                                    with st.expander("Error Details"):
-                                        st.code(traceback.format_exc())
                             
-                            # Show download button if report was generated
-                            if st.session_state.get('dq_report_generated', False) and st.session_state.get('dq_report_filename'):
-                                report_filename = st.session_state.dq_report_filename
-                                if os.path.exists(report_filename):
+                            with col_btn1:
+                                if st.button("📄 Generate Technical Report", use_container_width=True, key="generate_dq_report"):
                                     try:
-                                        with open(report_filename, 'rb') as f:
-                                            report_data = f.read()
-                                        st.download_button(
-                                            "📥 Download Technical Report",
-                                            report_data,
-                                            file_name=os.path.basename(report_filename),
-                                            mime="application/pdf",
-                                            use_container_width=True,
-                                            key="download_dq_report"
-                                        )
-                                    except Exception as e:
-                                        st.error(f"❌ Error reading report file: {str(e)}")
-                                else:
-                                    st.warning(f"⚠️ Report file not found: {report_filename}")
-                        
-                        with col_btn2:
-                            if st.button("📊 Generate Assessment Report", use_container_width=True, key="generate_assessment_report"):
-                                try:
-                                    with st.spinner("🔄 Generating professional assessment report..."):
-                                        from data_quality_report import create_schema_assessment_report
+                                        # Show loading
+                                        loading_placeholder = st.empty()
+                                        loading_placeholder.info("🔄 Generating professional technical report...")
+                                        
+                                        # Import here to avoid issues
+                                        try:
+                                            from data_quality_report import create_data_quality_report
+                                        except ImportError as import_error:
+                                            st.error(f"❌ Error importing report generator: {str(import_error)}")
+                                            raise
                                         
                                         # Get logo path
                                         logo_path = "logo@3x.png"
@@ -4278,45 +4231,108 @@ def show_data_quality_dashboard():
                                             analysis['ndmo_compliance'] = {}
                                         if 'total_columns' not in analysis:
                                             analysis['total_columns'] = len(analysis.get('columns', []))
+                                        if 'total_fields' not in analysis:
+                                            analysis['total_fields'] = len(analysis.get('fields', []))
                                         
-                                        assessment_filename = create_schema_assessment_report(
+                                        report_filename = create_data_quality_report(
                                             analysis,
                                             analysis.get('file_name', 'schema_file.xlsx'),
                                             logo_path=logo_path
                                         )
                                         
                                         # Store report filename in session state
-                                        st.session_state.dq_assessment_filename = assessment_filename
-                                        st.session_state.dq_assessment_generated = True
+                                        st.session_state.dq_report_filename = report_filename
+                                        st.session_state.dq_report_generated = True
                                         
-                                        st.success("✅ Assessment report generated successfully!")
+                                        loading_placeholder.empty()
+                                        st.success("✅ Technical report generated successfully!")
+                                        
+                                        # Force rerun to show download button
                                         st.rerun()
-                                
-                                except Exception as e:
-                                    st.error(f"❌ Error generating assessment: {str(e)}")
-                                    import traceback
-                                    with st.expander("Error Details"):
-                                        st.code(traceback.format_exc())
-                            
-                            # Show download button if assessment was generated
-                            if st.session_state.get('dq_assessment_generated', False) and st.session_state.get('dq_assessment_filename'):
-                                assessment_filename = st.session_state.dq_assessment_filename
-                                if os.path.exists(assessment_filename):
-                                    try:
-                                        with open(assessment_filename, 'rb') as f:
-                                            assessment_data = f.read()
-                                        st.download_button(
-                                            "📥 Download Assessment Report",
-                                            assessment_data,
-                                            file_name=os.path.basename(assessment_filename),
-                                            mime="application/pdf",
-                                            use_container_width=True,
-                                            key="download_assessment_report"
-                                        )
+                                    
                                     except Exception as e:
-                                        st.error(f"❌ Error reading assessment file: {str(e)}")
-                                else:
-                                    st.warning(f"⚠️ Assessment file not found: {assessment_filename}")
+                                        st.error(f"❌ Error generating report: {str(e)}")
+                                        import traceback
+                                        with st.expander("Error Details"):
+                                            st.code(traceback.format_exc())
+                                
+                                # Show download button if report was generated
+                                if st.session_state.get('dq_report_generated', False) and st.session_state.get('dq_report_filename'):
+                                    report_filename = st.session_state.dq_report_filename
+                                    if os.path.exists(report_filename):
+                                        try:
+                                            with open(report_filename, 'rb') as f:
+                                                report_data = f.read()
+                                            st.download_button(
+                                                "📥 Download Technical Report",
+                                                report_data,
+                                                file_name=os.path.basename(report_filename),
+                                                mime="application/pdf",
+                                                use_container_width=True,
+                                                key="download_dq_report"
+                                            )
+                                        except Exception as e:
+                                            st.error(f"❌ Error reading report file: {str(e)}")
+                                    else:
+                                        st.warning(f"⚠️ Report file not found: {report_filename}")
+                            
+                            with col_btn2:
+                                if st.button("📊 Generate Assessment Report", use_container_width=True, key="generate_assessment_report"):
+                                    try:
+                                        with st.spinner("🔄 Generating professional assessment report..."):
+                                            from data_quality_report import create_schema_assessment_report
+                                            
+                                            # Get logo path
+                                            logo_path = "logo@3x.png"
+                                            if not os.path.exists(logo_path):
+                                                logo_path = None
+                                            
+                                            # Ensure analysis has required fields
+                                            if 'column_analysis' not in analysis:
+                                                analysis['column_analysis'] = []
+                                            if 'ndmo_compliance' not in analysis:
+                                                analysis['ndmo_compliance'] = {}
+                                            if 'total_columns' not in analysis:
+                                                analysis['total_columns'] = len(analysis.get('columns', []))
+                                            
+                                            assessment_filename = create_schema_assessment_report(
+                                                analysis,
+                                                analysis.get('file_name', 'schema_file.xlsx'),
+                                                logo_path=logo_path
+                                            )
+                                            
+                                            # Store report filename in session state
+                                            st.session_state.dq_assessment_filename = assessment_filename
+                                            st.session_state.dq_assessment_generated = True
+                                            
+                                            st.success("✅ Assessment report generated successfully!")
+                                            st.rerun()
+                                    
+                                    except Exception as e:
+                                        st.error(f"❌ Error generating assessment: {str(e)}")
+                                        import traceback
+                                        with st.expander("Error Details"):
+                                            st.code(traceback.format_exc())
+                                
+                                # Show download button if assessment was generated
+                                if st.session_state.get('dq_assessment_generated', False) and st.session_state.get('dq_assessment_filename'):
+                                    assessment_filename = st.session_state.dq_assessment_filename
+                                    if os.path.exists(assessment_filename):
+                                        try:
+                                            with open(assessment_filename, 'rb') as f:
+                                                assessment_data = f.read()
+                                            st.download_button(
+                                                "📥 Download Assessment Report",
+                                                assessment_data,
+                                                file_name=os.path.basename(assessment_filename),
+                                                mime="application/pdf",
+                                                use_container_width=True,
+                                                key="download_assessment_report"
+                                            )
+                                        except Exception as e:
+                                            st.error(f"❌ Error reading assessment file: {str(e)}")
+                                    else:
+                                        st.warning(f"⚠️ Assessment file not found: {assessment_filename}")
                 
                     except Exception as e:
                         progress_bar.empty()
@@ -4375,46 +4391,105 @@ def show_data_quality_dashboard():
         )
         
         if uploaded_data:
+            # Display file info
+            file_size = len(uploaded_data.getvalue())
+            file_size_mb = file_size / (1024 * 1024)
+            st.info(f"📄 Data file uploaded: **{uploaded_data.name}** ({file_size_mb:.2f} MB)")
+            
             if 'schema_analysis' not in st.session_state:
                 st.warning("⚠️ Please analyze schema first in the 'Schema Analysis' tab")
+                st.info("💡 **Steps to follow:**")
+                st.markdown("""
+                1. Go to **Schema Analysis** tab
+                2. Upload your schema file (Excel)
+                3. Click **Analyze Schema** button
+                4. Come back here to process your data file
+                """)
             else:
+                st.success("✅ Schema analysis found! Ready to process data.")
+                
                 if st.button("⚙️ Process Data", use_container_width=True, key="process_data_btn"):
+                    progress_bar = st.progress(0)
+                    status_text = st.empty()
+                    
                     try:
-                        with st.spinner("🔄 Processing data..."):
-                            # Save uploaded file temporarily
-                            import tempfile
-                            with tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx') as tmp_file:
-                                tmp_file.write(uploaded_data.getvalue())
-                                tmp_path = tmp_file.name
+                        status_text.info("🔄 Saving uploaded file...")
+                        progress_bar.progress(10)
+                        
+                        # Save uploaded file temporarily
+                        import tempfile
+                        import os
+                        
+                        # Determine file extension
+                        file_ext = '.xlsx' if uploaded_data.name.endswith('.xlsx') else '.xls'
+                        
+                        with tempfile.NamedTemporaryFile(delete=False, suffix=file_ext) as tmp_file:
+                            tmp_file.write(uploaded_data.getvalue())
+                            tmp_path = tmp_file.name
+                        
+                        status_text.info("🔄 Processing data file...")
+                        progress_bar.progress(30)
+                        
+                        # Verify data_processor exists
+                        if 'data_processor' not in st.session_state:
+                            st.error("❌ Data processor not initialized. Please refresh the page.")
+                            return
+                        
+                        # Process data
+                        status_text.info("🔄 Analyzing data quality...")
+                        progress_bar.progress(50)
+                        
+                        result = st.session_state.data_processor.process_data(
+                            tmp_path,
+                            st.session_state.schema_analysis
+                        )
+                        
+                        progress_bar.progress(80)
+                        
+                        if result and result.get('success'):
+                            # Store results
+                            st.session_state.data_processing_result = result
                             
-                            try:
-                                result = st.session_state.data_processor.process_data(
-                                    tmp_path,
-                                    st.session_state.schema_analysis
-                                )
-                                
-                                if result and result.get('success'):
-                                    # Store results
-                                    st.session_state.data_processing_result = result
-                                    
-                                    st.success("✅ Data processing completed!")
-                                    st.rerun()
-                                else:
-                                    error_msg = result.get('error', 'Processing failed') if result else 'Processing failed - no result returned'
-                                    st.error(f"❌ {error_msg}")
-                            finally:
-                                # Clean up temp file
-                                try:
-                                    if os.path.exists(tmp_path):
-                                        os.unlink(tmp_path)
-                                except:
-                                    pass
+                            progress_bar.progress(100)
+                            status_text.success("✅ Data processing completed!")
+                            progress_bar.empty()
+                            
+                            st.balloons()  # Celebration animation
+                            st.rerun()
+                        else:
+                            progress_bar.empty()
+                            error_msg = result.get('error', 'Processing failed') if result else 'Processing failed - no result returned'
+                            status_text.error(f"❌ {error_msg}")
+                            
+                            # Show detailed error if available
+                            if result and result.get('processing_log'):
+                                with st.expander("📋 Processing Log"):
+                                    for log_entry in result.get('processing_log', []):
+                                        st.write(f"**{log_entry.get('timestamp', '')}**: {log_entry.get('message', '')}")
                     
                     except Exception as e:
-                        st.error(f"❌ Error: {str(e)}")
+                        progress_bar.empty()
+                        error_msg = str(e)
+                        status_text.error(f"❌ Error processing data: {error_msg}")
                         import traceback
-                        with st.expander("Error Details"):
-                            st.code(traceback.format_exc())
+                        error_details = traceback.format_exc()
+                        with st.expander("🔍 Error Details (Click to expand)"):
+                            st.code(error_details)
+                        
+                        st.warning("💡 **Troubleshooting Tips:**")
+                        st.markdown("""
+                        - Make sure the data file matches the schema structure
+                        - Check that column names in data file match schema columns
+                        - Ensure the file is not corrupted
+                        - Try opening the file in Excel first to verify it's valid
+                        """)
+                    finally:
+                        # Clean up temp file
+                        if 'tmp_path' in locals() and tmp_path and os.path.exists(tmp_path):
+                            try:
+                                os.unlink(tmp_path)
+                            except:
+                                pass
         
         # Show results if available
         if 'data_processing_result' in st.session_state:
@@ -4469,33 +4544,76 @@ def show_data_quality_dashboard():
         schema_ready = 'schema_analysis' in st.session_state
         data_ready = 'data_processing_result' in st.session_state
         
+        # Show workflow status
+        col1, col2 = st.columns(2)
+        with col1:
+            st.markdown(f"**Schema Analysis:** {'✅ Done' if schema_ready else '❌ Pending'}")
+        with col2:
+            st.markdown(f"**Data Processing:** {'✅ Done' if data_ready else '❌ Pending'}")
+        
+        st.markdown("---")
+        
         if not schema_ready:
             st.warning("⚠️ Please complete Schema Analysis first")
+            st.info("💡 Go to **Schema Analysis** tab and analyze your schema file")
         elif not data_ready:
             st.warning("⚠️ Please complete Data Processing first")
+            st.info("💡 Go to **Data Processing** tab and process your data file")
         else:
+            st.success("✅ All prerequisites completed! Ready to assess compliance.")
+            
             if st.button("🛡️ Assess NDMO Compliance", use_container_width=True, key="assess_compliance_btn"):
+                progress_bar = st.progress(0)
+                status_text = st.empty()
+                
                 try:
-                    with st.spinner("🔄 Calculating compliance scores..."):
-                        schema_analysis = st.session_state.schema_analysis
-                        data_quality = st.session_state.data_processing_result.get('quality_metrics', {})
-                        
-                        compliance_results = st.session_state.ndmo_standards.calculate_compliance_score(
-                            schema_analysis,
-                            data_quality
-                        )
-                        
-                        # Store results
-                        st.session_state.compliance_results = compliance_results
-                        
-                        st.success("✅ Compliance assessment completed!")
-                        st.rerun()
+                    status_text.info("🔄 Calculating compliance scores...")
+                    progress_bar.progress(20)
+                    
+                    schema_analysis = st.session_state.schema_analysis
+                    data_quality = st.session_state.data_processing_result.get('quality_metrics', {})
+                    
+                    progress_bar.progress(50)
+                    status_text.info("🔄 Analyzing NDMO standards...")
+                    
+                    # Verify ndmo_standards exists
+                    if 'ndmo_standards' not in st.session_state:
+                        st.error("❌ NDMO standards not initialized. Please refresh the page.")
+                        return
+                    
+                    compliance_results = st.session_state.ndmo_standards.calculate_compliance_score(
+                        schema_analysis,
+                        data_quality
+                    )
+                    
+                    progress_bar.progress(80)
+                    status_text.info("🔄 Finalizing results...")
+                    
+                    # Store results
+                    st.session_state.compliance_results = compliance_results
+                    
+                    progress_bar.progress(100)
+                    status_text.success("✅ Compliance assessment completed!")
+                    progress_bar.empty()
+                    
+                    st.balloons()  # Celebration animation
+                    st.rerun()
                 
                 except Exception as e:
-                    st.error(f"❌ Error: {str(e)}")
+                    progress_bar.empty()
+                    error_msg = str(e)
+                    status_text.error(f"❌ Error assessing compliance: {error_msg}")
                     import traceback
-                    with st.expander("Error Details"):
-                        st.code(traceback.format_exc())
+                    error_details = traceback.format_exc()
+                    with st.expander("🔍 Error Details (Click to expand)"):
+                        st.code(error_details)
+                    
+                    st.warning("💡 **Troubleshooting Tips:**")
+                    st.markdown("""
+                    - Make sure both schema analysis and data processing are completed
+                    - Check that the data quality metrics are available
+                    - Verify that NDMO standards are properly loaded
+                    """)
         
         # Show results if available
         if 'compliance_results' in st.session_state:
